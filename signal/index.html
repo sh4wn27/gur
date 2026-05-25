@@ -657,6 +657,155 @@
     .about-grid { grid-template-columns: 1fr; gap: 32px; }
     .form-section { grid-template-columns: 1fr; gap: 32px; }
   }
+
+  /* ── Hamburger button & mobile nav overlay ───────── */
+  .menu-btn {
+    display: none;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--soft); border: 1px solid var(--rule);
+    cursor: pointer; padding: 0; color: var(--ink);
+    font-size: 18px; line-height: 1;
+    align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .mob-nav {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--paper);
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .mob-nav.open { display: flex; }
+  .mob-nav-top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--rule);
+    position: sticky; top: 0;
+    background: color-mix(in oklch, var(--paper) 90%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .mob-nav-links {
+    display: flex; flex-direction: column;
+    padding: 8px 20px; flex: 1;
+  }
+  .mob-nav-links a {
+    padding: 16px 0; border-bottom: 1px solid var(--rule);
+    font-family: var(--display); font-weight: 500;
+    font-size: 36px; letter-spacing: -0.025em; line-height: 1.1;
+    color: var(--ink); transition: color .15s;
+  }
+  .mob-nav-links a:last-child { border-bottom: none; }
+  .mob-nav-links a.active, .mob-nav-links a:hover { color: var(--accent); }
+  .mob-nav-foot {
+    padding: 20px 20px 40px;
+    display: flex; flex-direction: column; gap: 12px;
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (max-width: 800px) {
+    .menu-btn { display: flex; }
+    .topright .live { display: none; }
+  }
+
+  /* ── Phone layout fixes (≤600px) ────────────────── */
+  @media (max-width: 600px) {
+    :root { --gutter: 16px; }
+
+    /* Topbar */
+    .topbar-inner { padding: 10px var(--gutter); gap: 10px; }
+    .topright { gap: 6px; }
+    .pill-cta { padding: 7px 12px; font-size: 10px; }
+    .brand-text b { font-size: 9px; }
+    .brand-text > span:not(b) { display: none; }
+
+    /* Hero */
+    .hero { padding-top: 32px; padding-bottom: 20px; }
+    .hero-bg-logo { width: 90%; right: -20%; opacity: 0.15; }
+    .hero-tags { gap: 6px; margin-bottom: 18px; }
+    .tag { padding: 5px 10px; font-size: 10px; }
+    .hero-foot { margin-top: 24px; padding-top: 18px; gap: 18px; }
+    .hero-lede { font-size: 15px; }
+    .cta-stack { gap: 10px; }
+    .btn { padding: 12px 18px; font-size: 11px; }
+
+    /* Stats */
+    .stats { padding: 44px var(--gutter); gap: 28px; }
+    .stat { grid-template-columns: 1fr; gap: 4px; padding: 20px 0; }
+    .stat .ix { padding-bottom: 0; }
+    .stat .num { font-size: clamp(54px, 14vw, 88px); }
+    .stat .desc { grid-column: auto; text-align: left; padding-top: 4px; padding-bottom: 0; }
+
+    /* Section heading */
+    .sec { padding: 36px var(--gutter); }
+    .sec-head {
+      grid-template-columns: 1fr; gap: 6px;
+      padding-bottom: 16px; margin-bottom: 22px;
+    }
+    .sec-head .meta { display: none; }
+
+    /* Programs */
+    .program-card { padding: 18px; gap: 10px; }
+    .program-card .cta-area { display: none; }
+
+    /* Gallery: single column on phones */
+    .gallery { grid-template-columns: 1fr; gap: 10px; }
+    .t1, .t2, .t3, .t4, .t5 { grid-column: span 1; aspect-ratio: 16/10; }
+
+    /* CTA banner */
+    .cta-banner { padding: 32px 20px; border-radius: 16px; margin-bottom: 48px; }
+    .cta-banner h2 { font-size: clamp(26px, 8vw, 48px); }
+    .cta-banner-inner { gap: 20px; }
+    .cta-banner .btn { justify-content: center; }
+
+    /* Footer */
+    .foot-top { grid-template-columns: 1fr; gap: 28px; }
+    .foot-bottom { flex-direction: column; gap: 6px; text-align: center; align-items: center; }
+
+    /* Page headers (inner pages) */
+    .pageheader { padding: 32px var(--gutter) 20px; }
+    .pageheader h1 { font-size: clamp(30px, 9vw, 72px); }
+    .pageheader .lede { font-size: 14px; margin-top: 16px; }
+    .pageheader .meta-row { gap: 8px; margin-bottom: 20px; }
+
+    /* About */
+    .about-grid { padding: 32px var(--gutter) 40px; }
+    .stat-cards {
+      grid-template-columns: 1fr 1fr; gap: 10px;
+      padding: 0 var(--gutter) 40px;
+    }
+    .stat-card { padding: 18px; }
+    .stat-card .v { font-size: 36px; }
+    .team-grid { grid-template-columns: 1fr 1fr !important; gap: 12px; }
+
+    /* Programs page */
+    .proj-cards { padding: 16px var(--gutter); }
+    .proj-card { grid-template-columns: 1fr; padding: 18px; gap: 12px; }
+    .proj-card .n { display: none; }
+    .proj-card h3 { font-size: 24px; }
+    .proj-card .meta-col {
+      grid-column: auto; align-items: flex-start;
+      flex-direction: row; flex-wrap: wrap; gap: 8px;
+    }
+
+    /* Insights */
+    .ins-featured { padding: 16px var(--gutter); }
+    .ins-fcard { padding: 24px; gap: 24px; }
+    .ins-grid { padding: 16px var(--gutter) 40px; gap: 10px; }
+    .ins-item { grid-template-columns: 1fr; }
+    .ins-item .arrow-circle { display: none; }
+
+    /* Get Involved */
+    .paths { padding: 16px var(--gutter); gap: 10px; }
+    .path-card { grid-template-columns: 44px 1fr; padding: 16px; gap: 12px; }
+    .path-card .pn { font-size: 28px; }
+    .path-card .arrow-circle { display: none; }
+    .form-section { padding: 28px var(--gutter) 52px; gap: 22px; }
+    .form { grid-template-columns: 1fr; gap: 14px; }
+    .form-actions { flex-direction: column; gap: 10px; align-items: stretch; }
+    .form-actions .btn { justify-content: center; }
+    .seg { gap: 6px; flex-wrap: wrap; }
+    .seg .chip { padding: 8px 12px; font-size: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -755,6 +904,7 @@ const STEPS = [
 const TEAM = [
   { name: "Shawn Li", role: "Co-Founder & Co-President", img: "shawnli.avif", bio: "Shawn is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He co-founded GUR to make a meaningful impact on students locally and globally, while building a team of talented and compassionate high schoolers who inspire the next generation of leaders. In his free time, Shawn enjoys playing piano and guitar, gaming, solving Rubik's Cube, and exploring new interests. You can find him at sh4wn.org." },
   { name: "Arnav Talreja", role: "Co-Founder & Co-President", img: "arnavtalreja.avif", bio: "Arnav is a junior at TJHSST. He co-founded GUR to make a real impact in the robotics community, both globally and close to home, by helping more people learn technical skills, build with confidence, and compete in robotics competitions. Most importantly, he cares about making robotics something people genuinely enjoy being a part of. In his free time, Arnav likes playing tennis, gaming, and hanging out with friends." },
+  { name: "Caleb Guan", role: "Director", img: "calebguan.avif", bio: "Caleb is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Alexandria VA. He joined Growing Up With Robotics (GUR) because of his passion for computer science, robotics and problem solving, and his interest to help younger students to explore STEM in an engaging way. In his freetime, Caleb enjoys playing basketball, gaming, and hanging out with friends." },
   { name: "Darrell Kao", role: "Director", img: "darrellkao.avif", bio: "Darrell is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR), where he works to expand access to STEM education and robotics for younger students. Darrell was inspired by the learning experience he has at TJ, and hopes to bring the same learning opportunities to others. Additionally hoping he can inspire the younger generation in STEM related topics. Outside of school, Darrell enjoys reading, playing video games, hanging out with friends, and doing Chinese yo-yo." },
   { name: "Surya Raj", role: "Director", img: "suryaraj.avif", bio: "Surya is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR) to expand his love for robotics beyond the classroom and competitions, and to help make STEM education more accessible to students everywhere. Inspired by the hands on engineering culture at TJ, Surya hopes to use his skills to mentor younger students and spark their curiosity in robotics and technology. Outside of school, Surya enjoys watching sports, gaming, learning about cars, and spending time with friends." },
   { name: "Jae Kim", role: "Finance", img: "jaekim.avif", bio: "Jae is a sophomore at Centreville High School. Jae enjoys spending time teaching children about robotics. He enjoys spending time with friends and playing games. He is also the best MC in the world." },
@@ -815,28 +965,60 @@ function Counter({ target, prefix = "", suffix = "" }) {
 }
 
 function Header({ route, setRoute }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const close = () => setMenuOpen(false);
+  const navigate = (id) => { setRoute(id); close(); };
   return (
-    <header className="topbar">
-      <div className="topbar-inner">
-        <a className="brand" onClick={() => setRoute("home")} href="#home">
-          <span className="brand-mark" aria-label="GUR"></span>
-          <span className="brand-text"><b>Growing Up with Robotics</b><span></span></span>
-        </a>
-        <nav className="topnav">
+    <>
+      <header className="topbar">
+        <div className="topbar-inner">
+          <a className="brand" onClick={() => navigate("home")} href="#home">
+            <span className="brand-mark" aria-label="GUR"></span>
+            <span className="brand-text"><b>Growing Up with Robotics</b><span></span></span>
+          </a>
+          <nav className="topnav">
+            {NAV.map(n => (
+              <a key={n.id} href={`#${n.id}`}
+                 className={route === n.id ? "active" : ""}
+                 onClick={(e) => { e.preventDefault(); setRoute(n.id); }}>
+                {n.label}
+              </a>
+            ))}
+          </nav>
+          <div className="topright">
+            <span className="live">LIVE · Summer Cohort in Planning</span>
+            <a className="pill-cta" href="mailto:growingupwithrobotics@gmail.com">Contact ↗</a>
+            <button className="menu-btn" onClick={() => setMenuOpen(v => !v)} aria-label="Toggle menu">
+              {menuOpen ? "✕" : "☰"}
+            </button>
+          </div>
+        </div>
+      </header>
+      <div className={"mob-nav" + (menuOpen ? " open" : "")}>
+        <div className="mob-nav-top">
+          <a className="brand" onClick={() => navigate("home")} href="#home">
+            <span className="brand-mark" aria-label="GUR"></span>
+            <span className="brand-text"><b>Growing Up with Robotics</b></span>
+          </a>
+          <button className="menu-btn" onClick={close} aria-label="Close menu">✕</button>
+        </div>
+        <nav className="mob-nav-links">
           {NAV.map(n => (
             <a key={n.id} href={`#${n.id}`}
                className={route === n.id ? "active" : ""}
-               onClick={(e) => { e.preventDefault(); setRoute(n.id); }}>
+               onClick={(e) => { e.preventDefault(); navigate(n.id); }}>
               {n.label}
             </a>
           ))}
         </nav>
-        <div className="topright">
-          <span className="live">LIVE · Summer Cohort in Planning</span>
-          <a className="pill-cta" href="mailto:growingupwithrobotics@gmail.com">Contact ↗</a>
+        <div className="mob-nav-foot">
+          <a className="btn btn-primary" href="mailto:growingupwithrobotics@gmail.com" onClick={close}>
+            Contact Us <span className="arrow">↗</span>
+          </a>
+          <span className="live" style={{ alignSelf: "flex-start" }}>LIVE · Summer Cohort in Planning</span>
         </div>
       </div>
-    </header>
+    </>
   );
 }
 
@@ -872,7 +1054,7 @@ function Footer({ setRoute }) {
             <ul>
               <li><a href="https://www.instagram.com/growingupwithrobotics/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></li>
               <li><a href="https://www.linkedin.com/company/growing-up-with-robotics/?viewAsMember=true" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
-              <li><a href="https://growingupwithrobotics.us12.list-manage.com/subscribe?u=5f5c8f7d8e9b8f8b8f8b8f8b8&id=5f5c8f7d8e9b8f8b8f8b8f8b8" target="_blank" rel="noopener noreferrer">Newsletter ↗</a></li>
+              <li><a href="mailto:growingupwithrobotics@gmail.com">Newsletter ↗</a></li>
             </ul>
           </div>
         </div>
@@ -934,8 +1116,8 @@ function Home({ setRoute, tweaks }) {
 
       <div className="ticker">
         <div className="ticker-track">
-          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>EMBEDDED<span>·</span>FRC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span></span>
-          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>EMBEDDED<span>·</span>FRC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span></span>
+          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>PROGRAMMING<span>·</span>FRC<span>·</span>FTC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span><span className="acc">110+ VOLUNTEERS</span><span>·</span><span className="acc">5+ COUNTRIES</span><span>·</span><span className="acc">$19,500+ RAISED</span><span>·</span>THOMAS JEFFERSON HIGH SCHOOL FOR SCI & TECH<span>·</span>AREA YOUTH MINISTRY<span>·</span></span>
+          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>PROGRAMMING<span>·</span>FRC<span>·</span>FTC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span><span className="acc">110+ VOLUNTEERS</span><span>·</span><span className="acc">5+ COUNTRIES</span><span>·</span><span className="acc">$19,500+ RAISED</span><span>·</span>THOMAS JEFFERSON HIGH SCHOOL FOR SCI & TECH<span>·</span>AREA YOUTH MINISTRY<span>·</span></span>
         </div>
       </div>
 
@@ -1014,7 +1196,7 @@ function Home({ setRoute, tweaks }) {
           <div className="meta">Spring MMXXVI · 5 selected</div>
         </div>
         <div className="gallery">
-          <div className="tile t1"><img src="images/insights/ftcteam.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FTC 14607</div><div className="cap">FTC 14607 Robot Uprising at Cheesequake State Championship </div></div>
+          <div className="tile t1"><img src="images/insights/ftcteam.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FTC 14607</div><div className="cap">FTC 14607 Robot Uprising at Chesapeake State Championship </div></div>
           <div className="tile t2"><img src="images/insights/aymsummercampgroup.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM SUMMER CAMP</div><div className="cap">AYM summer camp · full cohort & robot mascot</div></div>
           <div className="tile t3"><img src="images/insights/aymsummercamp.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM SUMMER CAMP</div><div className="cap">CAD lecture session · summer program</div></div>
           <div className="tile t4"><img src="images/insights/fllmentoring.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL MENTORSHIP</div><div className="cap">One-on-one FLL coaching · field review</div></div>
@@ -1260,13 +1442,13 @@ function Insights() {
                 </div>
                 <div className="field full" style={{ width: "100%" }}>
                   <label style={{ color: "var(--accent-ink)", opacity: 0.7 }}>Your email</label>
-                  <div style={{ display: "flex", gap: 12 }}>
+                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                     <input
                       type="email" name="EMAIL" required
-                      placeholder="you@school.edu"
-                      style={{ flex: 1, background: "color-mix(in oklch, var(--accent-ink) 10%, transparent)", borderColor: "rgba(0,0,0,0.2)", color: "var(--accent-ink)" }}
+                      placeholder="2027hli@tjhsst.edu"
+                      style={{ flex: "1 1 200px", minWidth: 0, background: "color-mix(in oklch, var(--accent-ink) 10%, transparent)", borderColor: "rgba(0,200,0,50)", color: "var(--accent-ink)" }}
                     />
-                    <button className="btn btn-primary" type="submit">Subscribe <span className="arrow">↗</span></button>
+                    <button className="btn btn-primary" type="submit" style={{ flexShrink: 0 }}>Subscribe <span className="arrow">↗</span></button>
                   </div>
                 </div>
               </form>
