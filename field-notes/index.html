@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GUR — Field Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ink: #0e0f0c;
+    --paper: #f6f3ec;
+    --rule: rgba(14,15,12,0.18);
+    --rule-strong: rgba(14,15,12,0.5);
+    --muted: rgba(14,15,12,0.62);
+    --accent: #1f5c3a;       /* deep editorial green */
+    --accent-ink: #f6f3ec;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "DM Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --density: 1;            /* 0.85 compact, 1 default, 1.2 airy */
+    --maxw: 1320px;
+  }
+  [data-mode="dark"] {
+    --ink: #ece7da;
+    --paper: #0d0e0b;
+    --rule: rgba(236,231,218,0.16);
+    --rule-strong: rgba(236,231,218,0.45);
+    --muted: rgba(236,231,218,0.62);
+    --accent: #84c89a;
+    --accent-ink: #0d0e0b;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Top bar ─────────────────────────────────────────── */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar-inner {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+  .brandmark { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em; }
+  .brandmark .mark { width: 30px; height: 30px; background: url('logo-mark.png') center/contain no-repeat; flex-shrink: 0; }
+  [data-mode="dark"] .brandmark .mark { filter: brightness(1.05); }
+  .brandmark em { font-style: italic; }
+  .topnav { display: flex; gap: 28px; justify-self: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .topnav a { padding: 6px 0; position: relative; color: var(--muted); transition: color .2s; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a.active { color: var(--ink); }
+  .topnav a.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -16px; height: 1px; background: var(--accent);
+  }
+  .topright { display: flex; gap: 14px; justify-self: end; align-items: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .contact-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border: 1px solid var(--ink); border-radius: 999px;
+    color: var(--ink);
+    transition: background .2s, color .2s;
+  }
+  .contact-pill:hover { background: var(--ink); color: var(--paper); }
+
+  /* ── Layout ──────────────────────────────────────────── */
+  main { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+  .pad-y { padding-top: calc(96px * var(--density)); padding-bottom: calc(96px * var(--density)); }
+  .rule { border-top: 1px solid var(--rule); }
+  .rule-strong { border-top: 1px solid var(--rule-strong); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before {
+    content: ""; display: inline-block; width: 18px; height: 1px; background: var(--accent);
+  }
+  .eyebrow.no-line::before { display: none; }
+
+  /* ── Hero ────────────────────────────────────────────── */
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; padding-top: calc(80px * var(--density)); padding-bottom: calc(80px * var(--density)); }
+  .hero-issue { display: flex; gap: 28px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-bottom: 28px; border-bottom: 1px solid var(--rule); margin-bottom: 40px; grid-column: 1 / -1; }
+  .hero-issue span:first-child { color: var(--accent); }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, 7.2vw, 132px);
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero h1 .ampersand { font-style: italic; color: var(--accent); font-feature-settings: "salt" on; }
+  .hero-right { display: flex; flex-direction: column; justify-content: space-between; gap: 40px; }
+  .hero-lede { font-family: var(--serif); font-size: 22px; line-height: 1.4; max-width: 44ch; color: var(--ink); }
+  .hero-lede strong { font-weight: 400; background: linear-gradient(transparent 70%, color-mix(in oklch, var(--accent) 35%, transparent) 70%); padding: 0 2px; }
+  .cta-stack { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; border: 1px solid transparent;
+    transition: transform .15s, background .2s, color .2s, border-color .2s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { background: var(--ink); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+  .btn .arrow { transition: transform .2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  .hero-cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* ── Marquee strip ───────────────────────────────────── */
+  .marquee {
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    overflow: hidden; padding: 18px 0;
+    font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--muted);
+  }
+  .marquee-track { display: flex; gap: 60px; white-space: nowrap; animation: scroll-x 50s linear infinite; }
+  .marquee span { display: inline-flex; align-items: center; gap: 60px; }
+  .marquee .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── Stats ──────────────────────────────────────────── */
+  .stats {
+    display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .stats-header { padding: 40px 30px 40px 0; border-right: 1px solid var(--rule); }
+  .stats-header h3 { font-family: var(--serif); font-size: 32px; line-height: 1.1; margin: 0 0 12px; font-weight: 400; }
+  .stats-header p { font-size: 14px; color: var(--muted); margin: 0; max-width: 28ch; }
+  .stat { padding: 40px 30px; border-right: 1px solid var(--rule); position: relative; }
+  .stat:last-child { border-right: none; }
+  .stat .num { font-family: var(--serif); font-size: clamp(56px, 5.5vw, 88px); line-height: 1; font-weight: 400; letter-spacing: -0.02em; }
+  .stat .num em { font-style: italic; color: var(--accent); }
+  .stat .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 14px; }
+
+  /* ── Section header ──────────────────────────────────── */
+  .sec-head {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 40px; align-items: end;
+    padding-bottom: 28px; border-bottom: 1px solid var(--rule-strong);
+    margin-bottom: 48px;
+  }
+  .sec-head .num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); }
+  .sec-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 4.4vw, 64px); line-height: 1; margin: 0; letter-spacing: -0.02em; }
+  .sec-head h2 em { font-style: italic; color: var(--accent); }
+  .sec-head .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ── Programs ───────────────────────────────────────── */
+  .programs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .program {
+    padding: 0 24px 32px;
+    border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 24px;
+    cursor: pointer;
+    position: relative;
+    transition: background .2s;
+  }
+  .program:first-child { padding-left: 0; }
+  .program:last-child { padding-right: 0; border-right: none; }
+  .program:hover { background: color-mix(in oklch, var(--ink) 3%, transparent); }
+  .program .figure {
+    aspect-ratio: 3/4;
+    background: repeating-linear-gradient(45deg, color-mix(in oklch, var(--ink) 6%, transparent) 0 8px, transparent 8px 16px);
+    border: 1px solid var(--rule);
+    display: flex; align-items: flex-end; padding: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    position: relative;
+  }
+  .program .figure::before {
+    content: "FIG."; position: absolute; top: 16px; left: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
+  }
+  .program .figure .ix { color: var(--accent); font-weight: 500; }
+  .program .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .program h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.05; margin: 0; letter-spacing: -0.015em; }
+  .program p { font-size: 14px; line-height: 1.55; color: var(--muted); margin: 0; }
+  .program .link {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px; color: var(--ink);
+    margin-top: auto; padding-top: 8px;
+  }
+  .program .link .arrow { transition: transform .2s; }
+  .program:hover .link .arrow { transform: translateX(4px); }
+
+  /* ── How we work ─────────────────────────────────────── */
+  .process {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 80px;
+  }
+  .process-intro h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 4.4vw, 64px); line-height: 1; margin: 0 0 24px; letter-spacing: -0.02em; }
+  .process-intro h2 em { font-style: italic; color: var(--accent); }
+  .process-intro p { font-family: var(--serif); font-size: 19px; line-height: 1.5; color: var(--muted); max-width: 32ch; }
+  .steps { display: flex; flex-direction: column; }
+  .step {
+    display: grid; grid-template-columns: 80px 1fr 1fr; gap: 40px; align-items: start;
+    padding: 32px 0;
+    border-top: 1px solid var(--rule);
+    transition: padding .2s;
+    cursor: default;
+  }
+  .step:last-child { border-bottom: 1px solid var(--rule); }
+  .step:hover { padding-left: 12px; }
+  .step .n { font-family: var(--serif); font-style: italic; font-size: 48px; color: var(--accent); line-height: 1; }
+  .step h4 { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.1; margin: 0; letter-spacing: -0.01em; }
+  .step p { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0; }
+
+  /* ── Featured gallery ────────────────────────────────── */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+  }
+  .tile {
+    background: repeating-linear-gradient(135deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 10px, transparent 10px 20px);
+    border: 1px solid var(--rule);
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform .3s;
+  }
+  .tile:hover { transform: scale(1.01); }
+  .tile::before {
+    content: attr(data-tag); position: absolute; top: 14px; left: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .tile .cap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 16px; background: linear-gradient(transparent, color-mix(in oklch, var(--paper) 88%, transparent));
+    font-family: var(--serif); font-size: 18px;
+  }
+  .tile .cap em { color: var(--accent); font-style: italic; }
+  .t1 { grid-column: span 7; aspect-ratio: 16/10; }
+  .t2 { grid-column: span 5; aspect-ratio: 4/5; }
+  .t3 { grid-column: span 4; aspect-ratio: 1; }
+  .t4 { grid-column: span 4; aspect-ratio: 1; }
+  .t5 { grid-column: span 4; aspect-ratio: 1; }
+
+  /* ── CTA banner ─────────────────────────────────────── */
+  .cta-banner {
+    background: var(--ink); color: var(--paper);
+    padding: 80px 28px;
+    margin: 0 -28px;
+    border-radius: 0;
+  }
+  .cta-banner-inner {
+    max-width: var(--maxw); margin: 0 auto;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: 60px; align-items: end;
+  }
+  .cta-banner h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(48px, 5.5vw, 84px); line-height: 0.98; margin: 0; letter-spacing: -0.02em; }
+  .cta-banner h2 em { font-style: italic; color: var(--accent); }
+  .cta-banner .actions { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+  .cta-banner .btn-primary { background: var(--accent); color: var(--ink); }
+  .cta-banner .btn-primary:hover { background: var(--paper); color: var(--ink); }
+  .cta-banner .btn-ghost { color: var(--paper); border-color: var(--paper); }
+  .cta-banner .btn-ghost:hover { background: var(--paper); color: var(--ink); }
+  .cta-banner .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,243,236,0.6); margin-bottom: 16px; }
+
+  /* ── Footer ──────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 60px 0 32px;
+  }
+  .foot-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+    padding-bottom: 60px; border-bottom: 1px solid var(--rule);
+  }
+  .foot-grid h5 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 16px; font-weight: 500; }
+  .foot-grid ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .foot-grid a:hover { color: var(--accent); }
+  .foot-brand h4 { font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 1.05; margin: 0 0 16px; letter-spacing: -0.01em; }
+  .foot-brand h4 em { font-style: italic; color: var(--accent); }
+  .foot-brand p { font-size: 14px; color: var(--muted); max-width: 36ch; }
+  .foot-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); }
+  .foot-bottom .socials { display: flex; gap: 18px; }
+  .foot-bottom .socials a:hover { color: var(--accent); }
+
+  /* ── Inner pages ─────────────────────────────────────── */
+  .pageheader { padding: calc(80px * var(--density)) 0 calc(48px * var(--density)); border-bottom: 1px solid var(--rule); }
+  .pageheader .row { display: flex; gap: 40px; align-items: end; justify-content: space-between; flex-wrap: wrap; }
+  .pageheader h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(64px, 8vw, 128px); line-height: 0.96; letter-spacing: -0.025em; margin: 20px 0 0; flex: 1; min-width: 0; }
+  .pageheader h1 em { font-style: italic; color: var(--accent); }
+  .pageheader .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .pageheader .lede { font-family: var(--serif); font-size: 22px; line-height: 1.45; max-width: 52ch; margin: 32px 0 0; color: var(--muted); }
+  .pageheader .lede strong { color: var(--ink); font-weight: 400; }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: start; padding: 80px 0; border-bottom: 1px solid var(--rule); }
+  .about-grid h2 { font-family: var(--serif); font-weight: 400; font-size: 48px; line-height: 1.05; margin: 0 0 24px; letter-spacing: -0.02em; }
+  .about-grid h2 em { font-style: italic; color: var(--accent); }
+  .about-grid .body { columns: 2; column-gap: 32px; font-size: 15px; line-height: 1.7; color: var(--ink); }
+  .about-grid .body p { margin: 0 0 14px; break-inside: avoid; }
+  .about-grid .body p:first-child::first-letter { font-family: var(--serif); font-size: 56px; float: left; line-height: 0.85; padding-right: 8px; padding-top: 6px; color: var(--accent); }
+  .about-side { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  .about-side dl { margin: 0; }
+  .about-side dt { color: var(--muted); padding: 16px 0 4px; border-top: 1px solid var(--rule); }
+  .about-side dt:first-child { border-top: none; padding-top: 0; }
+  .about-side dd { margin: 0 0 16px; color: var(--ink); font-family: var(--serif); font-size: 22px; text-transform: none; letter-spacing: -0.005em; }
+
+  .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; padding: 80px 0; border-bottom: 1px solid var(--rule); }
+  .person {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .person .portrait {
+    aspect-ratio: 4/5;
+    background: repeating-linear-gradient(45deg, color-mix(in oklch, var(--ink) 6%, transparent) 0 8px, transparent 8px 16px);
+    border: 1px solid var(--rule);
+    display: flex; align-items: flex-end; padding: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .person .name { font-family: var(--serif); font-size: 22px; line-height: 1.1; letter-spacing: -0.01em; }
+  .person .role { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+  /* Projects detail */
+  .proj-list { padding: 0; }
+  .proj-row {
+    display: grid; grid-template-columns: 80px 1fr 2fr 240px; gap: 40px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+    cursor: pointer;
+    transition: padding-left .2s, background .2s;
+  }
+  .proj-row:hover { padding-left: 16px; background: color-mix(in oklch, var(--ink) 2.5%, transparent); }
+  .proj-row .pn { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; padding-top: 12px; }
+  .proj-row .pt { font-family: var(--serif); font-size: 32px; line-height: 1.05; letter-spacing: -0.015em; }
+  .proj-row .pt em { font-style: italic; color: var(--accent); }
+  .proj-row .pd { font-size: 14px; line-height: 1.6; color: var(--muted); }
+  .proj-row .pmeta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); display: flex; flex-direction: column; gap: 6px; padding-top: 12px; }
+  .proj-row .pmeta b { color: var(--ink); font-weight: 500; }
+
+  /* Insights */
+  .ins-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 32px; padding-top: 32px; }
+  .ins {
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+    cursor: pointer;
+    display: flex; flex-direction: column; gap: 16px;
+    transition: opacity .2s;
+  }
+  .ins:hover { opacity: 0.75; }
+  .ins .fig {
+    aspect-ratio: 4/3;
+    background: repeating-linear-gradient(135deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 8px, transparent 8px 16px);
+    border: 1px solid var(--rule);
+  }
+  .ins .ix { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .ins h3 { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.1; margin: 0; letter-spacing: -0.015em; }
+  .ins .featured h3 { font-size: 44px; }
+  .ins .featured .fig { aspect-ratio: 16/10; }
+  .ins p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.55; }
+  .ins .byline { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); margin-top: auto; }
+
+  /* Get involved */
+  .involve { padding: 80px 0; }
+  .paths { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule); }
+  .path {
+    padding: 32px 24px; border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 16px;
+    cursor: pointer; transition: background .2s;
+  }
+  .path:last-child { border-right: none; }
+  .path:hover { background: color-mix(in oklch, var(--ink) 3.5%, transparent); }
+  .path .pn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--accent); }
+  .path h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.05; margin: 0; letter-spacing: -0.015em; }
+  .path p { font-size: 14px; color: var(--muted); line-height: 1.55; margin: 0; }
+  .path .link { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 12px; }
+
+  .form-wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; padding: 80px 0; border-top: 1px solid var(--rule); }
+  .form-wrap h2 { font-family: var(--serif); font-weight: 400; font-size: 48px; line-height: 1.05; margin: 0 0 16px; letter-spacing: -0.02em; }
+  .form-wrap h2 em { font-style: italic; color: var(--accent); }
+  .form-wrap p { font-size: 15px; color: var(--muted); max-width: 36ch; line-height: 1.6; }
+  .form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .field input, .field select, .field textarea {
+    background: transparent;
+    border: none; border-bottom: 1px solid var(--rule-strong);
+    padding: 10px 0; font-family: var(--serif); font-size: 20px; color: var(--ink);
+    outline: none; transition: border-color .2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-bottom-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 80px; font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+  .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+  .seg .chip {
+    padding: 8px 14px; border: 1px solid var(--rule-strong); border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+    background: transparent; color: var(--ink);
+  }
+  .seg .chip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .form-actions { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .form-actions .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .form-success { padding: 28px; border: 1px solid var(--accent); border-radius: 4px; color: var(--ink); font-family: var(--serif); font-size: 22px; line-height: 1.4; }
+  .form-success em { color: var(--accent); font-style: italic; }
+
+  /* Inner page section heads */
+  .sub-head { padding: 64px 0 24px; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: end; gap: 40px; }
+  .sub-head h2 { font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1; margin: 0; letter-spacing: -0.02em; }
+  .sub-head h2 em { font-style: italic; color: var(--accent); }
+  .sub-head .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+  /* Values */
+  .values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 60px 0 90px; border-bottom: 1px solid var(--rule); }
+  .value { padding: 0 32px; border-right: 1px solid var(--rule); }
+  .value:first-child { padding-left: 0; }
+  .value:last-child { padding-right: 0; border-right: none; }
+  .value .n { font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--accent); margin-bottom: 16px; }
+  .value h3 { font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1.05; margin: 0 0 14px; letter-spacing: -0.015em; }
+  .value p { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0; }
+
+  /* Page transition */
+  .page { animation: pagefade .35s cubic-bezier(.2,.7,.2,1); }
+  @keyframes pagefade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── Dynamic tweak overrides ─────────────────────────── */
+  .btn, .form-success { border-radius: calc(var(--radius, 999px)); }
+  .btn { border-radius: 999px; } /* keep pill on buttons */
+  .program .figure, .ins .fig, .person .portrait, .tile { border-radius: var(--radius, 0px); background-image: var(--fig-bg, repeating-linear-gradient(45deg, color-mix(in oklch, var(--ink) 6%, transparent) 0 8px, transparent 8px 16px)); background-color: transparent; }
+
+  /* User-fillable image placeholders. Drop files into ./images/<folder>/<slug>.jpg
+     and they show up; missing files just reveal the patterned background. */
+  .program .figure, .ins .fig, .person .portrait { position: relative; overflow: hidden; }
+  .ph-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block; z-index: 0;
+  }
+  .program .figure > *:not(.ph-img),
+  .program .figure::before,
+  .ins .fig > *:not(.ph-img),
+  .person .portrait > *:not(.ph-img) { position: relative; z-index: 1; }
+  /* When a real image loads, hide the label */
+  .program .figure:has(.ph-img:not([hidden]))::before { opacity: 0; }
+  .program .figure:has(.ph-img:not([hidden])) > .ix,
+  .program .figure:has(.ph-img:not([hidden])) > * { color: #fff; mix-blend-mode: difference; }
+  .person .portrait:has(.ph-img:not([hidden])) { color: transparent; }
+  .tile { background: var(--fig-bg); }
+  .field input, .field select, .field textarea { border-radius: 0; }
+  .cta-banner { border-radius: var(--radius, 0px); }
+
+  /* Accent style variants — applied via [data-accent] on <html> */
+  [data-accent="italic"] em,
+  [data-accent="italic"] .accent { font-style: italic; color: var(--accent); font-weight: 400; }
+
+  [data-accent="underline"] em,
+  [data-accent="underline"] .accent {
+    font-style: normal; color: var(--ink); font-weight: 400;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat; background-size: 100% 5px; background-position: 0 95%;
+    padding-bottom: 2px;
+  }
+
+  [data-accent="highlight"] em,
+  [data-accent="highlight"] .accent {
+    font-style: normal; color: var(--ink); font-weight: 400;
+    background: color-mix(in oklch, var(--accent) 45%, transparent);
+    padding: 0 6px; border-radius: 2px;
+  }
+
+  [data-accent="smallcaps"] em,
+  [data-accent="smallcaps"] .accent {
+    font-style: normal; color: var(--accent); font-weight: 500;
+    font-variant: small-caps; letter-spacing: 0.04em;
+  }
+
+  [data-accent="plain"] em,
+  [data-accent="plain"] .accent {
+    font-style: normal; color: var(--accent); font-weight: 500;
+  }
+
+  /* hero featured / asymmetric layouts */
+  .hero-featured {
+    grid-column: 1 / -1;
+    padding: 40px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: 1fr; gap: 28px;
+    text-align: center;
+  }
+  .hero-featured .quote {
+    font-family: var(--serif);
+    font-size: clamp(40px, 5.5vw, 84px);
+    line-height: 1.05; letter-spacing: -0.02em;
+    margin: 0 auto; max-width: 22ch;
+  }
+  .hero-featured .quote em { font-style: italic; color: var(--accent); }
+  .hero-featured .byline { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .hero-featured .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .hero-asym { grid-template-columns: 2fr 1fr !important; gap: 100px !important; align-items: end; }
+  .hero-asym .hero-right { padding-bottom: 16px; }
+  .hero-asym h1 { font-size: clamp(44px, 7.2vw, 132px) !important; }
+
+  /* small screens — keep readable */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats-header { grid-column: 1/-1; border-right: none; border-bottom: 1px solid var(--rule); }
+    .stat { border-right: none; border-top: 1px solid var(--rule); }
+    .programs { grid-template-columns: 1fr 1fr; }
+    .program { border-right: none; padding: 0 0 32px; border-bottom: 1px solid var(--rule); }
+    .process { grid-template-columns: 1fr; gap: 40px; }
+    .gallery { grid-template-columns: repeat(6, 1fr); }
+    .t1, .t2, .t3, .t4, .t5 { grid-column: span 6; aspect-ratio: 16/10; }
+    .cta-banner-inner { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+    .topnav { display: none; }
+    .topbar-inner { grid-template-columns: 1fr auto; }
+    .team-grid, .paths, .values, .ins-grid { grid-template-columns: 1fr 1fr; }
+    .form-wrap { grid-template-columns: 1fr; gap: 40px; }
+    .proj-row { grid-template-columns: 60px 1fr; }
+    .proj-row .pd, .proj-row .pmeta { grid-column: 1 / -1; padding-left: 0; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-grid .body { columns: 1; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React/Babel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="../../tweaks-panel.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const onImgErr = (e) => { e.currentTarget.hidden = true; };
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "fontPair": "instrument_dm",
+  "mode": "light",
+  "density": "default",
+  "heroLayout": "split",
+  "accentStyle": "italic",
+  "ruleWeight": "regular",
+  "radius": "sharp",
+  "figurePattern": "hatch"
+}/*EDITMODE-END*/;
+
+const PALETTES = {
+  forest:    { name: "Forest",    ink: "#0e0f0c", paper: "#f6f3ec", accent: "#1f5c3a" },
+  meadow:    { name: "Meadow",    ink: "#101510", paper: "#f0eee5", accent: "#3a8a4a" },
+  chartreuse:{ name: "Chartreuse",ink: "#0a0a0a", paper: "#ededea", accent: "#d4ff3a" },
+  warm:      { name: "Warm",      ink: "#1a1410", paper: "#f5ede0", accent: "#2d6a4f" },
+  bordeaux:  { name: "Bordeaux",  ink: "#1a0e0e", paper: "#f4ece4", accent: "#7a1f2b" },
+  oxblood:   { name: "Oxblood",   ink: "#150c0c", paper: "#f0e7dc", accent: "#a83e2e" },
+  cobalt:    { name: "Cobalt",    ink: "#0a1020", paper: "#eee9df", accent: "#1f3a8a" },
+  sky:       { name: "Sky",       ink: "#0a121a", paper: "#eef0ec", accent: "#0e6f9a" },
+  sand:      { name: "Sand",      ink: "#1c1812", paper: "#ebe3d2", accent: "#9c6b2a" },
+  charcoal:  { name: "Charcoal",  ink: "#1a1a1a", paper: "#e6e6e3", accent: "#ee5a36" },
+  iris:      { name: "Iris",      ink: "#120f1a", paper: "#efebe2", accent: "#5a3aa8" },
+  matcha:    { name: "Matcha",    ink: "#10130d", paper: "#e8e6d4", accent: "#5c7a1e" },
+};
+const PALETTES_DARK = {
+  forest:    { ink: "#ece7da", paper: "#0d0e0b", accent: "#84c89a" },
+  meadow:    { ink: "#e6e8de", paper: "#0e120e", accent: "#7fc095" },
+  chartreuse:{ ink: "#ededea", paper: "#0a0a0a", accent: "#d4ff3a" },
+  warm:      { ink: "#f5ede0", paper: "#1a1410", accent: "#e8a86a" },
+  bordeaux:  { ink: "#f0e2dd", paper: "#190b0b", accent: "#e3697a" },
+  oxblood:   { ink: "#f0e2d2", paper: "#150a0a", accent: "#f08767" },
+  cobalt:    { ink: "#e6ebf2", paper: "#080d1a", accent: "#7aa0ff" },
+  sky:       { ink: "#e6ebef", paper: "#070f17", accent: "#5fc0e6" },
+  sand:      { ink: "#eee3d0", paper: "#15110a", accent: "#e0a85d" },
+  charcoal:  { ink: "#ededea", paper: "#0e0e0e", accent: "#ff8a6a" },
+  iris:      { ink: "#ece5f0", paper: "#0e0a17", accent: "#9d80e6" },
+  matcha:    { ink: "#e6e6d2", paper: "#0a0d07", accent: "#c2dc60" },
+};
+
+const FONT_PAIRS = {
+  instrument_dm:      { name: "Instrument + DM",     serif: "'Instrument Serif', serif", sans: "'DM Sans', sans-serif" },
+  newsreader_jakarta: { name: "Newsreader + Jakarta",serif: "'Newsreader', serif", sans: "'Plus Jakarta Sans', sans-serif", load: "Newsreader:ital,opsz@0,6..72;1,6..72|Plus+Jakarta+Sans:wght@300;400;500;600" },
+  ebgaramond_manrope: { name: "Garamond + Manrope",  serif: "'EB Garamond', serif", sans: "'Manrope', sans-serif", load: "EB+Garamond:ital,wght@0,400;0,500;1,400|Manrope:wght@300;400;500;600" },
+  cormorant_work:     { name: "Cormorant + Work",    serif: "'Cormorant Garamond', serif", sans: "'Work Sans', sans-serif", load: "Cormorant+Garamond:ital,wght@0,400;0,500;1,400|Work+Sans:wght@300;400;500;600" },
+  lora_inter:         { name: "Lora + Inter",        serif: "'Lora', serif", sans: "'Inter', sans-serif", load: "Lora:ital,wght@0,400;0,500;1,400|Inter:wght@300;400;500;600" },
+  spectral_plex:      { name: "Spectral + IBM Plex", serif: "'Spectral', serif", sans: "'IBM Plex Sans', sans-serif", load: "Spectral:ital,wght@0,300;0,400;1,400|IBM+Plex+Sans:wght@300;400;500;600" },
+  playfair_dmsans:    { name: "Playfair + DM",       serif: "'Playfair Display', serif", sans: "'DM Sans', sans-serif", load: "Playfair+Display:ital,wght@0,400;0,500;1,400" },
+  fraunces_jakarta:   { name: "Fraunces + Jakarta",  serif: "'Fraunces', serif", sans: "'Plus Jakarta Sans', sans-serif", load: "Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400|Plus+Jakarta+Sans:wght@300;400;500;600" },
+};
+
+const DENSITIES = { compact: 0.78, default: 1, airy: 1.25 };
+const RULE_WEIGHTS = { hairline: { rule: 0.08, strong: 0.35 }, regular: { rule: 0.18, strong: 0.5 }, strong: { rule: 0.35, strong: 0.75 } };
+const RADII = { sharp: "0px", soft: "6px", round: "14px" };
+const FIG_PATTERNS = {
+  hatch:  "repeating-linear-gradient(45deg, color-mix(in oklch, var(--ink) 6%, transparent) 0 8px, transparent 8px 16px)",
+  cross:  "repeating-linear-gradient(45deg, color-mix(in oklch, var(--ink) 6%, transparent) 0 8px, transparent 8px 16px), repeating-linear-gradient(-45deg, color-mix(in oklch, var(--ink) 6%, transparent) 0 8px, transparent 8px 16px)",
+  dots:   "radial-gradient(color-mix(in oklch, var(--ink) 15%, transparent) 1.5px, transparent 2px) 0 0 / 14px 14px",
+  lines:  "repeating-linear-gradient(0deg, color-mix(in oklch, var(--ink) 8%, transparent) 0 1px, transparent 1px 14px)",
+  solid:  "color-mix(in oklch, var(--ink) 5%, transparent)",
+  noise:  "radial-gradient(color-mix(in oklch, var(--ink) 10%, transparent) 0.5px, transparent 1px) 0 0 / 5px 5px, radial-gradient(color-mix(in oklch, var(--ink) 8%, transparent) 0.5px, transparent 1px) 2px 3px / 7px 7px",
+};
+
+const NAV = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "projects", label: "Projects" },
+  { id: "insights", label: "Insights" },
+  { id: "involve", label: "Get Involved" },
+];
+
+const STATS = [
+  { num: "2,650", suffix: "+", label: "Students Impacted" },
+  { num: "110", suffix: "+", label: "Student Volunteers" },
+  { num: "5", suffix: "+", label: "Countries Reached" },
+];
+
+const PROGRAMS = [
+  { ix: "I.", kicker: "1-on-1", title: "Student Mentorship", desc: "Pair a curious K–12 student with a near-peer mentor. Weekly sessions, project-driven, outcome-tracked.", tag: "Portrait · Mentorship session" },
+  { ix: "II.", kicker: "Team Support", title: "Team-to-Team", desc: "Established robotics teams coach rookie squads on competition prep, build strategy, and code review.", tag: "Photograph · Team meeting" },
+  { ix: "III.", kicker: "Self-paced", title: "Engineering & CS Courses", desc: "Free, modular curricula in CAD, embedded systems, and programming — taught by students, for students.", tag: "Still · Hardware bench" },
+  { ix: "IV.", kicker: "Seasonal", title: "Camps & Workshops", desc: "Multi-day hands-on programs hosted at schools and community centers, especially in underserved areas.", tag: "Photograph · Workshop floor" },
+];
+
+const STEPS = [
+  { n: "i", title: "Understand", body: "We meet each student or team where they are — background, experience, ambition. No assumptions, no prerequisites." },
+  { n: "ii", title: "Match & Design", body: "Mentors are matched by domain and personality. A learning path is co-designed across mentorship, courses, and workshops." },
+  { n: "iii", title: "Learn by Doing", body: "Hands-on from week one: CAD, code, electronics, real robots, real failures, real iteration." },
+  { n: "iv", title: "Grow & Give Back", body: "Students become mentors. Teams pay it forward. The cycle is the curriculum." },
+];
+
+const TEAM = [
+  { name: "A. Liang", role: "Founder & Director" },
+  { name: "M. Okafor", role: "Curriculum Lead" },
+  { name: "S. Patel", role: "Mentorship Coordinator" },
+  { name: "J. Reyes", role: "Outreach & Partnerships" },
+  { name: "K. Brennan", role: "Camps Director" },
+  { name: "T. Nakamura", role: "Engineering Mentor" },
+  { name: "R. Castellanos", role: "Team-to-Team Lead" },
+  { name: "E. Adeyemi", role: "International Programs" },
+];
+
+const PROJECTS_DETAIL = [
+  { n: "01", title: "1-to-1 Mentorship", desc: "Long-form mentor pairings designed around the student's curiosity. Currently serving 240 active pairs.", years: "Year-round", grades: "Grades 4–12" },
+  { n: "02", title: "Team-to-Team Support", desc: "Sustained relationships between competitive and emerging teams. Code reviews, design critiques, mock matches.", years: "Aug–Apr", grades: "FLL → FRC" },
+  { n: "03", title: "Engineering & CS Courses", desc: "Open curricula in Python, C++, Onshape CAD, and embedded systems. Self-paced and instructor-led tracks.", years: "Rolling", grades: "Grades 6–12" },
+  { n: "04", title: "Camps & Workshops", desc: "Week-long intensives in partnership with Title I schools and community centers across five countries.", years: "Summer + Winter", grades: "Grades 3–9" },
+  { n: "05", title: "Mentor Training", desc: "Onboarding and ongoing development for student volunteers. 12-hour core curriculum + role-specific modules.", years: "Quarterly", grades: "Volunteers" },
+];
+
+const INSIGHTS = [
+  { ix: "Field Notes № 014", title: "What we learned from 1,200 hours of mentor pairings", byline: "A. Liang · 12 min read", featured: true },
+  { ix: "Issue 013", title: "Why we stopped optimizing for competition results", byline: "M. Okafor · 8 min read" },
+  { ix: "Issue 012", title: "A protocol for first-week mentor conversations", byline: "S. Patel · 6 min read" },
+  { ix: "Issue 011", title: "How team-to-team coaching beats top-down curriculum", byline: "R. Castellanos · 9 min read" },
+  { ix: "Issue 010", title: "Designing camps for students who've never coded", byline: "K. Brennan · 7 min read" },
+];
+
+const PATHS = [
+  { n: "01", title: "Join as a Student", desc: "K–12 students interested in mentorship, courses, or camps. Free, application-based.", cta: "Application" },
+  { n: "02", title: "Mentor with Us", desc: "High school and college students with technical and teaching interests. Training provided.", cta: "Apply to mentor" },
+  { n: "03", title: "Partner Schools", desc: "Schools and districts looking to bring workshops, curricula, or camps to their students.", cta: "Inquire" },
+  { n: "04", title: "Sponsor Programs", desc: "Companies and individuals funding access for students in underserved communities.", cta: "Sponsor" },
+];
+
+const VALUES = [
+  { n: "i.", title: "Access first", body: "Every program is free. We design for the student with the least, not the most." },
+  { n: "ii.", title: "Students teach students", body: "Near-peer mentorship is not a constraint — it's the method. It's how confidence transfers." },
+  { n: "iii.", title: "Hands on the work", body: "We don't lecture about robotics. We build with students from day one." },
+];
+
+// ── Header ────────────────────────────────────────────
+function Header({ route, setRoute }) {
+  return (
+    <header className="topbar">
+      <div className="topbar-inner">
+        <a className="brandmark" onClick={() => setRoute("home")} href="#home">
+          <span className="mark" aria-hidden="true"></span>
+          <span>Growing Up <em>with</em> Robotics</span>
+        </a>
+        <nav className="topnav">
+          {NAV.map(n => (
+            <a key={n.id} href={`#${n.id}`}
+               className={route === n.id ? "active" : ""}
+               onClick={(e) => { e.preventDefault(); setRoute(n.id); }}>
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <div className="topright">
+          <span>MMXXVI</span>
+          <a className="contact-pill" href="mailto:growingupwithrobotics@gmail.com">
+            Contact <span style={{ fontSize: 14 }}>↗</span>
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// ── Footer ────────────────────────────────────────────
+function Footer({ setRoute }) {
+  return (
+    <footer>
+      <div style={{ maxWidth: "var(--maxw)", margin: "0 auto", padding: "0 28px" }}>
+        <div className="foot-grid">
+          <div className="foot-brand">
+            <h4>Inspiring the next generation <em>of leaders</em>, one student at a time.</h4>
+            <p>A student-led nonprofit expanding access to hands-on STEM and robotics — through mentorship, partnerships, and programs designed for the students who need them most.</p>
+          </div>
+          <div>
+            <h5>Programs</h5>
+            <ul>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Mentorship</a></li>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Team-to-Team</a></li>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Courses</a></li>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Camps</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Organization</h5>
+            <ul>
+              <li><a href="#about" onClick={(e)=>{e.preventDefault(); setRoute("about");}}>About</a></li>
+              <li><a href="#insights" onClick={(e)=>{e.preventDefault(); setRoute("insights");}}>Insights</a></li>
+              <li><a href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Get Involved</a></li>
+              <li><a href="mailto:growingupwithrobotics@gmail.com">Press</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Follow</h5>
+            <ul>
+              <li><a href="#">Instagram ↗</a></li>
+              <li><a href="#">LinkedIn ↗</a></li>
+              <li><a href="#">YouTube ↗</a></li>
+              <li><a href="#">Newsletter ↗</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="foot-bottom">
+          <span>© MMXXVI Growing Up with Robotics · 501(c)(3) pending</span>
+          <div className="socials">
+            <a href="#">IG</a><a href="#">LI</a><a href="#">YT</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ── Home ──────────────────────────────────────────────
+function Home({ setRoute, tweaks }) {
+  return (
+    <div className="page">
+      <main>
+        <section className={"hero" + (tweaks.heroLayout === "asymmetric" ? " hero-asym" : "")}>
+          <div className="hero-issue">
+            <span>● Live · Spring Cohort Open</span>
+            <span>Issue Nº 014</span>
+            <span>MMXXVI</span>
+            <span style={{ marginLeft: "auto" }}>Five countries · 110 mentors · 2,650+ students</span>
+          </div>
+          {tweaks.heroLayout === "feature" ? (
+            <div className="hero-featured">
+              <div className="byline">— A note from the editor</div>
+              <p className="quote">"Most students don't fail at robotics. They <em>never get the chance</em> to try. We exist to close that gap."</p>
+              <div className="byline">A. Liang · Founder, Issue Nº 014</div>
+              <div className="ctas">
+                <a className="btn btn-primary" href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Explore Programs <span className="arrow">→</span></a>
+                <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join as Student</a>
+              </div>
+            </div>
+          ) : tweaks.heroLayout === "stack" ? (
+            <>
+              <div style={{ gridColumn: "1 / -1" }}>
+                <h1>Inspiring the next generation of leaders <em>— one student</em> at a time.</h1>
+                <div style={{ marginTop: 40, display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 60 }}>
+                  <p className="hero-lede">Growing Up With Robotics is a student-led nonprofit making robotics and STEM accessible to K–12 students. <strong>Through mentorship, hands-on programs, and community partnerships,</strong> we help students grow — not just technical skills, but confidence, curiosity, and leadership.</p>
+                  <div className="cta-stack">
+                    <div className="hero-cta-row">
+                      <a className="btn btn-primary" href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Explore Programs <span className="arrow">→</span></a>
+                      <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join as Student</a>
+                    </div>
+                    <div className="hero-cta-row">
+                      <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join the Team</a>
+                      <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with Us</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : tweaks.heroLayout === "centered" ? (
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", paddingTop: 40, paddingBottom: 40 }}>
+              <h1 style={{ maxWidth: "18ch", margin: "0 auto" }}>Inspiring the next generation of leaders <em>— one student</em> at a time.</h1>
+              <p className="hero-lede" style={{ margin: "40px auto 32px", textAlign: "left", maxWidth: "60ch" }}>Growing Up With Robotics is a student-led nonprofit making robotics and STEM accessible to K–12 students. <strong>Through mentorship, hands-on programs, and community partnerships,</strong> we help students grow — not just technical skills, but confidence, curiosity, and leadership.</p>
+              <div className="hero-cta-row" style={{ justifyContent: "center" }}>
+                <a className="btn btn-primary" href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Explore Programs <span className="arrow">→</span></a>
+                <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join as Student</a>
+                <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join the Team</a>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div>
+                <h1>Inspiring the next generation <em>of leaders</em> — one student at a time.</h1>
+              </div>
+              <div className="hero-right">
+                <p className="hero-lede">Growing Up With Robotics is a student-led nonprofit making robotics and STEM accessible to K–12 students. <strong>Through mentorship, hands-on programs, and community partnerships,</strong> we help students grow — not just technical skills, but confidence, curiosity, and leadership.</p>
+                <div className="cta-stack">
+                  <div className="hero-cta-row">
+                    <a className="btn btn-primary" href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Explore Programs <span className="arrow">→</span></a>
+                    <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join as Student</a>
+                  </div>
+                  <div className="hero-cta-row">
+                    <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Join the Team</a>
+                    <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with Us</a>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
+      </main>
+
+      <div className="marquee">
+        <div className="marquee-track">
+          <span>Mentorship<span className="dot"></span>CAD<span className="dot"></span>Embedded Systems<span className="dot"></span>FRC<span className="dot"></span>FLL<span className="dot"></span>Camps<span className="dot"></span>Workshops<span className="dot"></span>Curriculum<span className="dot"></span>Community<span className="dot"></span></span>
+          <span>Mentorship<span className="dot"></span>CAD<span className="dot"></span>Embedded Systems<span className="dot"></span>FRC<span className="dot"></span>FLL<span className="dot"></span>Camps<span className="dot"></span>Workshops<span className="dot"></span>Curriculum<span className="dot"></span>Community<span className="dot"></span></span>
+        </div>
+      </div>
+
+      <main>
+        <section className="pad-y">
+          <div className="stats">
+            <div className="stats-header">
+              <div className="eyebrow">Nº 01 · Impact ledger</div>
+              <h3 style={{ marginTop: 16 }}>Three years of mentorship, measured.</h3>
+              <p>Numbers verified by program leads quarterly. The work behind each is in our Insights.</p>
+            </div>
+            {STATS.map((s) => (
+              <div className="stat" key={s.label}>
+                <div className="num">{s.num}<em>{s.suffix}</em></div>
+                <div className="label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="pad-y">
+          <div className="sec-head">
+            <div className="num">Nº 02</div>
+            <h2>Our programs <em>&amp;</em> impact</h2>
+            <div className="meta">Four offerings · One throughline</div>
+          </div>
+          <div className="programs">
+            {PROGRAMS.map((p) => (
+              <div className="program" key={p.title} onClick={() => setRoute("projects")}>
+                <div className="figure">
+                  <img className="ph-img" src={`images/programs/${slug(p.title)}.jpg`} alt="" onError={onImgErr} />
+                  <span className="ix">{p.ix}</span>&nbsp;·&nbsp;<span>{p.tag}</span>
+                </div>
+                <div className="kicker">{p.kicker}</div>
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+                <span className="link">Read more <span className="arrow">→</span></span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="pad-y">
+          <div className="process">
+            <div className="process-intro">
+              <div className="eyebrow" style={{ marginBottom: 24 }}>Nº 03 · Method</div>
+              <h2>How <em>we work.</em></h2>
+              <p>Mentorship, accessibility, and hands-on learning — meeting students where they are and helping them grow through real robotics experiences.</p>
+            </div>
+            <div className="steps">
+              {STEPS.map((s) => (
+                <div className="step" key={s.title}>
+                  <div className="n">{s.n}.</div>
+                  <h4>{s.title}</h4>
+                  <p>{s.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="pad-y">
+          <div className="sec-head">
+            <div className="num">Nº 04</div>
+            <h2>From the <em>field.</em></h2>
+            <div className="meta">Selected work · Spring MMXXVI</div>
+          </div>
+          <div className="gallery">
+            <div className="tile t1" data-tag="Camp · Lagos"><div className="cap">FRC bootcamp at <em>Lagos State Model College</em></div></div>
+            <div className="tile t2" data-tag="Mentorship · Houston"><div className="cap">Week 6: CAD walkthrough</div></div>
+            <div className="tile t3" data-tag="Workshop · Bogotá"><div className="cap">First robots, first wins</div></div>
+            <div className="tile t4" data-tag="Curriculum"><div className="cap">Embedded systems, v3.2</div></div>
+            <div className="tile t5" data-tag="Team · NJ"><div className="cap">Mock match prep</div></div>
+          </div>
+        </section>
+      </main>
+
+      <div className="cta-banner">
+        <div className="cta-banner-inner">
+          <div>
+            <div className="meta">— Get involved</div>
+            <h2>The next student we reach <em>could be yours.</em></h2>
+          </div>
+          <div className="actions">
+            <a className="btn btn-primary" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Start an application <span className="arrow">→</span></a>
+            <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── About ─────────────────────────────────────────────
+function About({ setRoute }) {
+  return (
+    <div className="page">
+      <main>
+        <header className="pageheader">
+          <div className="row">
+            <div>
+              <div className="eyebrow">Nº 00 · About the organization</div>
+              <h1>A student-led answer <em>to a student-sized</em> problem.</h1>
+            </div>
+            <div className="meta">Founded MMXXIII · 501(c)(3) pending</div>
+          </div>
+          <p className="lede"><strong>Robotics teaches the things school is slow to teach: how to fail, how to argue with a teammate, how to ship something that almost-works.</strong> But access to good robotics programs is uneven — geography, language, and budget decide who gets in. We're trying to change that, from the inside.</p>
+        </header>
+
+        <section className="about-grid">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 20 }}>Mission</div>
+            <h2>Make robotics <em>belong</em> to every curious kid.</h2>
+            <div className="body">
+              <p>Growing Up with Robotics started as a single after-school mentorship in 2023 — two high school students teaching CAD to a middle schooler who'd never opened a wrench. Three years later, we run mentorship pairings, team-to-team coaching, free open courses, and seasonal camps across five countries.</p>
+              <p>What we keep coming back to is this: most students don't fail at robotics. They never get the chance to try. The bench is too far. The team is too full. The cost is too much. We exist to close that gap.</p>
+              <p>Every program is free, every mentor is a student, and every decision is made closer to the bench than the boardroom. We are small, we are deliberate, and we are growing.</p>
+            </div>
+          </div>
+          <aside className="about-side">
+            <dl>
+              <dt>Founded</dt><dd>2023, Houston TX</dd>
+              <dt>Students reached</dt><dd>2,650+ across 5 countries</dd>
+              <dt>Active mentors</dt><dd>110 student volunteers</dd>
+              <dt>Programs running</dt><dd>4 core, year-round</dd>
+              <dt>Status</dt><dd>501(c)(3) pending</dd>
+            </dl>
+          </aside>
+        </section>
+
+        <section>
+          <div className="sub-head">
+            <h2>What <em>we believe.</em></h2>
+            <div className="meta">Three principles</div>
+          </div>
+          <div className="values">
+            {VALUES.map(v => (
+              <div className="value" key={v.title}>
+                <div className="n">{v.n}</div>
+                <h3>{v.title}</h3>
+                <p>{v.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div className="sub-head">
+            <h2>The <em>team.</em></h2>
+            <div className="meta">Eight of 110 · Staff &amp; leads</div>
+          </div>
+          <div className="team-grid">
+            {TEAM.map(p => (
+              <div className="person" key={p.name}>
+                <div className="portrait">
+                  <img className="ph-img" src={`images/team/${slug(p.name)}.jpg`} alt="" onError={onImgErr} />
+                  Portrait · {p.name}
+                </div>
+                <div className="name">{p.name}</div>
+                <div className="role">{p.role}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <div className="cta-banner">
+        <div className="cta-banner-inner">
+          <div>
+            <div className="meta">— Join the team</div>
+            <h2>We're hiring mentors <em>for the fall.</em></h2>
+          </div>
+          <div className="actions">
+            <a className="btn btn-primary" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Apply to mentor <span className="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Projects ──────────────────────────────────────────
+function Projects({ setRoute }) {
+  const [active, setActive] = useState(null);
+  return (
+    <div className="page">
+      <main>
+        <header className="pageheader">
+          <div className="row">
+            <div>
+              <div className="eyebrow">Nº 00 · Programs</div>
+              <h1>Five programs. <em>One throughline:</em> access.</h1>
+            </div>
+            <div className="meta">5 active · 0 pending</div>
+          </div>
+          <p className="lede">Each program is free, mentor-led, and designed for students who don't already have a robotics community to lean on. <strong>Pick the one that fits — or ask us to help you choose.</strong></p>
+        </header>
+
+        <section className="proj-list">
+          {PROJECTS_DETAIL.map(p => (
+            <div className="proj-row" key={p.n} onClick={() => setActive(active === p.n ? null : p.n)}>
+              <div className="pn">{p.n}</div>
+              <div className="pt"><em>{p.title.split(" ")[0]}</em> {p.title.split(" ").slice(1).join(" ")}</div>
+              <div className="pd">{p.desc}{active === p.n && (
+                <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--rule)", fontSize: 14, color: "var(--ink)" }}>
+                  <strong style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", display: "block", marginBottom: 8 }}>How it works</strong>
+                  Application opens quarterly. Once matched, expect weekly 60-min sessions over a 12-week cycle, with a shared project log and milestone reviews. Mentors and students set goals together in week one.
+                </div>
+              )}</div>
+              <div className="pmeta">
+                <div><b>When</b> · {p.years}</div>
+                <div><b>Who</b> · {p.grades}</div>
+                <div style={{ marginTop: 6 }}>{active === p.n ? "− Collapse" : "+ Expand"}</div>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className="pad-y">
+          <div className="sec-head">
+            <div className="num">Nº 02</div>
+            <h2>Gallery <em>—</em> on the bench.</h2>
+            <div className="meta">Selected · MMXXVI</div>
+          </div>
+          <div className="gallery">
+            <div className="tile t1" data-tag="Houston"><div className="cap">Mentorship cohort — <em>fall MMXXVI</em></div></div>
+            <div className="tile t2" data-tag="Lagos"><div className="cap">First-time builders</div></div>
+            <div className="tile t3" data-tag="Mumbai"><div className="cap">Camp wrap day</div></div>
+            <div className="tile t4" data-tag="Bogotá"><div className="cap">Workshop floor</div></div>
+            <div className="tile t5" data-tag="NJ"><div className="cap">Team-to-team review</div></div>
+          </div>
+        </section>
+      </main>
+      <div className="cta-banner">
+        <div className="cta-banner-inner">
+          <div>
+            <div className="meta">— Apply</div>
+            <h2>Spring applications open <em>through April.</em></h2>
+          </div>
+          <div className="actions">
+            <a className="btn btn-primary" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Start an application <span className="arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Insights ──────────────────────────────────────────
+function Insights() {
+  return (
+    <div className="page">
+      <main>
+        <header className="pageheader">
+          <div className="row">
+            <div>
+              <div className="eyebrow">Nº 00 · Insights</div>
+              <h1>Notes from <em>the bench.</em></h1>
+            </div>
+            <div className="meta">Updated weekly · 14 issues</div>
+          </div>
+          <p className="lede">Field notes, essays, and protocols from mentors, organizers, and students. <strong>What we're learning, what we got wrong, and what we'd do differently.</strong></p>
+        </header>
+
+        <section className="ins-grid">
+          {INSIGHTS.map((p, i) => (
+            <article className={"ins" + (p.featured ? " featured" : "")} key={p.title} style={p.featured ? { gridRow: "span 2" } : {}}>
+              <div className="fig">
+                <img className="ph-img" src={`images/insights/${slug(p.title)}.jpg`} alt="" onError={onImgErr} />
+              </div>
+              <div className="ix">{p.ix}</div>
+              <h3>{p.title}</h3>
+              {p.featured && <p>An honest look at what 1,200 hours of one-on-one mentorship taught us about matching, retention, and the small rituals that decide whether a pairing sticks.</p>}
+              <div className="byline">{p.byline}</div>
+            </article>
+          ))}
+        </section>
+
+        <section style={{ padding: "80px 0 40px", borderTop: "1px solid var(--rule)", marginTop: 80, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "end" }}>
+          <div>
+            <div className="eyebrow">Newsletter</div>
+            <h2 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: 48, lineHeight: 1.05, margin: "16px 0 16px", letterSpacing: "-0.02em" }}>Quarterly <em style={{ fontStyle: "italic", color: "var(--accent)" }}>field reports</em>, in your inbox.</h2>
+            <p style={{ color: "var(--muted)", maxWidth: "44ch" }}>Long-form essays and program updates, four times a year. No spam, no growth-hack tracking.</p>
+          </div>
+          <div className="field full" style={{ borderTop: "1px solid var(--rule-strong)", paddingTop: 16 }}>
+            <label>Your email</label>
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <input style={{ flex: 1 }} placeholder="you@school.edu" />
+              <button className="btn btn-primary" type="button">Subscribe <span className="arrow">→</span></button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+// ── Get Involved ──────────────────────────────────────
+function GetInvolved() {
+  const [role, setRole] = useState("Student");
+  const [submitted, setSubmitted] = useState(false);
+  return (
+    <div className="page">
+      <main>
+        <header className="pageheader">
+          <div className="row">
+            <div>
+              <div className="eyebrow">Nº 00 · Get Involved</div>
+              <h1>Four ways <em>to start.</em></h1>
+            </div>
+            <div className="meta">Applications open · Spring MMXXVI</div>
+          </div>
+          <p className="lede"><strong>Whatever you bring — curiosity, time, a classroom, a check —</strong> there's a way in. Pick the one that fits.</p>
+        </header>
+
+        <section className="involve" style={{ paddingTop: 48, paddingBottom: 0 }}>
+          <div className="paths">
+            {PATHS.map(p => (
+              <div className="path" key={p.n}>
+                <div className="pn">{p.n}</div>
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+                <a className="link" href="#">{p.cta} <span className="arrow">→</span></a>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="form-wrap">
+          <div>
+            <div className="eyebrow">Application</div>
+            <h2 style={{ marginTop: 16 }}>Tell us <em>who you are.</em></h2>
+            <p>One short form. We'll route it to the right program lead and reply within a week — usually faster.</p>
+          </div>
+          {submitted ? (
+            <div className="form-success">
+              <em>Received.</em> A program lead will be in touch within seven days. In the meantime, you'll get a confirmation in your inbox.
+            </div>
+          ) : (
+            <form className="form" onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
+              <div className="field full">
+                <label>I'm here as a</label>
+                <div className="seg">
+                  {["Student","Mentor","School","Sponsor"].map(r => (
+                    <button key={r} type="button" className={"chip" + (role === r ? " on" : "")} onClick={() => setRole(r)}>{r}</button>
+                  ))}
+                </div>
+              </div>
+              <div className="field"><label>Full name</label><input required placeholder="A. Liang" /></div>
+              <div className="field"><label>Email</label><input required type="email" placeholder="you@school.edu" /></div>
+              <div className="field"><label>{role === "Student" ? "Grade level" : role === "Mentor" ? "Year in school" : role === "School" ? "Institution" : "Organization"}</label><input placeholder={role === "Student" ? "e.g. 8th" : "—"} /></div>
+              <div className="field"><label>Location</label><input placeholder="City, Country" /></div>
+              <div className="field full"><label>Tell us a bit more</label><textarea placeholder="What are you hoping to do or build?"></textarea></div>
+              <div className="form-actions">
+                <div className="meta">We reply within 7 days.</div>
+                <button className="btn btn-primary" type="submit">Submit application <span className="arrow">→</span></button>
+              </div>
+            </form>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+}
+
+// ── Tweaks panel ──────────────────────────────────────
+function Tweaks({ tweaks, setTweak }) {
+  return (
+    <TweaksPanel title="Tweaks · Field Notes">
+      <TweakSection label="Color">
+        <TweakColor
+          label="Palette"
+          value={tweaks.palette}
+          options={Object.entries(PALETTES).map(([k, p]) => [p.paper, p.ink, p.accent])}
+          onChange={(_, ix) => {
+            const key = Object.keys(PALETTES)[ix];
+            setTweak("palette", key);
+          }}
+        />
+        <TweakRadio label="Mode" value={tweaks.mode} options={["light","dark"]} onChange={(v) => setTweak("mode", v)} />
+        <TweakSelect label="Accent style" value={tweaks.accentStyle}
+          options={[["italic","Italic"],["underline","Underline"],["highlight","Highlight"],["smallcaps","Small caps"],["plain","Plain bold"]]}
+          onChange={(v) => setTweak("accentStyle", v)} />
+      </TweakSection>
+      <TweakSection label="Type">
+        <TweakSelect label="Font pair" value={tweaks.fontPair} options={Object.entries(FONT_PAIRS).map(([k,v]) => [k, v.name])} onChange={(v) => setTweak("fontPair", v)} />
+      </TweakSection>
+      <TweakSection label="Layout">
+        <TweakRadio label="Density" value={tweaks.density} options={["compact","default","airy"]} onChange={(v) => setTweak("density", v)} />
+        <TweakSelect label="Hero" value={tweaks.heroLayout}
+          options={[["split","Split"],["stack","Stacked"],["centered","Centered"],["feature","Featured quote"],["asymmetric","Asymmetric"]]}
+          onChange={(v) => setTweak("heroLayout", v)} />
+        <TweakRadio label="Rule weight" value={tweaks.ruleWeight} options={["hairline","regular","strong"]} onChange={(v) => setTweak("ruleWeight", v)} />
+        <TweakRadio label="Radius" value={tweaks.radius} options={["sharp","soft","round"]} onChange={(v) => setTweak("radius", v)} />
+        <TweakSelect label="Figure pattern" value={tweaks.figurePattern}
+          options={[["hatch","Hatch"],["cross","Cross-hatch"],["dots","Dots"],["lines","Horizontal"],["solid","Solid tint"],["noise","Noise"]]}
+          onChange={(v) => setTweak("figurePattern", v)} />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+// ── Root ──────────────────────────────────────────────
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [route, setRouteState] = useState(() => {
+    const h = window.location.hash.replace("#", "");
+    return NAV.find(n => n.id === h) ? h : "home";
+  });
+  const setRoute = (id) => {
+    setRouteState(id);
+    window.location.hash = id;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  useEffect(() => {
+    const onHash = () => {
+      const h = window.location.hash.replace("#", "");
+      if (NAV.find(n => n.id === h)) setRouteState(h);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  // Apply tweaks → CSS variables
+  useEffect(() => {
+    const root = document.documentElement;
+    const p = (tweaks.mode === "dark" ? PALETTES_DARK : PALETTES)[tweaks.palette] || PALETTES.forest;
+    root.style.setProperty("--ink", p.ink);
+    root.style.setProperty("--paper", p.paper);
+    root.style.setProperty("--accent", p.accent);
+    root.style.setProperty("--accent-ink", tweaks.mode === "dark" ? p.paper : p.paper);
+    root.dataset.mode = tweaks.mode;
+    root.style.setProperty("--density", DENSITIES[tweaks.density]);
+    // Rule weights
+    const rw = RULE_WEIGHTS[tweaks.ruleWeight] || RULE_WEIGHTS.regular;
+    const inkRgb = tweaks.mode === "dark" ? "236,231,218" : "14,15,12";
+    root.style.setProperty("--rule",        `rgba(${inkRgb}, ${rw.rule})`);
+    root.style.setProperty("--rule-strong", `rgba(${inkRgb}, ${rw.strong})`);
+    // Radius
+    root.style.setProperty("--radius", RADII[tweaks.radius] || "0px");
+    // Figure pattern
+    root.style.setProperty("--fig-bg", FIG_PATTERNS[tweaks.figurePattern] || FIG_PATTERNS.hatch);
+    // Accent style
+    root.dataset.accent = tweaks.accentStyle || "italic";
+    const fp = FONT_PAIRS[tweaks.fontPair] || FONT_PAIRS.instrument_dm;
+    root.style.setProperty("--serif", fp.serif);
+    root.style.setProperty("--sans", fp.sans);
+    // Lazy-load extra fonts if needed
+    if (fp.load && !document.getElementById("font-extra-" + tweaks.fontPair)) {
+      const link = document.createElement("link");
+      link.id = "font-extra-" + tweaks.fontPair;
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=" + fp.load.replaceAll("|", "&family=") + "&display=swap";
+      document.head.appendChild(link);
+    }
+  }, [tweaks]);
+
+  const Page = { home: Home, about: About, projects: Projects, insights: Insights, involve: GetInvolved }[route] || Home;
+
+  return (
+    <>
+      <Header route={route} setRoute={setRoute} />
+      <Page key={route} setRoute={setRoute} tweaks={tweaks} />
+      <Footer setRoute={setRoute} />
+      <Tweaks tweaks={tweaks} setTweak={setTweak} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

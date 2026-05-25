@@ -1,0 +1,1418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GUR — Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@300;400;500;600&display=swap">
+<style>
+  :root {
+    --ink: #f6f6f3;
+    --paper: #0a0d0a;
+    --paper-2: #111511;
+    --rule: rgba(246,246,243,0.10);
+    --rule-strong: rgba(246,246,243,0.35);
+    --muted: rgba(246,246,243,0.55);
+    --soft: rgba(246,246,243,0.04);
+    --accent: #6cff5a;       /* signal terminal green */
+    --accent-ink: #0a0d0a;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --sans: "DM Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --density: 1;
+    --maxw: 1480px;
+    --gutter: 36px;
+  }
+  [data-mode="light"] {
+    --ink: #0a0d0a;
+    --paper: #f6f6f3;
+    --paper-2: #ededeb;
+    --rule: rgba(10,13,10,0.10);
+    --rule-strong: rgba(10,13,10,0.35);
+    --muted: rgba(10,13,10,0.55);
+    --soft: rgba(10,13,10,0.04);
+    --accent: #1f7a30;
+    --accent-ink: #f6f6f3;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; overflow-x: clip; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* film grain */
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 30% 20%, color-mix(in oklch, var(--accent) 10%, transparent) 0, transparent 50%),
+      radial-gradient(circle at 80% 80%, color-mix(in oklch, var(--accent) 6%, transparent) 0, transparent 60%);
+    opacity: 0.8;
+    z-index: 0;
+  }
+
+  main, header.topbar, footer { position: relative; z-index: 1; }
+
+  /* ── Topbar ──────────────────────────────────────────── */
+  .topbar {
+    position: sticky; top: 0; z-index: 80;
+    background: color-mix(in oklch, var(--paper) 80%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar-inner {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 14px var(--gutter);
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 32px; align-items: center;
+  }
+  .brand { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; }
+  .brand-mark {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: transparent; color: var(--accent-ink);
+    background-image: url('gur.svg');
+    background-size: 130% 130%;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-weight: 700; font-size: 14px;
+    position: relative;
+  }
+  .brand-mark::before {
+    content: ""; position: absolute; inset: -3px; border-radius: 10px;
+    border: 1px solid var(--accent);
+    opacity: 0.5;
+    animation: ring 2.4s ease-in-out infinite;
+  }
+  @keyframes ring { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.45); opacity: 0; } }
+  .brand-text { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; line-height: 1.2; display: flex; flex-direction: column; }
+  .brand-text b { color: var(--ink); font-weight: 500; display: block; }
+  .brand-text span { color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-top: 2px; }
+
+  .topnav { display: inline-flex; gap: 4px; background: var(--soft); padding: 4px; border-radius: 999px; border: 1px solid var(--rule); }
+  .topnav a {
+    padding: 8px 16px; border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted);
+    transition: color .2s, background .2s;
+  }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a.active { color: var(--accent-ink); background: var(--accent); }
+
+  .topright { display: inline-flex; gap: 12px; align-items: center; justify-self: end; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .live {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border: 1px solid var(--rule); border-radius: 999px;
+  }
+  .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .pill-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500;
+    transition: filter .2s;
+  }
+  .pill-cta:hover { filter: brightness(1.15); }
+
+  /* ── Hero ────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding: calc(70px * var(--density)) var(--gutter) calc(40px * var(--density));
+    max-width: var(--maxw); margin: 0 auto;
+    overflow: hidden;
+  }
+  .hero-bg-logo {
+    position: absolute;
+    top: 38%; right: -15%;
+    transform: translateY(-50%);
+    width: 68%;
+    aspect-ratio: 1 / 1;
+    background-image: url('gur.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.78;
+    pointer-events: none;
+    z-index: 0;
+    filter: brightness(1.05);
+  }
+  [data-mode="light"] .hero-bg-logo { opacity: 0.75; }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-bg-num {
+    position: absolute; right: var(--gutter); top: 30px; bottom: 30px;
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(280px, 38vw, 720px);
+    line-height: 0.8;
+    color: var(--soft);
+    z-index: 0; user-select: none;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-tags {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .tag.accent { color: var(--accent); border-color: color-mix(in oklch, var(--accent) 40%, transparent); background: color-mix(in oklch, var(--accent) 8%, transparent); }
+  .tag.accent::before { content: "▸"; }
+
+  .hero h1 {
+    font-family: var(--display); font-weight: 500;
+    font-size: clamp(44px, 7.2vw, 132px);
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    margin: 0;
+    max-width: 14ch;
+  }
+  .hero h1 .accent { color: var(--accent); font-style: italic; font-weight: 600; }
+  .hero h1 .underline {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-size: 100% 4px;
+    background-position: 0 100%;
+    padding-bottom: 4px;
+  }
+  .hero h1 .strike { position: relative; }
+  .hero h1 .strike::after {
+    content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 6px; background: var(--accent); transform: translateY(-30%) rotate(-1deg); border-radius: 2px;
+  }
+  .hero h1 .marker {
+    background: var(--accent); color: var(--accent-ink);
+    padding: 0 10px; border-radius: 8px; display: inline-block;
+    font-weight: 600;
+  }
+
+  .hero-foot {
+    margin-top: 64px;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 32px;
+    padding-top: 36px; border-top: 1px solid var(--rule);
+    align-items: start;
+  }
+  .hero-lede { font-size: 18px; line-height: 1.55; color: var(--ink); max-width: 46ch; }
+  .hero-lede strong { color: var(--accent); font-weight: 500; }
+  .cta-stack { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .cta-stack h5 { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; font-weight: 500; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
+    cursor: pointer; border: 1px solid transparent;
+    transition: all .2s;
+  }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px color-mix(in oklch, var(--accent) 50%, transparent); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--rule-strong); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn .arrow { transition: transform .2s; display: inline-block; }
+  .btn:hover .arrow { transform: translate(3px, -3px); }
+
+  /* ── Ticker ──────────────────────────────────────────── */
+  .ticker {
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    background: var(--soft);
+    overflow: hidden; padding: 16px 0;
+    font-family: var(--mono); font-size: 13px; color: var(--muted);
+  }
+  .ticker-track { display: flex; gap: 40px; white-space: nowrap; animation: scroll-x 40s linear infinite; }
+  .ticker span { display: inline-flex; align-items: center; gap: 16px; }
+  .ticker .acc { color: var(--accent); }
+  @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── Stats ──────────────────────────────────────────── */
+  .stats {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: calc(120px * var(--density)) var(--gutter);
+    display: grid; grid-template-columns: 1fr 2fr; gap: 80px;
+    align-items: center;
+  }
+  .stats-intro { position: sticky; top: 100px; align-self: start; }
+  .stats-intro .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .stats-intro h2 { font-family: var(--display); font-weight: 500; font-size: clamp(40px, 4.5vw, 64px); line-height: 1; letter-spacing: -0.03em; margin: 0 0 20px; }
+  .stats-intro h2 .acc { color: var(--accent); font-style: italic; }
+  .stats-intro p { color: var(--muted); max-width: 32ch; font-size: 15px; }
+
+  .stats-grid { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--rule); }
+  .stat {
+    display: grid; grid-template-columns: 120px 1fr auto;
+    gap: 32px; align-items: end;
+    padding: 36px 0; border-bottom: 1px solid var(--rule);
+    transition: padding .2s;
+  }
+  .stat:hover { padding-left: 12px; }
+  .stat .ix { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; padding-bottom: 18px; }
+  .stat .ix b { display: block; color: var(--accent); font-weight: 500; }
+  .stat .num {
+    font-family: var(--display); font-weight: 500;
+    font-size: clamp(72px, 9vw, 144px); line-height: 0.88; letter-spacing: -0.045em;
+  }
+  .stat .num .acc { color: var(--accent); }
+  .stat .desc { text-align: right; font-size: 14px; color: var(--muted); max-width: 30ch; padding-bottom: 24px; }
+  .stat .desc b { color: var(--ink); font-weight: 500; }
+
+  /* ── Section heading ────────────────────────────────── */
+  .sec { max-width: var(--maxw); margin: 0 auto; padding: calc(80px * var(--density)) var(--gutter); }
+  .sec-head {
+    display: grid; grid-template-columns: 200px 1fr auto; gap: 32px;
+    align-items: end; padding-bottom: 32px; border-bottom: 1px solid var(--rule); margin-bottom: 48px;
+  }
+  .sec-head .ix { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+  .sec-head h2 { font-family: var(--display); font-weight: 500; font-size: clamp(40px, 5vw, 80px); line-height: 0.96; letter-spacing: -0.035em; margin: 0; }
+  .sec-head h2 .acc { color: var(--accent); font-style: italic; }
+  .sec-head .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── Programs ───────────────────────────────────────── */
+  .programs-stack { display: flex; flex-direction: column; gap: 16px; }
+  .program-card {
+    border: 1px solid var(--rule); border-radius: 16px;
+    padding: 36px;
+    display: grid; grid-template-columns: 80px 1.2fr 2fr auto; gap: 36px;
+    align-items: start; cursor: pointer;
+    transition: border-color .25s, background .25s, transform .25s;
+    background: var(--soft);
+    position: relative; overflow: hidden;
+  }
+  .program-card::after {
+    content: ""; position: absolute; top: 0; right: 0; width: 200px; height: 200px;
+    background: radial-gradient(circle, color-mix(in oklch, var(--accent) 18%, transparent) 0, transparent 70%);
+    transform: translate(80px, -80px);
+    opacity: 0; transition: opacity .3s;
+  }
+  .program-card:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); transform: translateY(-2px); }
+  .program-card:hover::after { opacity: 1; }
+  .program-card .ix {
+    font-family: var(--display); font-weight: 500;
+    font-size: 64px; line-height: 0.9; color: var(--accent); letter-spacing: -0.03em;
+  }
+  .program-card .title { display: flex; flex-direction: column; gap: 8px; }
+  .program-card .title .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .program-card .title h3 { font-family: var(--display); font-weight: 500; font-size: 34px; line-height: 1.05; margin: 0; letter-spacing: -0.02em; }
+  .program-card .body p { margin: 0 0 16px; font-size: 15px; color: var(--muted); line-height: 1.55; max-width: 60ch; }
+  .program-card .body .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .program-card .body .tag { background: var(--paper); border-color: var(--rule); }
+  .program-card .cta-area { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; min-width: 120px; }
+  .program-card .arrow-circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 1px solid var(--rule-strong);
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 18px;
+    transition: background .2s, color .2s, border-color .2s, transform .2s;
+  }
+  .program-card:hover .arrow-circle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(-45deg); }
+  .program-card .cta-area .meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-align: right; }
+
+  /* ── How we work ─────────────────────────────────────── */
+  .process {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 60px;
+  }
+  .process-intro h3 { font-family: var(--display); font-weight: 500; font-size: clamp(40px, 5vw, 72px); line-height: 0.95; letter-spacing: -0.03em; margin: 0 0 20px; }
+  .process-intro h3 .acc { color: var(--accent); font-style: italic; }
+  .process-intro p { color: var(--muted); max-width: 32ch; font-size: 15px; }
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    display: grid; grid-template-columns: 80px 1fr; gap: 24px;
+    padding: 28px; border-radius: 16px;
+    background: var(--soft); border: 1px solid var(--rule);
+    align-items: start;
+    transition: border-color .2s, transform .15s;
+    position: relative;
+  }
+  .step:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); }
+  .step:hover .n { color: var(--accent); }
+  .step .n {
+    font-family: var(--display); font-weight: 600;
+    font-size: 56px; line-height: 0.9; letter-spacing: -0.03em;
+    color: var(--muted); transition: color .2s;
+  }
+  .step h4 { font-family: var(--display); font-weight: 500; font-size: 24px; margin: 0 0 8px; letter-spacing: -0.015em; }
+  .step p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.6; }
+
+  /* ── Gallery ────────────────────────────────────────── */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 14px;
+  }
+  .tile {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .tile:hover { transform: translateY(-3px) scale(1.005); border-color: color-mix(in oklch, var(--accent) 60%, transparent); box-shadow: 0 12px 40px color-mix(in oklch, var(--accent) 18%, transparent); }
+  .tile::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%),
+      repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklch, var(--ink) 4%, transparent) 12px 13px);
+  }
+  .tile .tag-tl {
+    position: absolute; top: 14px; left: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--accent);
+    background: color-mix(in oklch, var(--paper) 80%, transparent);
+    backdrop-filter: blur(8px);
+    padding: 6px 10px; border-radius: 999px;
+    z-index: 1;
+  }
+  .tile .cap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 16px 18px; z-index: 1;
+    background: linear-gradient(transparent, color-mix(in oklch, var(--paper) 80%, transparent));
+    font-family: var(--display); font-size: 18px; font-weight: 500; letter-spacing: -0.01em;
+  }
+  .t1 { grid-column: span 7; aspect-ratio: 16/10; }
+  .t2 { grid-column: span 5; aspect-ratio: 4/5; }
+  .t3 { grid-column: span 4; aspect-ratio: 1; }
+  .t4 { grid-column: span 4; aspect-ratio: 1; }
+  .t5 { grid-column: span 4; aspect-ratio: 1; }
+
+  /* ── CTA banner ─────────────────────────────────────── */
+  .cta-banner {
+    margin: 0 var(--gutter) 80px;
+    max-width: calc(var(--maxw) - var(--gutter) * 2);
+    margin-left: auto; margin-right: auto;
+    padding: 80px 60px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-radius: 24px;
+    position: relative; overflow: hidden;
+  }
+  .cta-banner::before {
+    content: "✦"; position: absolute; top: -40px; right: -40px;
+    font-size: 360px; opacity: 0.12; line-height: 0.8;
+    color: var(--accent-ink); pointer-events: none;
+  }
+  .cta-banner-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.4fr 1fr; gap: 60px; align-items: end; }
+  .cta-banner h2 { font-family: var(--display); font-weight: 500; font-size: clamp(48px, 6vw, 96px); line-height: 0.96; margin: 0; letter-spacing: -0.04em; max-width: 14ch; }
+  .cta-banner h2 .italic { font-style: italic; font-weight: 600; }
+  .cta-banner .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; opacity: 0.7; }
+  .cta-banner .actions { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .cta-banner .btn-primary { background: var(--accent-ink); color: var(--accent); }
+  .cta-banner .btn-primary:hover { background: var(--paper); }
+  .cta-banner .btn-ghost { color: var(--accent-ink); border-color: rgba(0,0,0,0.3); }
+  .cta-banner .btn-ghost:hover { background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink); }
+
+  /* ── Footer ──────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 60px 0 28px;
+    background: var(--paper-2);
+  }
+  .foot { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+  .foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+  .foot-brand h4 { font-family: var(--display); font-weight: 500; font-size: 36px; margin: 0 0 14px; letter-spacing: -0.02em; line-height: 1.05; }
+  .foot-brand h4 .acc { color: var(--accent); }
+  .foot-brand p { color: var(--muted); max-width: 40ch; font-size: 14px; }
+  .foot-top h5 { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; font-weight: 500; }
+  .foot-top ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+  .foot-top a:hover { color: var(--accent); }
+  .foot-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+  .foot-bottom .ascii { color: var(--accent); }
+
+  /* ── Inner pages ─────────────────────────────────────── */
+  .pageheader { max-width: var(--maxw); margin: 0 auto; padding: calc(80px * var(--density)) var(--gutter); position: relative; overflow: hidden; }
+  .pageheader .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+  .pageheader h1 { font-family: var(--display); font-weight: 500; font-size: clamp(44px, 7.2vw, 132px); line-height: 0.86; letter-spacing: -0.045em; margin: 0; max-width: 16ch; }
+  .pageheader h1 .acc { color: var(--accent); font-style: italic; font-weight: 600; }
+  .pageheader .lede { font-size: 18px; line-height: 1.55; color: var(--ink); max-width: 60ch; margin: 36px 0 0; }
+  .pageheader .lede strong { color: var(--accent); font-weight: 500; }
+
+  /* About */
+  .about-grid {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 60px var(--gutter) 80px;
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px;
+    align-items: start;
+  }
+  .about-grid h2 { font-family: var(--display); font-weight: 500; font-size: 56px; line-height: 1; letter-spacing: -0.03em; margin: 0 0 20px; }
+  .about-grid h2 .acc { color: var(--accent); font-style: italic; }
+  .about-grid .body { font-size: 16px; line-height: 1.65; display: flex; flex-direction: column; gap: 18px; }
+  .about-grid .body p { margin: 0; }
+
+  .stat-cards { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter) 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat-card { background: var(--soft); border: 1px solid var(--rule); border-radius: 16px; padding: 28px; }
+  .stat-card .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .stat-card .v { font-family: var(--display); font-weight: 500; font-size: 44px; line-height: 1; letter-spacing: -0.025em; }
+  .stat-card .v .acc { color: var(--accent); }
+
+  .team-grid { max-width: var(--maxw); margin: 0 auto; padding: 60px var(--gutter); display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .person {
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 18px; border-radius: 16px; background: var(--soft); border: 1px solid var(--rule);
+    transition: border-color .2s, transform .2s;
+  }
+  .person:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); transform: translateY(-2px); }
+  .person .portrait {
+    aspect-ratio: 1; border-radius: 12px;
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 60%),
+      var(--paper-2);
+    border: 1px solid var(--rule);
+    display: flex; align-items: flex-end; padding: 12px;
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+  }
+  .person .name { font-family: var(--display); font-weight: 500; font-size: 20px; line-height: 1.1; letter-spacing: -0.015em; }
+  .person .role { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; }
+  .person .bio { font-size: 13px; line-height: 1.6; color: var(--muted); margin-top: 4px; }
+
+  /* Projects detail */
+  .proj-cards { max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter); display: flex; flex-direction: column; gap: 16px; }
+  .proj-card {
+    border: 1px solid var(--rule); border-radius: 20px; background: var(--soft);
+    padding: 32px; cursor: pointer; transition: border-color .2s, transform .2s;
+    display: grid; grid-template-columns: 100px 1fr 240px; gap: 32px; align-items: start;
+  }
+  .proj-card:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); }
+  .proj-card .n {
+    font-family: var(--display); font-weight: 500; font-size: 64px; line-height: 0.9; letter-spacing: -0.03em;
+    color: color-mix(in oklch, var(--accent) 60%, transparent);
+  }
+  .proj-card h3 { font-family: var(--display); font-weight: 500; font-size: 36px; line-height: 1.05; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .proj-card h3 .acc { color: var(--accent); font-style: italic; }
+  .proj-card p { color: var(--muted); font-size: 15px; line-height: 1.55; margin: 0 0 16px; max-width: 60ch; }
+  .proj-card .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .proj-card .meta-col { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+  .proj-card .meta-col .row { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  .proj-card .meta-col .row b { color: var(--ink); font-weight: 500; }
+  .proj-card .arrow-circle { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--rule-strong); display: grid; place-items: center; font-family: var(--mono); transition: all .2s; }
+  .proj-card:hover .arrow-circle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(-45deg); }
+
+  /* Insights */
+  .ins-featured {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 40px var(--gutter);
+    border-radius: 24px;
+  }
+  .ins-fcard {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    background: var(--soft); border: 1px solid var(--rule); border-radius: 20px; padding: 40px;
+    align-items: center;
+  }
+  .ins-fcard .left { display: flex; flex-direction: column; gap: 16px; }
+  .ins-fcard .ix { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.06em; }
+  .ins-fcard h2 { font-family: var(--display); font-weight: 500; font-size: clamp(36px, 4vw, 60px); line-height: 1; letter-spacing: -0.03em; margin: 0; }
+  .ins-fcard h2 .acc { color: var(--accent); font-style: italic; }
+  .ins-fcard p { color: var(--muted); font-size: 15px; line-height: 1.6; }
+  .ins-fcard .by { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .ins-fcard .fig { aspect-ratio: 4/3; border-radius: 12px; background: radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 60%), var(--paper-2); border: 1px solid var(--rule); }
+
+  .ins-grid { max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter) 80px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .ins-item {
+    padding: 28px; border-radius: 16px; background: var(--soft); border: 1px solid var(--rule);
+    display: grid; grid-template-columns: 1fr 100px; gap: 24px; cursor: pointer; align-items: center;
+    transition: border-color .2s, transform .2s;
+  }
+  .ins-item:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); transform: translateY(-2px); }
+  .ins-item .ix { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .ins-item h3 { font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.015em; }
+  .ins-item .by { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  .ins-item .arrow-circle { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule-strong); display: grid; place-items: center; transition: all .2s; }
+  .ins-item:hover .arrow-circle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(-45deg); }
+
+  /* Get Involved */
+  .paths { max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter); display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .path-card {
+    padding: 32px; border-radius: 20px; background: var(--soft); border: 1px solid var(--rule);
+    display: grid; grid-template-columns: 80px 1fr auto; gap: 24px;
+    align-items: center;
+    cursor: pointer; position: relative; overflow: hidden;
+    transition: border-color .2s, transform .2s;
+  }
+  .path-card:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); transform: translateY(-2px); }
+  .path-card .pn { font-family: var(--display); font-weight: 600; font-size: 48px; line-height: 0.9; color: var(--accent); letter-spacing: -0.03em; }
+  .path-card h3 { font-family: var(--display); font-weight: 500; font-size: 26px; line-height: 1.1; margin: 0 0 8px; letter-spacing: -0.015em; }
+  .path-card p { color: var(--muted); margin: 0; font-size: 14px; line-height: 1.55; }
+  .path-card .arrow-circle { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--rule-strong); display: grid; place-items: center; transition: all .2s; font-size: 16px; }
+  .path-card:hover .arrow-circle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(-45deg); }
+
+  .form-section {
+    max-width: var(--maxw); margin: 0 auto;
+    padding: 60px var(--gutter) 100px;
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px;
+  }
+  .form-section .left h2 { font-family: var(--display); font-weight: 500; font-size: 52px; line-height: 1; letter-spacing: -0.03em; margin: 0 0 16px; }
+  .form-section .left h2 .acc { color: var(--accent); font-style: italic; }
+  .form-section .left p { color: var(--muted); max-width: 38ch; font-size: 15px; line-height: 1.6; }
+  .form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .field input, .field textarea {
+    background: var(--soft); border: 1px solid var(--rule);
+    padding: 14px 16px; font-family: var(--sans); font-size: 14px; color: var(--ink);
+    border-radius: 12px; outline: none; transition: border-color .15s;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 100px; }
+  .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+  .seg .chip { padding: 10px 16px; border: 1px solid var(--rule-strong); border-radius: 999px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; background: transparent; color: var(--ink); transition: all .15s; }
+  .seg .chip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .form-actions { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; }
+  .form-success { padding: 28px; border-radius: 16px; background: color-mix(in oklch, var(--accent) 18%, transparent); border: 1px solid var(--accent); color: var(--ink); font-size: 16px; }
+  .form-success b { color: var(--accent); }
+
+  /* Page transitions */
+  .page { animation: pagefade .4s cubic-bezier(.2,.7,.2,1); }
+  @keyframes pagefade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── Dynamic tweak overrides ─────────────────────────── */
+  .program-card, .step, .stat-card, .person, .proj-card, .path-card,
+  .ins-fcard, .ins-item, .tile, .form-success, .field input, .field textarea,
+  .cta-banner, .brand-mark {
+    border-radius: var(--card-radius, 16px);
+  }
+  .person .portrait, .ins-fcard .fig { border-radius: calc(var(--card-radius, 16px) - 4px); }
+  .arrow-circle { border-radius: 50%; } /* keep circle */
+
+  /* User-fillable image placeholders. Drop files into ./images/<folder>/<slug>.jpg
+     and they show up; missing files just reveal the patterned background. */
+  .person .portrait, .ins-fcard .fig { position: relative; overflow: hidden; }
+  .ph-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block; z-index: 0;
+  }
+  .person .portrait > *:not(.ph-img),
+  .ins-fcard .fig > *:not(.ph-img) { position: relative; z-index: 1; }
+  .person .portrait:has(.ph-img:not([hidden])) { color: transparent; }
+
+  /* Tile texture override */
+  .tile::before { background: var(--tile-bg) !important; }
+
+  /* Glow strength */
+  .live::before { box-shadow: 0 0 calc(var(--glow-halo, 14px)) var(--accent); }
+  .btn-primary:hover { box-shadow: 0 8px calc(var(--glow-halo, 32px) * 2) color-mix(in oklch, var(--accent) calc(50% * var(--glow-strength, 1)), transparent); }
+  .tile:hover { box-shadow: 0 12px 40px color-mix(in oklch, var(--accent) calc(18% * var(--glow-strength, 1)), transparent); }
+  .brand-mark::before { animation-play-state: var(--glow-strength) ; }
+  [data-glow="off"] .brand-mark::before { display: none; }
+  [data-glow="off"] body::after { display: none; }
+  [data-glow="strong"] body::after { opacity: 1.2; }
+
+  /* Accent mark — exposed as var(--accent-mark) for any future use.
+     The hardcoded "▸" in existing text is left alone. */
+
+  /* hero alternate layouts */
+  .hero h1 .italic-all { font-style: italic; color: var(--accent); font-weight: 600; }
+  .hero h1.stacked { font-size: clamp(44px, 7.2vw, 132px); line-height: 0.96; max-width: 18ch; }
+  .hero h1.stacked span { display: block; }
+
+  @media (max-width: 1000px) {
+    .topbar-inner { grid-template-columns: 1fr auto; }
+    .topnav { display: none; }
+    .hero h1 { font-size: clamp(44px, 7.2vw, 132px); }
+    .hero-foot { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; }
+    .stat { grid-template-columns: 80px 1fr; }
+    .stat .desc { grid-column: 1/-1; text-align: left; padding-top: 8px; }
+    .program-card { grid-template-columns: 1fr; gap: 16px; }
+    .process { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: 1fr 1fr; }
+    .t1, .t2, .t3, .t4, .t5 { grid-column: span 2; aspect-ratio: 16/10; }
+    .cta-banner-inner { grid-template-columns: 1fr; }
+    .foot-top { grid-template-columns: 1fr 1fr; }
+    .stat-cards, .team-grid { grid-template-columns: 1fr 1fr; }
+    .proj-card { grid-template-columns: 60px 1fr; }
+    .proj-card .meta-col { grid-column: 1/-1; align-items: flex-start; }
+    .paths { grid-template-columns: 1fr; }
+    .ins-grid { grid-template-columns: 1fr; }
+    .ins-fcard { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .form-section { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="../../tweaks-panel.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const onImgErr = (e) => { e.currentTarget.hidden = true; };
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "fontPair": "bricolage",
+  "mode": "light",
+  "density": "compact",
+  "heroLayout": "marker",
+  "cardRadius": "round",
+  "accentMark": "▸",
+  "glow": "soft",
+  "tileTexture": "scan"
+}/*EDITMODE-END*/;
+
+// Each palette has dark + light variant accent
+const PALETTES = {
+  signal:   { dark: { ink: "#f6f6f3", paper: "#0a0d0a", accent: "#6cff5a" }, light: { ink: "#0a0d0a", paper: "#f6f6f3", accent: "#1f7a30" }, swatch: ["#0a0d0a","#f6f6f3","#6cff5a"] },
+  jade:     { dark: { ink: "#eef1ec", paper: "#0c1110", accent: "#34d399" }, light: { ink: "#0c1110", paper: "#eef1ec", accent: "#0e8a5d" }, swatch: ["#0c1110","#eef1ec","#34d399"] },
+  carbon:   { dark: { ink: "#f5f5f5", paper: "#08090a", accent: "#d1ff3a" }, light: { ink: "#08090a", paper: "#f5f5f5", accent: "#6a8b00" }, swatch: ["#08090a","#f5f5f5","#d1ff3a"] },
+  ocean:    { dark: { ink: "#e8eef0", paper: "#08111a", accent: "#5eead4" }, light: { ink: "#08111a", paper: "#e8eef0", accent: "#0d8b78" }, swatch: ["#08111a","#e8eef0","#5eead4"] },
+  ember:    { dark: { ink: "#f4ede4", paper: "#100806", accent: "#ff6a3d" }, light: { ink: "#100806", paper: "#f4ede4", accent: "#d94a1e" }, swatch: ["#100806","#f4ede4","#ff6a3d"] },
+  ultra:    { dark: { ink: "#eee9f4", paper: "#0c0716", accent: "#a78bfa" }, light: { ink: "#0c0716", paper: "#eee9f4", accent: "#6d3aed" }, swatch: ["#0c0716","#eee9f4","#a78bfa"] },
+  rose:     { dark: { ink: "#f4ebed", paper: "#11070a", accent: "#fb7185" }, light: { ink: "#11070a", paper: "#f4ebed", accent: "#c43a4f" }, swatch: ["#11070a","#f4ebed","#fb7185"] },
+  midnight: { dark: { ink: "#e6ecf5", paper: "#070b14", accent: "#60a5fa" }, light: { ink: "#070b14", paper: "#e6ecf5", accent: "#2563eb" }, swatch: ["#070b14","#e6ecf5","#60a5fa"] },
+  cyber:    { dark: { ink: "#eaf6ff", paper: "#04101a", accent: "#22d3ee" }, light: { ink: "#04101a", paper: "#eaf6ff", accent: "#0891b2" }, swatch: ["#04101a","#eaf6ff","#22d3ee"] },
+  bone:     { dark: { ink: "#f0ede4", paper: "#0e0d0a", accent: "#facc15" }, light: { ink: "#0e0d0a", paper: "#f0ede4", accent: "#a8740c" }, swatch: ["#0e0d0a","#f0ede4","#facc15"] },
+};
+const FONT_PAIRS = {
+  bricolage:    { name: "Bricolage", display: "'Bricolage Grotesque', sans-serif", sans: "'DM Sans', sans-serif" },
+  spaceGrotesk: { name: "Space Grotesk", display: "'Space Grotesk', sans-serif", sans: "'Space Grotesk', sans-serif", load: "Space+Grotesk:wght@300;400;500;600;700" },
+  manrope:      { name: "Manrope", display: "'Manrope', sans-serif", sans: "'Manrope', sans-serif", load: "Manrope:wght@200;300;400;500;600;700;800" },
+  generalSans:  { name: "Hanken Grotesk", display: "'Hanken Grotesk', sans-serif", sans: "'Hanken Grotesk', sans-serif", load: "Hanken+Grotesk:wght@300;400;500;600;700;800" },
+  redaktion:    { name: "Familjen Grotesk", display: "'Familjen Grotesk', sans-serif", sans: "'Familjen Grotesk', sans-serif", load: "Familjen+Grotesk:wght@400;500;600;700" },
+  unbounded:    { name: "Unbounded + Jakarta", display: "'Unbounded', sans-serif", sans: "'Plus Jakarta Sans', sans-serif", load: "Unbounded:wght@400;500;600;700;800|Plus+Jakarta+Sans:wght@300;400;500;600" },
+  syne:         { name: "Syne + DM", display: "'Syne', sans-serif", sans: "'DM Sans', sans-serif", load: "Syne:wght@400;500;600;700;800" },
+  archivo:      { name: "Archivo + Inter", display: "'Archivo', sans-serif", sans: "'Inter', sans-serif", load: "Archivo:wght@400;500;600;700;800;900|Inter:wght@300;400;500;600" },
+};
+const DENSITIES = { compact: 0.78, default: 1, airy: 1.25 };
+const CARD_RADII = { sharp: "0px", soft: "8px", round: "16px", pill: "28px" };
+const GLOWS = {
+  off:    { strength: 0, halo: 0 },
+  soft:   { strength: 1, halo: 14 },
+  strong: { strength: 1.6, halo: 24 },
+};
+const TILE_TEXTURES = {
+  scan:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklch, var(--ink) 4%, transparent) 12px 13px)",
+  grid:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), repeating-linear-gradient(0deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 1px, transparent 1px 24px), repeating-linear-gradient(90deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 1px, transparent 1px 24px)",
+  dots:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), radial-gradient(color-mix(in oklch, var(--ink) 12%, transparent) 1.5px, transparent 2px) 0 0 / 18px 18px",
+  noise: "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), radial-gradient(color-mix(in oklch, var(--ink) 10%, transparent) 0.5px, transparent 1px) 0 0 / 5px 5px, radial-gradient(color-mix(in oklch, var(--ink) 7%, transparent) 0.5px, transparent 1px) 2px 3px / 9px 9px",
+  blur:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 24%, transparent), transparent 55%), radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%)",
+  solid: "color-mix(in oklch, var(--ink) 5%, transparent)",
+};
+
+const NAV = [
+  { id: "home", label: "Signal" },
+  { id: "about", label: "About" },
+  { id: "projects", label: "Programs" },
+  { id: "insights", label: "Insights" },
+  { id: "involve", label: "Get Involved" },
+];
+
+const STATS = [
+  { ix: "01 / Reached Students", num: "7,000", suffix: "+", desc: "Students reached through mentorship, courses, and camps in five countries." },
+  { ix: "02 / Volunteers & Mentors", num: "110", suffix: "+", desc: "Active student volunteers serving as near-peer mentors." },
+  { ix: "03 / Global Impact", num: "5", suffix: "+", desc: "Establishing global impacts through international collaborations." },
+  { ix: "04 / Funds Raised", num: "19,500", suffix: "+", desc: "Raised to keep every program free and expand access to students who need it most.", prefix: "$" },
+];
+
+const PROGRAMS = [
+  { ix: "01", kicker: "1-on-1", title: "Student Mentorship", desc: "Pair K–12 students with near-peer mentors for weekly project-driven sessions. Goals set in week one, milestones reviewed monthly.", tags: ["Year-round", "Grades 4-12", "Free"] },
+  { ix: "02", kicker: "Team support", title: "Team-to-Team", desc: "Experienced competition teams coach emerging rookie squads on build, code, and competition strategy.", tags: ["Aug–Apr", "FLL → FRC", "Free"] },
+  { ix: "03", kicker: "Self-paced", title: "Engineering & CS Courses", desc: "Free, modular open curricula in CAD, embedded systems, and programming. Taught by students, for students.", tags: ["Rolling", "Grades 6-12", "Open source"] },
+  { ix: "04", kicker: "Seasonal", title: "Camps & Workshops", desc: "Multi-day hands-on programs hosted at schools and community centers, especially in underserved areas.", tags: ["Summer + Winter", "Grades 3-9", "Free"] },
+];
+
+const STEPS = [
+  { n: "01", title: "Understand", body: "Background, experience, ambition. No assumptions, no prerequisites." },
+  { n: "02", title: "Match & design", body: "Mentors matched by domain and personality. Path co-designed." },
+  { n: "03", title: "Learn by doing", body: "CAD, code, electronics, real robots from week one." },
+  { n: "04", title: "Grow & give back", body: "Students become mentors. The cycle is the curriculum." },
+];
+
+const TEAM = [
+  { name: "Shawn Li", role: "Co-Founder & Co-President", img: "shawnli.avif", bio: "Shawn is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He co-founded GUR to make a meaningful impact on students locally and globally, while building a team of talented and compassionate high schoolers who inspire the next generation of leaders. In his free time, Shawn enjoys playing piano and guitar, gaming, solving Rubik's Cube, and exploring new interests. You can find him at sh4wn.org." },
+  { name: "Arnav Talreja", role: "Co-Founder & Co-President", img: "arnavtalreja.avif", bio: "Arnav is a junior at TJHSST. He co-founded GUR to make a real impact in the robotics community, both globally and close to home, by helping more people learn technical skills, build with confidence, and compete in robotics competitions. Most importantly, he cares about making robotics something people genuinely enjoy being a part of. In his free time, Arnav likes playing tennis, gaming, and hanging out with friends." },
+  { name: "Darrell Kao", role: "Co-Vice President", img: "darrellkao.avif", bio: "Darrell is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR), where he works to expand access to STEM education and robotics for younger students. Darrell was inspired by the learning experience he has at TJ, and hopes to bring the same learning opportunities to others. Additionally hoping he can inspire the younger generation in STEM related topics. Outside of school, Darrell enjoys reading, playing video games, hanging out with friends, and doing Chinese yo-yo." },
+  { name: "Surya Raj", role: "Co-Vice President", img: "suryaraj.avif", bio: "Surya is a junior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR) to expand his love for robotics beyond the classroom and competitions, and to help make STEM education more accessible to students everywhere. Inspired by the hands on engineering culture at TJ, Surya hopes to use his skills to mentor younger students and spark their curiosity in robotics and technology. Outside of school, Surya enjoys watching sports, gaming, learning about cars, and spending time with friends." },
+  { name: "Jae Kim", role: "Director of Finance", img: "jaekim.avif", bio: "Jae is a sophomore at Centreville High School. Jae enjoys spending time teaching children about robotics. He enjoys spending time with friends and playing games. He is also the best MC in the world." },
+  { name: "Leah D'Cruz", role: "Outreach", img: "leahdcruz.avif", bio: "Leah is a freshman at TJHSST. She joined GUR to spread STEM education and passion for students. In her spare time, Leah enjoys playing instruments and reading." },
+];
+
+const PROJECTS_DETAIL = [
+  { n: "01", title: "1-to-1 Mentorship", desc: "Long-form mentor pairings designed around the student's curiosity. 240 active pairs as of spring 2026.", years: "Year-round", grades: "Grades 4–12", tags: ["Active", "Application-based"] },
+  { n: "02", title: "Team-to-Team Support", desc: "Sustained relationships between competitive and emerging teams. Code reviews, design critiques, mock matches.", years: "Aug–Apr", grades: "FLL → FRC", tags: ["Active", "Rolling"] },
+  { n: "03", title: "Engineering & CS Courses", desc: "Open curricula in Python, C++, Onshape CAD, embedded systems. Self-paced and instructor-led tracks.", years: "Rolling", grades: "Grades 6–12", tags: ["Open source"] },
+  { n: "04", title: "Camps & Workshops", desc: "Week-long intensives in partnership with Title I schools and community centers across five countries.", years: "Summer + Winter", grades: "Grades 3–9", tags: ["Active", "Free"] },
+  { n: "05", title: "Mentor Training", desc: "Onboarding and ongoing development for student volunteers. 12-hour core + role-specific modules.", years: "Quarterly", grades: "Volunteers", tags: ["Recurring"] },
+];
+
+const INSIGHTS = [
+  { ix: "FEATURED · № 014", title: "What we learned from 1,200 hours of mentor pairings", desc: "An honest look at what 1,200 hours of one-on-one mentorship taught us about matching, retention, and the small rituals that decide whether a pairing sticks.", by: "S. Li", time: "12 min", date: "December 2025", pdf: "A1 mentor.pdf", featured: true },
+  { ix: "ISSUE № 013", title: "Why we stopped optimizing for competition results", desc: "The case for treating tournaments as a side effect of a healthy program, not the goal of one.", by: "S. Li", time: "8 min", date: "March 2026", pdf: "EA1 competition.pdf" },
+  { ix: "ISSUE № 012", title: "A protocol for first-week mentor conversations", desc: "The first session with a new student is mostly throwaway. Here is how we stopped wasting it.", by: "S. Palle", time: "6 min", date: "February 2026", pdf: "EA2 first week.pdf" },
+  { ix: "ISSUE № 011", title: "How team-to-team coaching beats top-down curriculum", desc: "Why we gave up on writing a unified curriculum and started letting our cohorts teach each other.", by: "A. Talreja", time: "9 min", date: "March 2026", pdf: "EA3 team coaching.pdf" },
+  { ix: "ISSUE № 010", title: "Designing camps for students who've never coded", desc: "Five days, fifty students, zero programming experience. What we kept changing until it worked.", by: "G. Zhang", time: "7 min", date: "September 2025", pdf: "EA4 camp.pdf" },
+];
+
+const PATHS = [
+  { n: "01", title: "Join as a Student", desc: "K–12 students interested in mentorship, courses, or camps. Free, application-based.", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
+  { n: "02", title: "Mentor with Us", desc: "High school and college students with technical and teaching interests. Training provided.", href: "mailto:growingupwithrobotics@gmail.com" },
+  { n: "03", title: "Partner Schools", desc: "Schools and districts looking to bring workshops, curricula, or camps to their students.", href: "mailto:growingupwithrobotics@gmail.com" },
+  { n: "04", title: "Sponsor Programs", desc: "Companies and individuals funding access for students in underserved communities.", href: "mailto:growingupwithrobotics@gmail.com" },
+];
+
+// ── Animated counter ────────────────────────────────
+function Counter({ target, prefix = "", suffix = "" }) {
+  const [n, setN] = useState(0);
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = null, started = false;
+    const num = parseInt(target.replace(/,/g, ""), 10) || 0;
+    const obs = new IntersectionObserver((es) => {
+      es.forEach(e => {
+        if (e.isIntersecting && !started) {
+          started = true;
+          const dur = 1400; const t0 = performance.now();
+          const tick = (t) => {
+            const p = Math.min(1, (t - t0) / dur);
+            const eased = 1 - Math.pow(1 - p, 3);
+            setN(Math.round(num * eased));
+            if (p < 1) raf = requestAnimationFrame(tick);
+          };
+          raf = requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => { obs.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, [target]);
+  return <span ref={ref}>{prefix}{n.toLocaleString()}<span className="acc">{suffix}</span></span>;
+}
+
+function Header({ route, setRoute }) {
+  return (
+    <header className="topbar">
+      <div className="topbar-inner">
+        <a className="brand" onClick={() => setRoute("home")} href="#home">
+          <span className="brand-mark" aria-label="GUR"></span>
+          <span className="brand-text"><b>Growing Up with Robotics</b><span></span></span>
+        </a>
+        <nav className="topnav">
+          {NAV.map(n => (
+            <a key={n.id} href={`#${n.id}`}
+               className={route === n.id ? "active" : ""}
+               onClick={(e) => { e.preventDefault(); setRoute(n.id); }}>
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <div className="topright">
+          <span className="live">LIVE · Summer Cohort in Planning</span>
+          <a className="pill-cta" href="mailto:growingupwithrobotics@gmail.com">Contact ↗</a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function Footer({ setRoute }) {
+  return (
+    <footer>
+      <div className="foot">
+        <div className="foot-top">
+          <div className="foot-brand">
+            <h4>Inspiring the next generation of <span className="acc">leaders</span>, one student at a time.</h4>
+            <p>A student-led nonprofit expanding access to hands-on STEM and robotics — mentorship, partnerships, and programs designed for the students who need them most.</p>
+          </div>
+          <div>
+            <h5>Programs</h5>
+            <ul>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Mentorship</a></li>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Team-to-Team</a></li>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Courses</a></li>
+              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Camps</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Org</h5>
+            <ul>
+              <li><a href="#about" onClick={(e)=>{e.preventDefault(); setRoute("about");}}>About</a></li>
+              <li><a href="#insights" onClick={(e)=>{e.preventDefault(); setRoute("insights");}}>Insights</a></li>
+              <li><a href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Get Involved</a></li>
+              <li><a href="mailto:growingupwithrobotics@gmail.com">Press</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Follow</h5>
+            <ul>
+              <li><a href="#">Instagram ↗</a></li>
+              <li><a href="#">LinkedIn ↗</a></li>
+              <li><a href="#">YouTube ↗</a></li>
+              <li><a href="#">Newsletter ↗</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="foot-bottom">
+          <span>Fiscal 501(c)(3)</span>
+          <span className="ascii">▸ growingupwithrobotics.org</span>
+          <span>Built with Love by Shawn</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Home({ setRoute, tweaks }) {
+  return (
+    <div className="page">
+      <section className="hero">
+        <div className="hero-bg-logo" aria-hidden="true"></div>
+        <div className="hero-content">
+          <div className="hero-tags">
+            <span className="tag accent">Summer cohort open</span>
+            <span className="tag">110+ volunteers and mentors</span>
+            <span className="tag">7,000+ students reached</span>
+            <span className="tag">5+ countries</span>
+          </div>
+          {tweaks.heroLayout === "marker" ? (
+            <h1>
+              Inspiring<br/>
+              the next generation<br/>
+              of <span className="marker">leaders</span> — one<br/>
+              student <span className="accent">at a time.</span>
+            </h1>
+          ) : tweaks.heroLayout === "underline" ? (
+            <h1>
+              Inspiring the <span className="underline">next generation</span> of <span className="accent">leaders.</span>
+            </h1>
+          ) : (
+            <h1>
+              Robotics, <span className="accent">for every</span> curious kid <span className="strike">— without exception.</span>
+            </h1>
+          )}
+        </div>
+        <div className="hero-foot">
+          <p className="hero-lede">
+            Growing Up With Robotics is a student-led nonprofit making robotics and STEM accessible to K–12 students. <strong>Through mentorship, hands-on programs, and community partnerships,</strong> we help students grow — not just technical skills, but confidence, curiosity, and leadership.
+          </p>
+          <div className="cta-stack">
+            <h5>Get started</h5>
+            <a className="btn btn-primary" href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Explore Programs <span className="arrow">↗</span></a>
+            <a className="btn btn-ghost" href="https://forms.gle/JCKz958v3CVfPBky5" target="_blank" rel="noopener noreferrer">Join as student</a>
+          </div>
+          <div className="cta-stack">
+            <h5>Get involved</h5>
+            <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Mentor with us</a>
+            <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with us</a>
+          </div>
+        </div>
+      </section>
+
+      <div className="ticker">
+        <div className="ticker-track">
+          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>EMBEDDED<span>·</span>FRC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span></span>
+          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>EMBEDDED<span>·</span>FRC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span></span>
+        </div>
+      </div>
+
+      <section className="stats">
+        <div className="stats-intro">
+          <div className="label">▸ 01 / Impact ledger</div>
+          <h2>Three years of mentorship, <span className="acc">measured.</span></h2>
+          <p>Numbers verified by program leads quarterly. The work behind each is in our Insights.</p>
+        </div>
+        <div className="stats-grid">
+          {STATS.map((s, i) => (
+            <div className="stat" key={i}>
+              <div className="ix">{s.ix.split(' / ')[0]}<br/><b>/ {s.ix.split(' / ')[1]}</b></div>
+              <div className="num"><Counter target={s.num} suffix={s.suffix} prefix={s.prefix || ""} /></div>
+              <div className="desc">{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="sec">
+        <div className="sec-head">
+          <div className="ix">▸ 02 / Programs &amp; impact</div>
+          <h2>Four ways <span className="acc">in.</span></h2>
+          <div className="meta">All free · All mentor-led</div>
+        </div>
+        <div className="programs-stack">
+          {PROGRAMS.map(p => (
+            <div className="program-card" key={p.title} onClick={() => setRoute("projects")}>
+              <div className="ix">{p.ix}</div>
+              <div className="title">
+                <span className="kicker">{p.kicker}</span>
+                <h3>{p.title}</h3>
+              </div>
+              <div className="body">
+                <p>{p.desc}</p>
+                <div className="tags">
+                  {p.tags.map(t => <span className="tag" key={t}>{t}</span>)}
+                </div>
+              </div>
+              <div className="cta-area">
+                <div className="arrow-circle">↗</div>
+                <div className="meta">Read brief</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="sec">
+        <div className="sec-head">
+          <div className="ix">▸ 03 / Method</div>
+          <h2>How we <span className="acc">work.</span></h2>
+          <div className="meta">Four steps · Repeat</div>
+        </div>
+        <div className="process">
+          <div className="process-intro">
+            <h3>Built around <span className="acc">mentorship</span>, accessibility, &amp; hands-on learning.</h3>
+            <p>We meet students where they are and help them grow through real robotics experiences — not lectures.</p>
+          </div>
+          <div className="steps">
+            {STEPS.map(s => (
+              <div className="step" key={s.n}>
+                <div className="n">{s.n}</div>
+                <div><h4>{s.title}</h4><p>{s.body}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="sec">
+        <div className="sec-head">
+          <div className="ix">▸ 04 / From the field</div>
+          <h2>On the <span className="acc">field.</span></h2>
+          <div className="meta">Spring MMXXVI · 5 selected</div>
+        </div>
+        <div className="gallery">
+          <div className="tile t1"><img src="images/insights/ftcteam.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FTC 14607</div><div className="cap">FTC 14607 Robot Uprising at Cheesequake State Championship </div></div>
+          <div className="tile t2"><img src="images/insights/aymsummercampgroup.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM SUMMER CAMP</div><div className="cap">AYM summer camp · full cohort & robot mascot</div></div>
+          <div className="tile t3"><img src="images/insights/aymsummercamp.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM SUMMER CAMP</div><div className="cap">CAD lecture session · summer program</div></div>
+          <div className="tile t4"><img src="images/insights/fllmentoring.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL MENTORSHIP</div><div className="cap">One-on-one FLL coaching · field review</div></div>
+          <div className="tile t5"><img src="images/insights/flltutor.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL TEAM</div><div className="cap">FLL mentorship · pre-competition</div></div>
+        </div>
+      </section>
+
+      <section className="cta-banner">
+        <div className="cta-banner-inner">
+          <div>
+            <div className="meta">▸ Get involved</div>
+            <h2>The next student we reach <span className="italic">could be yours.</span></h2>
+          </div>
+          <div className="actions">
+            <a className="btn btn-primary" href="https://forms.gle/JCKz958v3CVfPBky5" target="_blank" rel="noopener noreferrer">Start application <span className="arrow">↗</span></a>
+            <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with us</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function About({ setRoute }) {
+  return (
+    <div className="page">
+      <header className="pageheader">
+        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>01</div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="meta-row">
+            <span className="tag accent">About</span>
+            <span className="tag">Founded 2023</span>
+            <span className="tag">Fiscal 501(c)(3)</span>
+          </div>
+          <h1>A student-led answer<br/>to a <span className="acc">student-sized</span> problem.</h1>
+          <p className="lede"><strong>Robotics teaches the things school is slow to teach:</strong> how to fail, how to argue with a teammate, how to ship something that almost-works. But access is uneven. We're trying to close that gap — from the inside.</p>
+        </div>
+      </header>
+
+      <section className="about-grid">
+        <div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>▸ 01 / Mission</div>
+          <h2>Make robotics belong to every <span className="acc">curious kid.</span></h2>
+        </div>
+        <div className="body">
+          <p>Growing Up with Robotics started as a single after-school mentorship in 2023 — two high school students teaching CAD to a middle schooler who'd never opened a wrench.</p>
+          <p>Three years later, we run mentorship pairings, team-to-team coaching, free open courses, and seasonal camps across five countries.</p>
+          <p>What we keep coming back to is this: most students don't fail at robotics. They never get the chance to try. The bench is too far, the team is too full, the cost is too much. We exist to close that gap.</p>
+          <p>Every program is free, every mentor is a student, and every decision is made closer to the bench than the boardroom.</p>
+        </div>
+      </section>
+
+      <div className="stat-cards">
+        <div className="stat-card"><div className="lbl">Founded</div><div className="v">2023</div></div>
+        <div className="stat-card"><div className="lbl">Students</div><div className="v">7,000<span className="acc">+</span></div></div>
+        <div className="stat-card"><div className="lbl">Mentors</div><div className="v">110<span className="acc">+</span></div></div>
+        <div className="stat-card"><div className="lbl">Countries</div><div className="v">5<span className="acc">+</span></div></div>
+      </div>
+
+      <section className="sec">
+        <div className="sec-head">
+          <div className="ix">▸ 02 / Team</div>
+          <h2>Eight of <span className="acc">110.</span></h2>
+          <div className="meta">Staff &amp; program leads</div>
+        </div>
+        <div className="team-grid" style={{ padding: 0 }}>
+          {TEAM.map(p => (
+            <div className="person" key={p.name}>
+              <div className="portrait">
+                <img className="ph-img" src={`images/team/${p.img}`} alt={p.name} onError={onImgErr} />
+                {p.name}
+              </div>
+              <div className="name">{p.name}</div>
+              <div className="role">{p.role}</div>
+              {p.bio && <div className="bio">{p.bio}</div>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="cta-banner">
+        <div className="cta-banner-inner">
+          <div>
+            <div className="meta">▸ Join the team</div>
+            <h2>We're hiring mentors <span className="italic">for fall.</span></h2>
+          </div>
+          <div className="actions">
+            <a className="btn btn-primary" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Apply to mentor <span className="arrow">↗</span></a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function Projects({ setRoute }) {
+  return (
+    <div className="page">
+      <header className="pageheader">
+        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>02</div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="meta-row">
+            <span className="tag accent">Programs</span>
+            <span className="tag">5 active</span>
+            <span className="tag">All free</span>
+          </div>
+          <h1>Five programs.<br/><span className="acc">One throughline:</span> access.</h1>
+          <p className="lede">Each program is free, mentor-led, and designed for students who don't already have a robotics community to lean on.</p>
+        </div>
+      </header>
+
+      <section className="proj-cards">
+        {PROJECTS_DETAIL.map(p => (
+          <div className="proj-card" key={p.n}>
+            <div className="n">{p.n}</div>
+            <div>
+              <h3><span className="acc">{p.title.split(" ")[0]}</span> {p.title.split(" ").slice(1).join(" ")}</h3>
+              <p>{p.desc}</p>
+              <div className="pills">{p.tags.map(t => <span className="tag" key={t}>{t}</span>)}</div>
+            </div>
+            <div className="meta-col">
+              <div className="row"><b>When</b> · {p.years}</div>
+              <div className="row"><b>Who</b> · {p.grades}</div>
+              <div className="arrow-circle">↗</div>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className="sec">
+        <div className="sec-head">
+          <div className="ix">▸ 02 / Gallery</div>
+          <h2>From <span className="acc">the field.</span></h2>
+          <div className="meta">Selected · MMXXVI</div>
+        </div>
+        <div className="gallery">
+          <div className="tile t1"><img src="images/insights/mentorship.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM CAMP</div><div className="cap">FTC 14607 mentors presenting to the cohort</div></div>
+          <div className="tile t2"><img src="images/insights/1on1mentorship.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ 1-ON-1 BUILD</div><div className="cap">Late-night robot assembly session</div></div>
+          <div className="tile t3"><img src="images/insights/guestspeaker.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ GUEST SPEAKER</div><div className="cap">Virtual guest talk · TJ classroom</div></div>
+          <div className="tile t4"><img src="images/insights/teammeetings.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ TEAM MEETING</div><div className="cap">Weekly planning session · whiteboard review</div></div>
+          <div className="tile t5"><img src="images/insights/fllmentoring.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL MENTORSHIP</div><div className="cap">FLL field coaching · hands-on review</div></div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function Insights() {
+  const [subDone, setSubDone] = useState(false);
+  return (
+    <div className="page">
+      <header className="pageheader">
+        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>03</div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="meta-row">
+            <span className="tag accent">Insights</span>
+            <span className="tag">14 issues</span>
+            <span className="tag">Updated quarterly</span>
+          </div>
+          <h1>Notes from <span className="acc">the bench.</span></h1>
+          <p className="lede">Field notes, essays, and protocols from mentors, organizers, and students. <strong>What we're learning, what we got wrong, and what we'd do differently.</strong></p>
+        </div>
+      </header>
+
+      <section className="ins-featured">
+        <div className="ins-fcard">
+          <div className="left">
+            <div className="ix">▸ {INSIGHTS[0].ix}</div>
+            <h2>{INSIGHTS[0].title}</h2>
+            <p>{INSIGHTS[0].desc}</p>
+            <div className="by">{INSIGHTS[0].by} · {INSIGHTS[0].time} read · {INSIGHTS[0].date}</div>
+            <a className="btn btn-primary" style={{ alignSelf: "flex-start" }} href={INSIGHTS[0].pdf} target="_blank" rel="noopener noreferrer">Read essay <span className="arrow">↗</span></a>
+          </div>
+          <div className="fig">
+            <img className="ph-img" src="images/insights/featured.jpg" alt="" onError={onImgErr} />
+          </div>
+        </div>
+      </section>
+
+      <section className="ins-grid">
+        {INSIGHTS.slice(1).map((p) => (
+          <a className="ins-item" key={p.title} href={p.pdf} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "inherit" }}>
+            <div>
+              <div className="ix">▸ {p.ix}</div>
+              <h3>{p.title}</h3>
+              <div className="by">{p.by} · {p.time} read · {p.date}</div>
+            </div>
+            <div className="arrow-circle">↗</div>
+          </a>
+        ))}
+      </section>
+
+      <section className="cta-banner" style={{ marginTop: 0 }}>
+        <div className="cta-banner-inner">
+          <div>
+            <div className="meta">▸ Subscribe</div>
+            <h2>Quarterly field reports — <span className="italic">in your inbox.</span></h2>
+          </div>
+          <div className="actions" style={{ width: "100%" }}>
+            {subDone ? (
+              <div style={{ fontFamily: "var(--mono)", fontSize: 14, color: "var(--accent-ink)", padding: "14px 0", letterSpacing: "0.04em" }}>
+                ✓ You're on the list — we'll be in touch.
+              </div>
+            ) : (
+              <form
+                action="https://growingupwithrobotics.us22.list-manage.com/subscribe/post?u=f3c46692cf2c574032e48ee57&id=57913a8feb&f_id=00b9c2e1f0"
+                method="post"
+                target="_blank"
+                onSubmit={() => setSubDone(true)}
+                style={{ width: "100%" }}
+              >
+                {/* Mailchimp bot-prevention honeypot — do not remove */}
+                <div style={{ position: "absolute", left: "-5000px" }} aria-hidden="true">
+                  <input type="text" name="b_f3c46692cf2c574032e48ee57_57913a8feb" tabIndex="-1" defaultValue="" />
+                </div>
+                <div className="field full" style={{ width: "100%" }}>
+                  <label style={{ color: "var(--accent-ink)", opacity: 0.7 }}>Your email</label>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <input
+                      type="email" name="EMAIL" required
+                      placeholder="you@school.edu"
+                      style={{ flex: 1, background: "color-mix(in oklch, var(--accent-ink) 10%, transparent)", borderColor: "rgba(0,0,0,0.2)", color: "var(--accent-ink)" }}
+                    />
+                    <button className="btn btn-primary" type="submit">Subscribe <span className="arrow">↗</span></button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function GetInvolved() {
+  const [role, setRole] = useState("Student");
+  const isStudent = role === "Student";
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isStudent) {
+      window.open("https://forms.gle/JCKz958v3CVfPBky5", "_blank");
+    } else {
+      window.location.href = "mailto:growingupwithrobotics@gmail.com";
+    }
+  };
+  return (
+    <div className="page">
+      <header className="pageheader">
+        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>04</div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="meta-row">
+            <span className="tag accent">Get involved</span>
+            <span className="tag">4 paths</span>
+          </div>
+          <h1>Four ways <span className="acc">to start.</span></h1>
+          <p className="lede"><strong>Whatever you bring — curiosity, time, a classroom, a check —</strong> there's a way in.</p>
+        </div>
+      </header>
+
+      <section className="paths">
+        {PATHS.map(p => (
+          <a className="path-card" key={p.n} href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener noreferrer" : undefined} style={{ textDecoration: "none", color: "inherit" }}>
+            <div className="pn">{p.n}</div>
+            <div>
+              <h3>{p.title}</h3>
+              <p>{p.desc}</p>
+            </div>
+            <div className="arrow-circle">↗</div>
+          </a>
+        ))}
+      </section>
+
+      <section className="form-section">
+        <div className="left">
+          <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>▸ Application</div>
+          <h2>Tell us <span className="acc">who you are.</span></h2>
+          <p>{isStudent ? "Sign up for our mailing list and apply to join as a student — takes under two minutes." : "Reach out directly and we'll connect you with the right program lead within a week."}</p>
+        </div>
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="field full">
+            <label>I'm here as a</label>
+            <div className="seg">
+              {["Student","Mentor","School","Sponsor"].map(r => (
+                <button key={r} type="button" className={"chip" + (role === r ? " on" : "")} onClick={() => setRole(r)}>{r}</button>
+              ))}
+            </div>
+          </div>
+          <div className="form-actions" style={{ gridColumn: "1 / -1", paddingTop: 0 }}>
+            <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              {isStudent ? "▸ Opens Google Form" : "▸ Opens your email client"}
+            </div>
+            <button className="btn btn-primary" type="submit">
+              {isStudent ? "Join the mailing list" : "Contact us"} <span className="arrow">↗</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function Tweaks({ tweaks, setTweak }) {
+  return (
+    <TweaksPanel title="Tweaks · Signal">
+      <TweakSection label="Color">
+        <TweakColor
+          label="Palette"
+          value={tweaks.palette}
+          options={Object.values(PALETTES).map(p => p.swatch)}
+          onChange={(_, ix) => setTweak("palette", Object.keys(PALETTES)[ix])}
+        />
+        <TweakRadio label="Mode" value={tweaks.mode} options={["light","dark"]} onChange={(v) => setTweak("mode", v)} />
+        <TweakRadio label="Glow" value={tweaks.glow} options={["off","soft","strong"]} onChange={(v) => setTweak("glow", v)} />
+      </TweakSection>
+      <TweakSection label="Type">
+        <TweakSelect label="Font" value={tweaks.fontPair} options={Object.entries(FONT_PAIRS).map(([k,v]) => [k, v.name])} onChange={(v) => setTweak("fontPair", v)} />
+        <TweakSelect label="Accent mark" value={tweaks.accentMark}
+          options={[["▸","▸ Triangle"],["●","● Dot"],["◆","◆ Diamond"],["✦","✦ Sparkle"],["▲","▲ Up-tri"],["■","■ Square"]]}
+          onChange={(v) => setTweak("accentMark", v)} />
+      </TweakSection>
+      <TweakSection label="Layout">
+        <TweakRadio label="Density" value={tweaks.density} options={["compact","default","airy"]} onChange={(v) => setTweak("density", v)} />
+        <TweakSelect label="Hero" value={tweaks.heroLayout}
+          options={[["marker","Marker"],["underline","Underline"],["strike","Strike"],["stack","Stacked"],["italic","All italic"]]}
+          onChange={(v) => setTweak("heroLayout", v)} />
+        <TweakSelect label="Card radius" value={tweaks.cardRadius}
+          options={[["sharp","Sharp"],["soft","Soft"],["round","Round"],["pill","Pill"]]}
+          onChange={(v) => setTweak("cardRadius", v)} />
+        <TweakSelect label="Tile texture" value={tweaks.tileTexture}
+          options={[["scan","Scan-lines"],["grid","Grid"],["dots","Dots"],["noise","Noise"],["blur","Blur"],["solid","Solid"]]}
+          onChange={(v) => setTweak("tileTexture", v)} />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [route, setRouteState] = useState(() => {
+    const h = window.location.hash.replace("#", "");
+    return NAV.find(n => n.id === h) ? h : "home";
+  });
+  const setRoute = (id) => {
+    setRouteState(id);
+    window.location.hash = id;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  useEffect(() => {
+    const onHash = () => {
+      const h = window.location.hash.replace("#", "");
+      if (NAV.find(n => n.id === h)) setRouteState(h);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const p = PALETTES[tweaks.palette] || PALETTES.signal;
+    const v = p[tweaks.mode] || p.dark;
+    root.style.setProperty("--ink", v.ink);
+    root.style.setProperty("--paper", v.paper);
+    root.style.setProperty("--accent", v.accent);
+    root.style.setProperty("--accent-ink", v.paper);
+    root.dataset.mode = tweaks.mode;
+    root.style.setProperty("--density", DENSITIES[tweaks.density]);
+    root.style.setProperty("--card-radius", CARD_RADII[tweaks.cardRadius] || "16px");
+    root.style.setProperty("--tile-bg", TILE_TEXTURES[tweaks.tileTexture] || TILE_TEXTURES.scan);
+    const glow = GLOWS[tweaks.glow] || GLOWS.soft;
+    root.style.setProperty("--glow-strength", glow.strength);
+    root.style.setProperty("--glow-halo", glow.halo + "px");
+    root.style.setProperty("--accent-mark", `"${tweaks.accentMark || "▸"} "`);
+    root.dataset.glow = tweaks.glow;
+    const fp = FONT_PAIRS[tweaks.fontPair] || FONT_PAIRS.bricolage;
+    root.style.setProperty("--display", fp.display);
+    root.style.setProperty("--sans", fp.sans);
+    if (fp.load && !document.getElementById("font-extra-" + tweaks.fontPair)) {
+      const link = document.createElement("link");
+      link.id = "font-extra-" + tweaks.fontPair;
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=" + fp.load + "&display=swap";
+      document.head.appendChild(link);
+    }
+  }, [tweaks]);
+
+  // Swap accent-mark glyphs in the DOM after every render
+  useEffect(() => {
+    const mark = tweaks.accentMark || "▸";
+    const allMarks = /[▸●◆✦▲■]/g;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+    const targets = [];
+    while (walker.nextNode()) targets.push(walker.currentNode);
+    targets.forEach(n => {
+      if (allMarks.test(n.nodeValue)) {
+        const newVal = n.nodeValue.replace(allMarks, mark);
+        if (newVal !== n.nodeValue) n.nodeValue = newVal;
+      }
+    });
+  });
+
+  const Page = { home: Home, about: About, projects: Projects, insights: Insights, involve: GetInvolved }[route] || Home;
+
+  return (
+    <>
+      <Header route={route} setRoute={setRoute} />
+      <Page key={route} setRoute={setRoute} tweaks={tweaks} />
+      <Footer setRoute={setRoute} />
+      <Tweaks tweaks={tweaks} setTweak={setTweak} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
