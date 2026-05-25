@@ -477,6 +477,22 @@
   .person .role { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; }
   .person .bio { font-size: 13px; line-height: 1.6; color: var(--muted); margin-top: 4px; }
 
+  /* Additional members roster */
+  .members-roster { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter) 60px; }
+  .members-roster-inner { border: 1px solid var(--rule); border-radius: 20px; overflow: hidden; }
+  .members-roster-header { padding: 20px 28px; border-bottom: 1px solid var(--rule); display: flex; align-items: baseline; gap: 12px; }
+  .members-roster-header .ix { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; }
+  .members-roster-header h3 { font-family: var(--display); font-weight: 500; font-size: 22px; letter-spacing: -0.02em; margin: 0; }
+  .members-list { display: grid; grid-template-columns: repeat(5, 1fr); }
+  .member-item { padding: 16px 28px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); transition: background .15s; }
+  .member-item:hover { background: var(--soft); }
+  .member-item:nth-child(5n) { border-right: none; }
+  .member-item:nth-last-child(-n+5) { border-bottom: none; }
+  .member-item .m-name { font-family: var(--display); font-weight: 500; font-size: 15px; letter-spacing: -0.01em; line-height: 1.2; }
+  .member-item .m-grade { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 3px; }
+  @media (max-width: 900px) { .members-list { grid-template-columns: repeat(3, 1fr); } .member-item:nth-child(5n) { border-right: 1px solid var(--rule); } .member-item:nth-child(3n) { border-right: none; } }
+  @media (max-width: 540px) { .members-list { grid-template-columns: repeat(2, 1fr); } .member-item:nth-child(3n) { border-right: 1px solid var(--rule); } .member-item:nth-child(2n) { border-right: none; } }
+
   /* Projects detail */
   .proj-cards { max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter); display: flex; flex-direction: column; gap: 16px; }
   .proj-card {
@@ -1078,6 +1094,34 @@ function About({ setRoute }) {
           ))}
         </div>
       </section>
+
+      <div className="members-roster">
+        <div className="members-roster-inner">
+          <div className="members-roster-header">
+            <span className="ix">▸ 03 / Roster</span>
+            <h3>More members</h3>
+          </div>
+          <div className="members-list">
+            {[
+              { name: "Anush Devkar",        grade: "12th" },
+              { name: "Shirdi Palle",         grade: "12th" },
+              { name: "Christoph Knaeble",   grade: "12th" },
+              { name: "Emma Zhang",          grade: "10th" },
+              { name: "Grace Zhang",         grade: "10th" },
+              { name: "Stephan Lugovoy",     grade: "10th" },
+              { name: "Victoria Lee",        grade: "10th" },
+              { name: "Ananya Rajasekaran",  grade: "9th" },
+              { name: "Aarav Devani",        grade: "9th" },
+              { name: "Madeleine Wong",      grade: "9th" },
+            ].map(m => (
+              <div className="member-item" key={m.name}>
+                <div className="m-name">{m.name}</div>
+                <div className="m-grade">Grade {m.grade}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <section className="cta-banner">
         <div className="cta-banner-inner">
