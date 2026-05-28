@@ -806,6 +806,89 @@
     .seg { gap: 6px; flex-wrap: wrap; }
     .seg .chip { padding: 8px 12px; font-size: 10px; }
   }
+
+  /* ── Program Modal ───────────────────────────────────── */
+  .prog-modal-backdrop {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .prog-modal {
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--card-radius);
+    max-width: 700px; width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    scrollbar-width: none;
+  }
+  .prog-modal::-webkit-scrollbar { display: none; }
+  .prog-modal-close {
+    position: sticky; top: 16px; float: right; margin: 16px 16px 0 0;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--soft); border: 1px solid var(--rule);
+    cursor: pointer; font-size: 20px; color: var(--muted);
+    display: grid; place-items: center; line-height: 1;
+    transition: background 0.15s, color 0.15s; z-index: 1;
+    flex-shrink: 0;
+  }
+  .prog-modal-close:hover { background: var(--rule-strong); color: var(--ink); }
+  .prog-modal-head {
+    padding: 40px 48px 28px;
+    border-bottom: 1px solid var(--rule);
+    clear: both;
+  }
+  .prog-modal-num {
+    font-family: var(--display); font-weight: 500;
+    font-size: 72px; line-height: 0.88; letter-spacing: -0.045em;
+    color: var(--accent); margin: 0 0 18px;
+  }
+  .prog-modal-kicker {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 10px;
+  }
+  .prog-modal-title {
+    font-family: var(--display); font-weight: 500;
+    font-size: clamp(30px, 4vw, 48px); line-height: 1;
+    letter-spacing: -0.03em; margin: 0 0 16px; color: var(--ink);
+  }
+  .prog-modal-lede {
+    font-size: 16px; line-height: 1.6; color: var(--muted);
+    max-width: 54ch; margin: 0;
+  }
+  .prog-modal-body { padding: 28px 48px 36px; }
+  .prog-modal-section { margin-bottom: 24px; }
+  .prog-modal-section:last-child { margin-bottom: 0; }
+  .prog-modal-section-label {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 7px;
+  }
+  .prog-modal-section p {
+    font-size: 15px; line-height: 1.6; color: var(--muted); margin: 0;
+  }
+  .prog-modal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .prog-modal-footer {
+    padding: 20px 48px 28px;
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .prog-modal-meta {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted); display: flex; flex-direction: column; gap: 5px;
+  }
+  @media (max-width: 600px) {
+    .prog-modal-head, .prog-modal-body { padding-left: 20px; padding-right: 20px; }
+    .prog-modal-footer { padding: 16px 20px 24px; flex-direction: column; align-items: flex-start; }
+    .prog-modal-num { font-size: 52px; }
+    .prog-modal-title { font-size: 28px; }
+  }
 </style>
 </head>
 <body>
@@ -918,6 +1001,79 @@ const PROJECTS_DETAIL = [
   { n: "04", title: "Camps & Workshops", desc: "Week-long intensives in partnership with Title I schools and community centers across five countries.", years: "Summer + Winter", grades: "Grades 3–9", tags: ["Active", "Free"] },
   { n: "05", title: "Mentor Training", desc: "Onboarding and ongoing development for student volunteers. 12-hour core + role-specific modules.", years: "Quarterly", grades: "Volunteers", tags: ["Recurring"] },
 ];
+
+const PROGRAM_FULL = {
+  "01": {
+    kicker: "1-on-1 · Year-round · Grades 4–12",
+    headline: "Student Mentorship",
+    lede: "Long-form pairings between K–12 students and near-peer mentors, built around the student's actual curiosity — not a generic syllabus.",
+    body: [
+      { label: "How it works", text: "Students apply and are matched with a high school or college mentor in a shared domain. Goals are set in week one, milestones reviewed monthly. The pairing is the curriculum." },
+      { label: "What you build", text: "Real projects from the start — robots, code, CAD models, electronics. No worksheets. No lecture decks. Just a mentor, a student, and something worth building." },
+      { label: "The scale", text: "240 active pairings as of spring 2026, year-round, across five countries. Sessions run 60–90 minutes weekly." },
+    ],
+    tags: ["Year-round", "Grades 4–12", "Free", "Application-based", "240 active pairings"],
+    when: "Year-round",
+    who: "Grades 4–12",
+    cta: { label: "Apply as a student", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
+  },
+  "02": {
+    kicker: "Team support · Aug–Apr · FLL → FRC",
+    headline: "Team-to-Team Support",
+    lede: "Experienced competition teams coach emerging rookie squads on build strategy, code quality, and competition mechanics — sustained relationships, not one-off help.",
+    body: [
+      { label: "How it works", text: "Veteran FTC and FRC teams are paired with newer FLL and rookie squads for the full season. Code reviews, design critiques, side-by-side mock matches — a working relationship, not a lecture." },
+      { label: "What teams gain", text: "A structured outside perspective during the season when you're too deep in the build to see the big picture. The coaching team gains mentorship experience that makes them sharper too." },
+      { label: "The cadence", text: "Bi-weekly check-ins, plus surge support around scrimmage and competition weekends, running August through April." },
+    ],
+    tags: ["Aug–Apr", "FLL → FRC", "Free", "Rolling enrollment"],
+    when: "Aug–Apr",
+    who: "FLL to FRC teams",
+    cta: { label: "Email us to get paired", href: "mailto:growingupwithrobotics@gmail.com" },
+  },
+  "03": {
+    kicker: "Self-paced · Rolling · Grades 6–12",
+    headline: "Engineering & CS Courses",
+    lede: "Free, modular, open-source curricula in Python, C++, Onshape CAD, embedded systems, and programming — taught by students, for students.",
+    body: [
+      { label: "What's covered", text: "Python and C++ fundamentals, Onshape 3D CAD, embedded systems with microcontrollers, and programming problem-solving. All curricula are open-source and free to adapt." },
+      { label: "How it's taught", text: "Two tracks: self-paced (work through materials at your own speed) and instructor-led (live sessions with a student instructor). Both are free and need no prior experience." },
+      { label: "The philosophy", text: "We don't teach to a test or toward a competition. We teach the skills that transfer — the ones that make students capable of building anything they want to build." },
+    ],
+    tags: ["Rolling", "Grades 6–12", "Open source", "Self-paced", "Instructor-led"],
+    when: "Rolling",
+    who: "Grades 6–12",
+    cta: { label: "Email us to enroll", href: "mailto:growingupwithrobotics@gmail.com" },
+  },
+  "04": {
+    kicker: "Seasonal · Grades 3–9 · Title I focus",
+    headline: "Camps & Workshops",
+    lede: "Multi-day, hands-on intensives at schools and community centers — especially in underserved areas and Title I schools across five countries.",
+    body: [
+      { label: "What happens", text: "Three to five day programs where students build, code, and compete with real robots. No experience required. We bring the hardware, the curriculum, and the mentors." },
+      { label: "Where we go", text: "Title I schools, community centers, and partner organizations across Northern Virginia and in five countries. If you don't have a robotics program, that's exactly why we come." },
+      { label: "The design", text: "Camps are scaffolded for students who've never seen a robot, with experienced mentors running the room and near-peer helpers keeping energy high and sessions moving." },
+    ],
+    tags: ["Summer + Winter", "Grades 3–9", "Free", "Title I focus", "5 countries"],
+    when: "Summer + Winter",
+    who: "Grades 3–9",
+    cta: { label: "Partner with us on a camp", href: "mailto:growingupwithrobotics@gmail.com" },
+  },
+  "05": {
+    kicker: "Quarterly · All volunteers",
+    headline: "Mentor Training",
+    lede: "Structured onboarding and ongoing development for every student volunteer. Good intentions don't make good mentors — practice and frameworks do.",
+    body: [
+      { label: "The core curriculum", text: "12 hours of foundational training covering mentorship frameworks, feedback techniques, managing different learning styles, and handling sessions that go sideways." },
+      { label: "Role-specific modules", text: "After core training, volunteers take modules specific to their role: 1-on-1 mentorship, team coaching, camp facilitation, or instruction. Each module runs 4–6 hours." },
+      { label: "The cadence", text: "New cohorts onboard quarterly. Returning mentors take refresher modules and advanced tracks. There's no graduation — there's just the next thing to get better at." },
+    ],
+    tags: ["Quarterly", "All volunteers", "12-hour core", "Role-specific modules"],
+    when: "Quarterly",
+    who: "High school & college volunteers",
+    cta: { label: "Apply to mentor", href: "mailto:growingupwithrobotics@gmail.com" },
+  },
+};
 
 const INSIGHTS = [
   { ix: "FEATURED · № 014", title: "What we learned from 1,200 hours of mentor pairings", desc: "An honest look at what 1,200 hours of one-on-one mentorship taught us about matching, retention, and the small rituals that decide whether a pairing sticks.", by: "S. Li", time: "12 min", date: "December 2025", pdf: "A1 mentor.pdf", featured: true },
@@ -1068,7 +1224,7 @@ function Footer({ setRoute }) {
   );
 }
 
-function Home({ setRoute, tweaks }) {
+function Home({ setRoute, tweaks, setActiveProgram }) {
   return (
     <div className="page">
       <section className="hero">
@@ -1146,7 +1302,7 @@ function Home({ setRoute, tweaks }) {
         </div>
         <div className="programs-stack">
           {PROGRAMS.map(p => (
-            <div className="program-card" key={p.title} onClick={() => setRoute("projects")}>
+            <div className="program-card" key={p.title} onClick={() => setActiveProgram(p.ix)}>
               <div className="ix">{p.ix}</div>
               <div className="title">
                 <span className="kicker">{p.kicker}</span>
@@ -1320,7 +1476,7 @@ function About({ setRoute }) {
   );
 }
 
-function Projects({ setRoute }) {
+function Projects({ setRoute, setActiveProgram }) {
   return (
     <div className="page">
       <header className="pageheader">
@@ -1338,7 +1494,7 @@ function Projects({ setRoute }) {
 
       <section className="proj-cards">
         {PROJECTS_DETAIL.map(p => (
-          <div className="proj-card" key={p.n}>
+          <div className="proj-card" key={p.n} onClick={() => setActiveProgram(p.n)} style={{ cursor: "pointer" }}>
             <div className="n">{p.n}</div>
             <div>
               <h3><span className="acc">{p.title.split(" ")[0]}</span> {p.title.split(" ").slice(1).join(" ")}</h3>
@@ -1562,12 +1718,57 @@ function Tweaks({ tweaks, setTweak }) {
   );
 }
 
+function ProgramModal({ programKey, onClose }) {
+  const p = PROGRAM_FULL[programKey];
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [onClose]);
+  if (!p) return null;
+  return (
+    <div className="prog-modal-backdrop" onClick={onClose}>
+      <div className="prog-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="prog-modal-close" onClick={onClose}>×</button>
+        <div className="prog-modal-head">
+          <div className="prog-modal-num">{programKey}</div>
+          <div className="prog-modal-kicker">▸ {p.kicker}</div>
+          <h2 className="prog-modal-title">{p.headline}</h2>
+          <p className="prog-modal-lede">{p.lede}</p>
+        </div>
+        <div className="prog-modal-body">
+          {p.body.map((sec) => (
+            <div className="prog-modal-section" key={sec.label}>
+              <div className="prog-modal-section-label">{sec.label}</div>
+              <p>{sec.text}</p>
+            </div>
+          ))}
+          <div className="prog-modal-tags">
+            {p.tags.map((t) => <span className="tag" key={t}>{t}</span>)}
+          </div>
+        </div>
+        <div className="prog-modal-footer">
+          <div className="prog-modal-meta">
+            <span><b>When</b> · {p.when}</span>
+            <span><b>Who</b> · {p.who}</span>
+          </div>
+          <a className="btn btn-primary" href={p.cta.href} {...(p.cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+            {p.cta.label} <span className="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [route, setRouteState] = useState(() => {
     const h = window.location.hash.replace("#", "");
     return NAV.find(n => n.id === h) ? h : "home";
   });
+  const [activeProgram, setActiveProgram] = useState(null);
   const setRoute = (id) => {
     setRouteState(id);
     window.location.hash = id;
@@ -1631,9 +1832,10 @@ function App() {
   return (
     <>
       <Header route={route} setRoute={setRoute} />
-      <Page key={route} setRoute={setRoute} tweaks={tweaks} />
+      <Page key={route} setRoute={setRoute} tweaks={tweaks} setActiveProgram={setActiveProgram} />
       <Footer setRoute={setRoute} />
       <Tweaks tweaks={tweaks} setTweak={setTweak} />
+      {activeProgram && <ProgramModal programKey={activeProgram} onClose={() => setActiveProgram(null)} />}
     </>
   );
 }
