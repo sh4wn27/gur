@@ -516,38 +516,6 @@
   .proj-card .arrow-circle { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--rule-strong); display: grid; place-items: center; font-family: var(--mono); transition: all .2s; }
   .proj-card:hover .arrow-circle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(-45deg); }
 
-  /* Insights */
-  .ins-featured {
-    max-width: var(--maxw); margin: 0 auto;
-    padding: 40px var(--gutter);
-    border-radius: 24px;
-  }
-  .ins-fcard {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
-    background: var(--soft); border: 1px solid var(--rule); border-radius: 20px; padding: 40px;
-    align-items: center;
-  }
-  .ins-fcard .left { display: flex; flex-direction: column; gap: 16px; }
-  .ins-fcard .ix { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.06em; }
-  .ins-fcard h2 { font-family: var(--display); font-weight: 500; font-size: clamp(36px, 4vw, 60px); line-height: 1; letter-spacing: -0.03em; margin: 0; }
-  .ins-fcard h2 .acc { color: var(--accent); font-style: italic; }
-  .ins-fcard p { color: var(--muted); font-size: 15px; line-height: 1.6; }
-  .ins-fcard .by { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
-  .ins-fcard .fig { aspect-ratio: 4/3; border-radius: 12px; background: radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 60%), var(--paper-2); border: 1px solid var(--rule); }
-
-  .ins-grid { max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter) 80px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .ins-item {
-    padding: 28px; border-radius: 16px; background: var(--soft); border: 1px solid var(--rule);
-    display: grid; grid-template-columns: 1fr 100px; gap: 24px; cursor: pointer; align-items: center;
-    transition: border-color .2s, transform .2s;
-  }
-  .ins-item:hover { border-color: color-mix(in oklch, var(--accent) 60%, transparent); transform: translateY(-2px); }
-  .ins-item .ix { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
-  .ins-item h3 { font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.015em; }
-  .ins-item .by { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
-  .ins-item .arrow-circle { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule-strong); display: grid; place-items: center; transition: all .2s; }
-  .ins-item:hover .arrow-circle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(-45deg); }
-
   /* Get Involved */
   .paths { max-width: var(--maxw); margin: 0 auto; padding: 40px var(--gutter); display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .path-card {
@@ -596,22 +564,21 @@
 
   /* ── Dynamic tweak overrides ─────────────────────────── */
   .program-card, .step, .stat-card, .person, .proj-card, .path-card,
-  .ins-fcard, .ins-item, .tile, .form-success, .field input, .field textarea,
+  .tile, .form-success, .field input, .field textarea,
   .cta-banner, .brand-mark {
     border-radius: var(--card-radius, 16px);
   }
-  .person .portrait, .ins-fcard .fig { border-radius: calc(var(--card-radius, 16px) - 4px); }
+  .person .portrait { border-radius: calc(var(--card-radius, 16px) - 4px); }
   .arrow-circle { border-radius: 50%; } /* keep circle */
 
   /* User-fillable image placeholders. Drop files into ./images/<folder>/<slug>.jpg
      and they show up; missing files just reveal the patterned background. */
-  .person .portrait, .ins-fcard .fig { position: relative; overflow: hidden; }
+  .person .portrait { position: relative; overflow: hidden; }
   .ph-img {
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; display: block; z-index: 0;
   }
-  .person .portrait > *:not(.ph-img),
-  .ins-fcard .fig > *:not(.ph-img) { position: relative; z-index: 1; }
+  .person .portrait > *:not(.ph-img) { position: relative; z-index: 1; }
   .person .portrait:has(.ph-img:not([hidden])) { color: transparent; }
 
   /* Tile texture override */
@@ -652,8 +619,6 @@
     .proj-card { grid-template-columns: 60px 1fr; }
     .proj-card .meta-col { grid-column: 1/-1; align-items: flex-start; }
     .paths { grid-template-columns: 1fr; }
-    .ins-grid { grid-template-columns: 1fr; }
-    .ins-fcard { grid-template-columns: 1fr; }
     .about-grid { grid-template-columns: 1fr; gap: 32px; }
     .form-section { grid-template-columns: 1fr; gap: 32px; }
   }
@@ -787,13 +752,6 @@
       flex-direction: row; flex-wrap: wrap; gap: 8px;
     }
 
-    /* Insights */
-    .ins-featured { padding: 16px var(--gutter); }
-    .ins-fcard { padding: 24px; gap: 24px; }
-    .ins-grid { padding: 16px var(--gutter) 40px; gap: 10px; }
-    .ins-item { grid-template-columns: 1fr; }
-    .ins-item .arrow-circle { display: none; }
-
     /* Get Involved */
     .paths { padding: 16px var(--gutter); gap: 10px; }
     .path-card { grid-template-columns: 44px 1fr; padding: 16px; gap: 12px; }
@@ -888,6 +846,77 @@
     .prog-modal-footer { padding: 16px 20px 24px; flex-direction: column; align-items: flex-start; }
     .prog-modal-num { font-size: 52px; }
     .prog-modal-title { font-size: 28px; }
+  }
+
+  /* ── Gallery page (media lightbox) ────────────────────── */
+  .mgallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .mgallery .tile { aspect-ratio: 4/3; }
+  .gal-media {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
+  }
+  .gal-play {
+    position: absolute; top: 14px; right: 14px; z-index: 1;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: color-mix(in oklch, var(--paper) 80%, transparent);
+    backdrop-filter: blur(8px);
+    display: grid; place-items: center;
+    font-size: 12px; color: var(--accent);
+  }
+  .lightbox-backdrop {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .lightbox-stage {
+    max-width: min(1100px, 90vw); max-height: 90vh;
+    display: flex; flex-direction: column; gap: 12px; align-items: center;
+  }
+  .lightbox-media {
+    max-width: 100%; max-height: 76vh; width: auto; height: auto;
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+    background: #000;
+    object-fit: contain;
+  }
+  .lightbox-cap {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    justify-content: center;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.03em;
+    color: rgba(255,255,255,0.85); text-align: center;
+  }
+  .lightbox-count { color: rgba(255,255,255,0.5); }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 20px; z-index: 2;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    color: #fff; font-size: 22px; cursor: pointer;
+    display: grid; place-items: center; line-height: 1;
+    transition: background .15s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.18); }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    color: #fff; font-size: 26px; cursor: pointer;
+    display: grid; place-items: center; line-height: 1;
+    transition: background .15s;
+  }
+  .lightbox-nav:hover { background: rgba(255,255,255,0.18); }
+  .lightbox-nav.prev { left: 20px; }
+  .lightbox-nav.next { right: 20px; }
+  @media (max-width: 600px) {
+    .lightbox-nav { width: 40px; height: 40px; font-size: 20px; }
+    .lightbox-nav.prev { left: 8px; }
+    .lightbox-nav.next { right: 8px; }
+    .lightbox-close { top: 10px; right: 10px; }
   }
 </style>
 </head>
@@ -1078,13 +1107,46 @@ const PROGRAM_FULL = {
   },
 };
 
-const INSIGHTS = [
-  { ix: "FEATURED · № 014", title: "What we learned from 1,200 hours of mentor pairings", desc: "An honest look at what 1,200 hours of one-on-one mentorship taught us about matching, retention, and the small rituals that decide whether a pairing sticks.", by: "S. Li", time: "12 min", date: "December 2025", pdf: "A1 mentor.pdf", featured: true },
-  { ix: "ISSUE № 013", title: "Why we stopped optimizing for competition results", desc: "The case for treating tournaments as a side effect of a healthy program, not the goal of one.", by: "S. Li", time: "8 min", date: "March 2026", pdf: "EA1 competition.pdf" },
-  { ix: "ISSUE № 012", title: "A protocol for first-week mentor conversations", desc: "The first session with a new student is mostly throwaway. Here is how we stopped wasting it.", by: "S. Palle", time: "6 min", date: "February 2026", pdf: "EA2 first week.pdf" },
-  { ix: "ISSUE № 011", title: "How team-to-team coaching beats top-down curriculum", desc: "Why we gave up on writing a unified curriculum and started letting our cohorts teach each other.", by: "A. Talreja", time: "9 min", date: "March 2026", pdf: "EA3 team coaching.pdf" },
-  { ix: "ISSUE № 010", title: "Designing camps for students who've never coded", desc: "Five days, fifty students, zero programming experience. What we kept changing until it worked.", by: "G. Zhang", time: "7 min", date: "September 2025", pdf: "EA4 camp.pdf" },
-];
+const mediaType = (src) => /\.(mp4|webm|mov|m4v)$/i.test(src) ? "video" : "image";
+
+const GALLERY = [
+  { src: "images/insights/ftcteam.jpeg", cap: "FTC 14607 Robot Uprising at Chesapeake State Championship" },
+  { src: "images/insights/aymsummercampgroup.jpeg", cap: "AYM summer camp · full group & robot mascot" },
+  { src: "images/insights/aymsummercamp.jpeg", cap: "CAD lecture session · summer program" },
+  { src: "images/insights/fllmentoring.jpeg", cap: "One-on-one FLL coaching · field review" },
+  { src: "images/insights/flltutor.jpeg", cap: "FLL mentorship · pre-competition" },
+  { src: "images/insights/mentorship.jpeg", cap: "FTC 14607 mentors presenting to the group" },
+  { src: "images/insights/1on1mentorship.jpeg", cap: "Late-night robot assembly session" },
+  { src: "images/insights/guestspeaker.jpeg", cap: "Virtual guest talk · TJ classroom" },
+  { src: "images/insights/teammeetings.jpeg", cap: "Weekly planning session · whiteboard review" },
+  { src: "images/insights/img_6211.jpg" },
+  { src: "images/insights/img_6215.jpg" },
+  { src: "images/insights/img_6248.jpg" },
+  { src: "images/insights/img_6267.jpg" },
+  { src: "images/insights/img_9035.jpg" },
+  { src: "images/insights/img_9073.jpg" },
+  { src: "images/insights/img_9084.jpg" },
+  { src: "images/insights/gur_5eff0633.jpg" },
+  { src: "images/insights/gur_80b5bdc2.jpg" },
+  { src: "images/insights/gur_9c2d6025.jpg" },
+  { src: "images/insights/gur_a6fd6064.jpg" },
+  { src: "images/insights/img_6792.jpg" },
+  { src: "images/insights/img_6796.jpg" },
+  { src: "images/insights/img_6799.jpg" },
+  { src: "images/insights/img_6811.jpg" },
+  { src: "images/insights/img_6821.jpg" },
+  { src: "images/insights/img_6853.jpg" },
+  { src: "images/insights/img_6872.jpg" },
+  { src: "images/insights/img_6878.jpg" },
+  { src: "images/insights/img_6908.jpg" },
+  { src: "images/insights/img_6927.jpg" },
+  { src: "images/insights/img_6852.mp4", poster: "images/insights/img_6852-poster.jpg" },
+  { src: "images/insights/img_6871.mp4", poster: "images/insights/img_6871-poster.jpg" },
+  { src: "images/insights/img_6894.mp4", poster: "images/insights/img_6894-poster.jpg" },
+  { src: "images/insights/img_6926.mp4", poster: "images/insights/img_6926-poster.jpg" },
+  { src: "images/insights/img_6896.mp4", poster: "images/insights/img_6896-poster.jpg" },
+  { src: "images/insights/gur_7ee6f165.mp4", poster: "images/insights/gur_7ee6f165-poster.jpg" },
+].map((item) => ({ ...item, type: mediaType(item.src) }));
 
 const PATHS = [
   { n: "01", title: "Join as a Student", desc: "K–12 students interested in mentorship, courses, or camps. Free, application-based.", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
@@ -1145,7 +1207,6 @@ function Header({ route, setRoute }) {
             ))}
           </nav>
           <div className="topright">
-            <span className="live">LIVE · Summer Cohort in Planning</span>
             <a className="pill-cta" href="mailto:growingupwithrobotics@gmail.com">Contact ↗</a>
             <button className="menu-btn" onClick={() => setMenuOpen(v => !v)} aria-label="Toggle menu">
               {menuOpen ? "✕" : "☰"}
@@ -1174,7 +1235,6 @@ function Header({ route, setRoute }) {
           <a className="btn btn-primary" href="mailto:growingupwithrobotics@gmail.com" onClick={close}>
             Contact Us <span className="arrow">↗</span>
           </a>
-          <span className="live" style={{ alignSelf: "flex-start" }}>LIVE · Summer Cohort in Planning</span>
         </div>
       </div>
     </>
@@ -1234,7 +1294,6 @@ function Home({ setRoute, tweaks, setActiveProgram }) {
         <div className="hero-bg-logo" aria-hidden="true"></div>
         <div className="hero-content">
           <div className="hero-tags">
-            <span className="tag accent">Summer cohort open</span>
             <span className="tag">110+ volunteers and mentors</span>
             <span className="tag">7,000+ students reached</span>
             <span className="tag">5+ countries</span>
@@ -1531,56 +1590,88 @@ function Projects({ setRoute, setActiveProgram }) {
   );
 }
 
+function GalleryLightbox({ items, index, setIndex, onClose }) {
+  const item = items[index];
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setIndex((i) => (i + 1) % items.length);
+      if (e.key === "ArrowLeft") setIndex((i) => (i - 1 + items.length) % items.length);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [items.length, onClose, setIndex]);
+  if (!item) return null;
+  return (
+    <div className="lightbox-backdrop" onClick={onClose}>
+      <button className="lightbox-close" onClick={onClose} aria-label="Close">×</button>
+      <button className="lightbox-nav prev" onClick={(e) => { e.stopPropagation(); setIndex((index - 1 + items.length) % items.length); }} aria-label="Previous">‹</button>
+      <div className="lightbox-stage" onClick={(e) => e.stopPropagation()}>
+        {item.type === "video" ? (
+          <video className="lightbox-media" src={item.src} poster={item.poster} controls autoPlay playsInline />
+        ) : (
+          <img className="lightbox-media" src={item.src} alt={item.cap || ""} onError={onImgErr} />
+        )}
+        <div className="lightbox-cap">
+          {item.cap && <span>{item.cap}</span>}
+          <span className="lightbox-count">{index + 1} / {items.length}</span>
+        </div>
+      </div>
+      <button className="lightbox-nav next" onClick={(e) => { e.stopPropagation(); setIndex((index + 1) % items.length); }} aria-label="Next">›</button>
+    </div>
+  );
+}
+
 function Insights() {
   const [subDone, setSubDone] = useState(false);
+  const [openIndex, setOpenIndex] = useState(null);
   return (
     <div className="page">
       <header className="pageheader">
         <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>03</div>
         <div style={{ position: "relative", zIndex: 1 }}>
           <div className="meta-row">
-            <span className="tag accent">Insights</span>
-            <span className="tag">14 issues</span>
-            <span className="tag">Updated quarterly</span>
+            <span className="tag accent">Gallery</span>
+            <span className="tag">{GALLERY.length} moments</span>
+            <span className="tag">Photos & video</span>
           </div>
-          <h1>Notes from <span className="acc">the bench.</span></h1>
-          <p className="lede">Field notes, essays, and protocols from mentors, organizers, and students. <strong>What we're learning, what we got wrong, and what we'd do differently.</strong></p>
+          <h1>Moments from <span className="acc">the field.</span></h1>
+          <p className="lede">Photos and clips from mentorship sessions, camps, and competitions. <strong>Click through to see it up close.</strong></p>
         </div>
       </header>
 
-      <section className="ins-featured">
-        <div className="ins-fcard">
-          <div className="left">
-            <div className="ix">▸ {INSIGHTS[0].ix}</div>
-            <h2>{INSIGHTS[0].title}</h2>
-            <p>{INSIGHTS[0].desc}</p>
-            <div className="by">{INSIGHTS[0].by} · {INSIGHTS[0].time} read · {INSIGHTS[0].date}</div>
-            <a className="btn btn-primary" style={{ alignSelf: "flex-start" }} href={INSIGHTS[0].pdf} target="_blank" rel="noopener noreferrer">Read essay <span className="arrow">↗</span></a>
-          </div>
-          <div className="fig">
-            <img className="ph-img" src="images/insights/featured.jpg" alt="" onError={onImgErr} />
-          </div>
+      <section className="sec" style={{ paddingTop: 40 }}>
+        <div className="mgallery">
+          {GALLERY.map((item, i) => (
+            <div
+              className="tile"
+              key={item.src}
+              onClick={() => setOpenIndex(i)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter") setOpenIndex(i); }}
+            >
+              {item.type === "video" ? (
+                <video className="gal-media" src={item.src} poster={item.poster} muted playsInline preload="metadata" />
+              ) : (
+                <img className="gal-media" src={item.src} alt="" loading="lazy" onError={onImgErr} />
+              )}
+              {item.type === "video" && <div className="gal-play">▶</div>}
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="ins-grid">
-        {INSIGHTS.slice(1).map((p) => (
-          <a className="ins-item" key={p.title} href={p.pdf} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "inherit" }}>
-            <div>
-              <div className="ix">▸ {p.ix}</div>
-              <h3>{p.title}</h3>
-              <div className="by">{p.by} · {p.time} read · {p.date}</div>
-            </div>
-            <div className="arrow-circle">↗</div>
-          </a>
-        ))}
-      </section>
+      {openIndex !== null && (
+        <GalleryLightbox items={GALLERY} index={openIndex} setIndex={setOpenIndex} onClose={() => setOpenIndex(null)} />
+      )}
 
       <section className="cta-banner" style={{ marginTop: 0 }}>
         <div className="cta-banner-inner">
           <div>
             <div className="meta">▸ Subscribe</div>
-            <h2>Quarterly field reports — <span className="italic">in your inbox.</span></h2>
+            <h2>New moments from the field — <span className="italic">in your inbox.</span></h2>
           </div>
           <div className="actions" style={{ width: "100%" }}>
             {subDone ? (
