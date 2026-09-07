@@ -392,13 +392,19 @@
   /* ── Sponsors ───────────────────────────────────────── */
   .sponsor-grid {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+  }
+  .sponsor-row {
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 48px 56px;
+    gap: 64px 80px;
   }
   .sponsor-card {
-    width: 190px; height: 86px;
+    width: 285px; height: 129px;
     display: flex; align-items: center; justify-content: center;
     transition: transform .2s, opacity .2s;
     opacity: 0.88;
@@ -406,8 +412,9 @@
   .sponsor-card:hover { transform: translateY(-3px); opacity: 1; }
   .sponsor-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
   @media (max-width: 860px) {
-    .sponsor-card { width: 150px; height: 68px; }
-    .sponsor-grid { gap: 32px 40px; }
+    .sponsor-card { width: 225px; height: 102px; }
+    .sponsor-row { gap: 40px 48px; }
+    .sponsor-grid { gap: 40px; }
   }
 
   /* ── CTA banner ─────────────────────────────────────── */
@@ -1136,7 +1143,7 @@ const SPONSORS = [
   { name: "Jane Street", src: "public/sponsors/jane_street.png" },
   { name: "R Cube IT", src: "public/sponsors/rcube.png" },
   { name: "Send Cut Send", src: "public/sponsors/send_cut_send.png" },
-  { name: "TJ Academic Boosters", src: "public/sponsors/tjab.jpg" },
+  { name: "TJ Academic Boosters", src: "public/sponsors/tjab.png" },
   { name: "TJ Partnership Fund", src: "public/sponsors/tjpf.png" },
 ];
 
@@ -1445,11 +1452,20 @@ function Home({ setRoute, tweaks, setActiveProgram }) {
           <div className="meta">{SPONSORS.length} organizations</div>
         </div>
         <div className="sponsor-grid">
-          {SPONSORS.map(s => (
-            <div className="sponsor-card" key={s.name}>
-              <img src={s.src} alt={s.name} loading="lazy" />
-            </div>
-          ))}
+          <div className="sponsor-row">
+            {SPONSORS.slice(0, 4).map(s => (
+              <div className="sponsor-card" key={s.name}>
+                <img src={s.src} alt={s.name} loading="lazy" />
+              </div>
+            ))}
+          </div>
+          <div className="sponsor-row">
+            {SPONSORS.slice(4).map(s => (
+              <div className="sponsor-card" key={s.name}>
+                <img src={s.src} alt={s.name} loading="lazy" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
