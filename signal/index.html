@@ -389,6 +389,27 @@
   .t4 { grid-column: span 4; aspect-ratio: 1; }
   .t5 { grid-column: span 4; aspect-ratio: 1; }
 
+  /* ── Sponsors ───────────────────────────────────────── */
+  .sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .sponsor-card {
+    background: #f6f6f3;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    padding: 28px;
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .sponsor-card:hover { transform: translateY(-3px); border-color: color-mix(in oklch, var(--accent) 60%, transparent); box-shadow: 0 12px 40px color-mix(in oklch, var(--accent) 18%, transparent); }
+  .sponsor-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  @media (max-width: 860px) {
+    .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
   /* ── CTA banner ─────────────────────────────────────── */
   .cta-banner {
     margin: 0 var(--gutter) 80px;
@@ -1109,43 +1130,53 @@ const PROGRAM_FULL = {
 
 const mediaType = (src) => /\.(mp4|webm|mov|m4v)$/i.test(src) ? "video" : "image";
 
+const SPONSORS = [
+  { name: "BAE Systems", src: "public/sponsors/bae_systems.png" },
+  { name: "goBILDA", src: "public/sponsors/go_builda.png" },
+  { name: "Jane Street", src: "public/sponsors/jane_street.png" },
+  { name: "R Cube IT", src: "public/sponsors/rcube.png" },
+  { name: "Send Cut Send", src: "public/sponsors/send_cut_send.png" },
+  { name: "TJ Academic Boosters", src: "public/sponsors/tjab.jpg" },
+  { name: "TJ Partnership Fund", src: "public/sponsors/tjpf.png" },
+];
+
 const GALLERY = [
-  { src: "images/insights/ftcteam.jpeg", cap: "FTC 14607 Robot Uprising at Chesapeake State Championship" },
-  { src: "images/insights/aymsummercampgroup.jpeg", cap: "AYM summer camp · full group & robot mascot" },
-  { src: "images/insights/aymsummercamp.jpeg", cap: "CAD lecture session · summer program" },
-  { src: "images/insights/fllmentoring.jpeg", cap: "One-on-one FLL coaching · field review" },
-  { src: "images/insights/flltutor.jpeg", cap: "FLL mentorship · pre-competition" },
-  { src: "images/insights/mentorship.jpeg", cap: "FTC 14607 mentors presenting to the group" },
-  { src: "images/insights/1on1mentorship.jpeg", cap: "Late-night robot assembly session" },
-  { src: "images/insights/guestspeaker.jpeg", cap: "Virtual guest talk · TJ classroom" },
-  { src: "images/insights/teammeetings.jpeg", cap: "Weekly planning session · whiteboard review" },
-  { src: "images/insights/img_6211.jpg" },
-  { src: "images/insights/img_6215.jpg" },
-  { src: "images/insights/img_6248.jpg" },
-  { src: "images/insights/img_6267.jpg" },
-  { src: "images/insights/img_9035.jpg" },
-  { src: "images/insights/img_9073.jpg" },
-  { src: "images/insights/img_9084.jpg" },
-  { src: "images/insights/gur_5eff0633.jpg" },
-  { src: "images/insights/gur_80b5bdc2.jpg" },
-  { src: "images/insights/gur_9c2d6025.jpg" },
-  { src: "images/insights/gur_a6fd6064.jpg" },
-  { src: "images/insights/img_6792.jpg" },
-  { src: "images/insights/img_6796.jpg" },
-  { src: "images/insights/img_6799.jpg" },
-  { src: "images/insights/img_6811.jpg" },
-  { src: "images/insights/img_6821.jpg" },
-  { src: "images/insights/img_6853.jpg" },
-  { src: "images/insights/img_6872.jpg" },
-  { src: "images/insights/img_6878.jpg" },
-  { src: "images/insights/img_6908.jpg" },
-  { src: "images/insights/img_6927.jpg" },
-  { src: "images/insights/img_6852.mp4", poster: "images/insights/img_6852-poster.jpg" },
-  { src: "images/insights/img_6871.mp4", poster: "images/insights/img_6871-poster.jpg" },
-  { src: "images/insights/img_6894.mp4", poster: "images/insights/img_6894-poster.jpg" },
-  { src: "images/insights/img_6926.mp4", poster: "images/insights/img_6926-poster.jpg" },
-  { src: "images/insights/img_6896.mp4", poster: "images/insights/img_6896-poster.jpg" },
-  { src: "images/insights/gur_7ee6f165.mp4", poster: "images/insights/gur_7ee6f165-poster.jpg" },
+  { src: "public/insights/ftcteam.jpeg", cap: "FTC 14607 Robot Uprising at Chesapeake State Championship" },
+  { src: "public/insights/aymsummercampgroup.jpeg", cap: "AYM summer camp · full group & robot mascot" },
+  { src: "public/insights/aymsummercamp.jpeg", cap: "CAD lecture session · summer program" },
+  { src: "public/insights/fllmentoring.jpeg", cap: "One-on-one FLL coaching · field review" },
+  { src: "public/insights/flltutor.jpeg", cap: "FLL mentorship · pre-competition" },
+  { src: "public/insights/mentorship.jpeg", cap: "FTC 14607 mentors presenting to the group" },
+  { src: "public/insights/1on1mentorship.jpeg", cap: "Late-night robot assembly session" },
+  { src: "public/insights/guestspeaker.jpeg", cap: "Virtual guest talk · TJ classroom" },
+  { src: "public/insights/teammeetings.jpeg", cap: "Weekly planning session · whiteboard review" },
+  { src: "public/insights/img_6211.jpg" },
+  { src: "public/insights/img_6215.jpg" },
+  { src: "public/insights/img_6248.jpg" },
+  { src: "public/insights/img_6267.jpg" },
+  { src: "public/insights/img_9035.jpg" },
+  { src: "public/insights/img_9073.jpg" },
+  { src: "public/insights/img_9084.jpg" },
+  { src: "public/insights/gur_5eff0633.jpg" },
+  { src: "public/insights/gur_80b5bdc2.jpg" },
+  { src: "public/insights/gur_9c2d6025.jpg" },
+  { src: "public/insights/gur_a6fd6064.jpg" },
+  { src: "public/insights/img_6792.jpg" },
+  { src: "public/insights/img_6796.jpg" },
+  { src: "public/insights/img_6799.jpg" },
+  { src: "public/insights/img_6811.jpg" },
+  { src: "public/insights/img_6821.jpg" },
+  { src: "public/insights/img_6853.jpg" },
+  { src: "public/insights/img_6872.jpg" },
+  { src: "public/insights/img_6878.jpg" },
+  { src: "public/insights/img_6908.jpg" },
+  { src: "public/insights/img_6927.jpg" },
+  { src: "public/insights/img_6852.mp4", poster: "public/insights/img_6852-poster.jpg" },
+  { src: "public/insights/img_6871.mp4", poster: "public/insights/img_6871-poster.jpg" },
+  { src: "public/insights/img_6894.mp4", poster: "public/insights/img_6894-poster.jpg" },
+  { src: "public/insights/img_6926.mp4", poster: "public/insights/img_6926-poster.jpg" },
+  { src: "public/insights/img_6896.mp4", poster: "public/insights/img_6896-poster.jpg" },
+  { src: "public/insights/gur_7ee6f165.mp4", poster: "public/insights/gur_7ee6f165-poster.jpg" },
 ].map((item) => ({ ...item, type: mediaType(item.src) }));
 
 const PATHS = [
@@ -1409,16 +1440,16 @@ function Home({ setRoute, tweaks, setActiveProgram }) {
 
       <section className="sec">
         <div className="sec-head">
-          <div className="ix">▸ 04 / From the field</div>
-          <h2>On the <span className="acc">field.</span></h2>
-          <div className="meta">Spring MMXXVI · 5 selected</div>
+          <div className="ix">▸ 04 / Partners</div>
+          <h2>Backed by our <span className="acc">sponsors.</span></h2>
+          <div className="meta">{SPONSORS.length} organizations</div>
         </div>
-        <div className="gallery">
-          <div className="tile t1"><img src="images/insights/ftcteam.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FTC 14607</div><div className="cap">FTC 14607 Robot Uprising at Chesapeake State Championship </div></div>
-          <div className="tile t2"><img src="images/insights/aymsummercampgroup.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM SUMMER CAMP</div><div className="cap">AYM summer camp · full cohort & robot mascot</div></div>
-          <div className="tile t3"><img src="images/insights/aymsummercamp.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM SUMMER CAMP</div><div className="cap">CAD lecture session · summer program</div></div>
-          <div className="tile t4"><img src="images/insights/fllmentoring.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL MENTORSHIP</div><div className="cap">One-on-one FLL coaching · field review</div></div>
-          <div className="tile t5"><img src="images/insights/flltutor.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL TEAM</div><div className="cap">FLL mentorship · pre-competition</div></div>
+        <div className="sponsor-grid">
+          {SPONSORS.map(s => (
+            <div className="sponsor-card" key={s.name}>
+              <img src={s.src} alt={s.name} loading="lazy" />
+            </div>
+          ))}
         </div>
       </section>
 
@@ -1480,6 +1511,7 @@ function About({ setRoute }) {
           <h2>Led by <span className="acc">Students.</span></h2>
           <div className="meta">Staff &amp; program leads</div>
         </div>
+
         <div className="team-grid" style={{ padding: 0 }}>
           {TEAM.map(p => (
             <div className="person" key={p.name}>
@@ -1579,11 +1611,11 @@ function Projects({ setRoute, setActiveProgram }) {
           <div className="meta">Selected · MMXXVI</div>
         </div>
         <div className="gallery">
-          <div className="tile t1"><img src="images/insights/mentorship.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM CAMP</div><div className="cap">FTC 14607 mentors presenting to the cohort</div></div>
-          <div className="tile t2"><img src="images/insights/1on1mentorship.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ 1-ON-1 BUILD</div><div className="cap">Late-night robot assembly session</div></div>
-          <div className="tile t3"><img src="images/insights/guestspeaker.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ GUEST SPEAKER</div><div className="cap">Virtual guest talk · TJ classroom</div></div>
-          <div className="tile t4"><img src="images/insights/teammeetings.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ TEAM MEETING</div><div className="cap">Weekly planning session · whiteboard review</div></div>
-          <div className="tile t5"><img src="images/insights/fllmentoring.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL MENTORSHIP</div><div className="cap">FLL field coaching · hands-on review</div></div>
+          <div className="tile t1"><img src="public/insights/mentorship.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ AYM CAMP</div><div className="cap">FTC 14607 mentors presenting to the cohort</div></div>
+          <div className="tile t2"><img src="public/insights/1on1mentorship.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ 1-ON-1 BUILD</div><div className="cap">Late-night robot assembly session</div></div>
+          <div className="tile t3"><img src="public/insights/guestspeaker.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ GUEST SPEAKER</div><div className="cap">Virtual guest talk · TJ classroom</div></div>
+          <div className="tile t4"><img src="public/insights/teammeetings.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ TEAM MEETING</div><div className="cap">Weekly planning session · whiteboard review</div></div>
+          <div className="tile t5"><img src="public/insights/fllmentoring.jpeg" alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:0 }} /><div className="tag-tl">▸ FLL MENTORSHIP</div><div className="cap">FLL field coaching · hands-on review</div></div>
         </div>
       </section>
     </div>
