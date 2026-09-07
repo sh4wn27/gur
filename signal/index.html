@@ -391,23 +391,23 @@
 
   /* ── Sponsors ───────────────────────────────────────── */
   .sponsor-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 48px 56px;
   }
   .sponsor-card {
-    background: #f6f6f3;
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    aspect-ratio: 16/9;
+    width: 190px; height: 86px;
     display: flex; align-items: center; justify-content: center;
-    padding: 28px;
-    transition: transform .25s, box-shadow .25s, border-color .25s;
+    transition: transform .2s, opacity .2s;
+    opacity: 0.88;
   }
-  .sponsor-card:hover { transform: translateY(-3px); border-color: color-mix(in oklch, var(--accent) 60%, transparent); box-shadow: 0 12px 40px color-mix(in oklch, var(--accent) 18%, transparent); }
+  .sponsor-card:hover { transform: translateY(-3px); opacity: 1; }
   .sponsor-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
   @media (max-width: 860px) {
-    .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
+    .sponsor-card { width: 150px; height: 68px; }
+    .sponsor-grid { gap: 32px 40px; }
   }
 
   /* ── CTA banner ─────────────────────────────────────── */
