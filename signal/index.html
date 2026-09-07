@@ -1532,7 +1532,7 @@ function About({ setRoute }) {
           {TEAM.map(p => (
             <div className="person" key={p.name}>
               <div className="portrait">
-                <img className="ph-img" src={`images/team/${p.img}`} alt={p.name} onError={onImgErr} />
+                <img className="ph-img" src={`public/team/${p.img}`} alt={p.name} onError={onImgErr} />
                 {p.name}
               </div>
               <div className="name">{p.name}</div>
