@@ -1131,7 +1131,7 @@ const PROGRAM_FULL = {
     tags: ["Quarterly", "All volunteers", "12-hour core", "Role-specific modules"],
     when: "Quarterly",
     who: "High school & college volunteers",
-    cta: { label: "Apply to mentor", href: "mailto:growingupwithrobotics@gmail.com" },
+    cta: { label: "Apply to mentor", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", external: true },
   },
 };
 
@@ -1188,7 +1188,7 @@ const GALLERY = [
 
 const PATHS = [
   { n: "01", title: "Join as a Student", desc: "K–12 students interested in mentorship, courses, or camps. Free, application-based.", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
-  { n: "02", title: "Mentor with Us", desc: "High school and college students with technical and teaching interests. Training provided.", href: "mailto:growingupwithrobotics@gmail.com" },
+  { n: "02", title: "Mentor with Us", desc: "High school and college students with technical and teaching interests. Training provided.", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", external: true },
   { n: "03", title: "Partner Schools", desc: "Schools and districts looking to bring workshops, curricula, or camps to their students.", href: "mailto:growingupwithrobotics@gmail.com" },
   { n: "04", title: "Sponsor Programs", desc: "Companies and individuals funding access for students in underserved communities.", href: "mailto:growingupwithrobotics@gmail.com" },
 ];
@@ -1364,7 +1364,7 @@ function Home({ setRoute, tweaks, setActiveProgram }) {
           </div>
           <div className="cta-stack">
             <h5>Get involved</h5>
-            <a className="btn btn-ghost" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Mentor with us</a>
+            <a className="btn btn-ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">Mentor with us</a>
             <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with us</a>
           </div>
         </div>
@@ -1578,7 +1578,7 @@ function About({ setRoute }) {
             <h2>We're hiring mentors <span className="italic">for fall.</span></h2>
           </div>
           <div className="actions">
-            <a className="btn btn-primary" href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Apply to mentor <span className="arrow">↗</span></a>
+            <a className="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">Apply to mentor <span className="arrow">↗</span></a>
           </div>
         </div>
       </section>
@@ -1761,10 +1761,13 @@ function Insights() {
 function GetInvolved() {
   const [role, setRole] = useState("Student");
   const isStudent = role === "Student";
+  const isMentor = role === "Mentor";
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isStudent) {
       window.open("https://forms.gle/JCKz958v3CVfPBky5", "_blank");
+    } else if (isMentor) {
+      window.open("https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", "_blank");
     } else {
       window.location.href = "mailto:growingupwithrobotics@gmail.com";
     }
@@ -1800,7 +1803,7 @@ function GetInvolved() {
         <div className="left">
           <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>▸ Application</div>
           <h2>Tell us <span className="acc">who you are.</span></h2>
-          <p>{isStudent ? "Sign up for our mailing list and apply to join as a student — takes under two minutes." : "Reach out directly and we'll connect you with the right program lead within a week."}</p>
+          <p>{isStudent ? "Sign up for our mailing list and apply to join as a student — takes under two minutes." : isMentor ? "Fill out our volunteer application to join the team as a mentor — takes under two minutes." : "Reach out directly and we'll connect you with the right program lead within a week."}</p>
         </div>
         <form className="form" onSubmit={handleSubmit}>
           <div className="field full">
@@ -1813,10 +1816,10 @@ function GetInvolved() {
           </div>
           <div className="form-actions" style={{ gridColumn: "1 / -1", paddingTop: 0 }}>
             <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              {isStudent ? "▸ Opens Google Form" : "▸ Opens your email client"}
+              {isStudent || isMentor ? "▸ Opens Google Form" : "▸ Opens your email client"}
             </div>
             <button className="btn btn-primary" type="submit">
-              {isStudent ? "Join the mailing list" : "Contact us"} <span className="arrow">↗</span>
+              {isStudent ? "Join the mailing list" : isMentor ? "Apply to volunteer" : "Contact us"} <span className="arrow">↗</span>
             </button>
           </div>
         </form>
