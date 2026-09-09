@@ -2,11 +2,7 @@
 
 The website and digital properties for **Growing Up with Robotics (GUR)** — a student-led 501(c)(3) nonprofit making robotics and STEM education accessible to K–12 students through mentorship, team-to-team coaching, free courses, and camps.
 
-🔗 Live site: [growingupwithrobotics.org](https://growingupwithrobotics.org)
-
-## Current site: `signal/`
-
-`signal/` is the active, production website ("GUR Signal") deployed via Vercel. It's a single-page app built with:
+Live site: [growingupwithrobotics.org](https://growingupwithrobotics.org)
 
 - **React 18** (UMD build) + **Babel Standalone**, loaded directly in `index.html` — no build step or bundler
 - Plain CSS (custom properties for theming, light/dark mode support)
@@ -20,16 +16,6 @@ Key sections of the site:
 - **Insights** — photo/video gallery of program moments
 - **Get Involved** — application paths for students, mentors, schools, and sponsors
 - **Sponsors** — supporting organizations
-
-### Running locally
-
-```bash
-cd signal
-python3 -m http.server 8080
-# open http://localhost:8080
-```
-
-No install or build step is required — the page loads React/Babel from CDN and transpiles JSX in-browser.
 
 ### Deployment
 
