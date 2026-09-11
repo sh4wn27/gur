@@ -952,18 +952,25 @@
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+  <div style="max-width:520px;margin:15vh auto;padding:0 24px;text-align:center;font-family:sans-serif">
+    <p style="font-size:15px;line-height:1.6">
+      Growing Up with Robotics is having trouble loading in this browser.
+      Please try refreshing the page, or reach us directly at
+      <a href="mailto:growingupwithrobotics@gmail.com" style="color:inherit">growingupwithrobotics@gmail.com</a>.
+    </p>
+  </div>
+</div>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script src="tweaks-panel.js"></script>
 
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
+<script>
+function _extends() {return _extends = Object.assign ? Object.assign.bind() : function (n) {for (var e = 1; e < arguments.length; e++) {var t = arguments[e];for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);}return n;}, _extends.apply(null, arguments);}const { useState, useEffect, useRef } = React;
 
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const onImgErr = (e) => { e.currentTarget.hidden = true; };
+const onImgErr = (e) => {e.currentTarget.hidden = true;};
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "fontPair": "bricolage",
@@ -974,96 +981,96 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accentMark": "▸",
   "glow": "soft",
   "tileTexture": "scan"
-}/*EDITMODE-END*/;
+} /*EDITMODE-END*/;
 
 // Each palette has dark + light variant accent
 const PALETTES = {
-  signal:   { dark: { ink: "#f6f6f3", paper: "#0a0d0a", accent: "#6cff5a" }, light: { ink: "#0a0d0a", paper: "#f6f6f3", accent: "#1f7a30" }, swatch: ["#0a0d0a","#f6f6f3","#6cff5a"] },
-  jade:     { dark: { ink: "#eef1ec", paper: "#0c1110", accent: "#34d399" }, light: { ink: "#0c1110", paper: "#eef1ec", accent: "#0e8a5d" }, swatch: ["#0c1110","#eef1ec","#34d399"] },
-  carbon:   { dark: { ink: "#f5f5f5", paper: "#08090a", accent: "#d1ff3a" }, light: { ink: "#08090a", paper: "#f5f5f5", accent: "#6a8b00" }, swatch: ["#08090a","#f5f5f5","#d1ff3a"] },
-  ocean:    { dark: { ink: "#e8eef0", paper: "#08111a", accent: "#5eead4" }, light: { ink: "#08111a", paper: "#e8eef0", accent: "#0d8b78" }, swatch: ["#08111a","#e8eef0","#5eead4"] },
-  ember:    { dark: { ink: "#f4ede4", paper: "#100806", accent: "#ff6a3d" }, light: { ink: "#100806", paper: "#f4ede4", accent: "#d94a1e" }, swatch: ["#100806","#f4ede4","#ff6a3d"] },
-  ultra:    { dark: { ink: "#eee9f4", paper: "#0c0716", accent: "#a78bfa" }, light: { ink: "#0c0716", paper: "#eee9f4", accent: "#6d3aed" }, swatch: ["#0c0716","#eee9f4","#a78bfa"] },
-  rose:     { dark: { ink: "#f4ebed", paper: "#11070a", accent: "#fb7185" }, light: { ink: "#11070a", paper: "#f4ebed", accent: "#c43a4f" }, swatch: ["#11070a","#f4ebed","#fb7185"] },
-  midnight: { dark: { ink: "#e6ecf5", paper: "#070b14", accent: "#60a5fa" }, light: { ink: "#070b14", paper: "#e6ecf5", accent: "#2563eb" }, swatch: ["#070b14","#e6ecf5","#60a5fa"] },
-  cyber:    { dark: { ink: "#eaf6ff", paper: "#04101a", accent: "#22d3ee" }, light: { ink: "#04101a", paper: "#eaf6ff", accent: "#0891b2" }, swatch: ["#04101a","#eaf6ff","#22d3ee"] },
-  bone:     { dark: { ink: "#f0ede4", paper: "#0e0d0a", accent: "#facc15" }, light: { ink: "#0e0d0a", paper: "#f0ede4", accent: "#a8740c" }, swatch: ["#0e0d0a","#f0ede4","#facc15"] },
+  signal: { dark: { ink: "#f6f6f3", paper: "#0a0d0a", accent: "#6cff5a" }, light: { ink: "#0a0d0a", paper: "#f6f6f3", accent: "#1f7a30" }, swatch: ["#0a0d0a", "#f6f6f3", "#6cff5a"] },
+  jade: { dark: { ink: "#eef1ec", paper: "#0c1110", accent: "#34d399" }, light: { ink: "#0c1110", paper: "#eef1ec", accent: "#0e8a5d" }, swatch: ["#0c1110", "#eef1ec", "#34d399"] },
+  carbon: { dark: { ink: "#f5f5f5", paper: "#08090a", accent: "#d1ff3a" }, light: { ink: "#08090a", paper: "#f5f5f5", accent: "#6a8b00" }, swatch: ["#08090a", "#f5f5f5", "#d1ff3a"] },
+  ocean: { dark: { ink: "#e8eef0", paper: "#08111a", accent: "#5eead4" }, light: { ink: "#08111a", paper: "#e8eef0", accent: "#0d8b78" }, swatch: ["#08111a", "#e8eef0", "#5eead4"] },
+  ember: { dark: { ink: "#f4ede4", paper: "#100806", accent: "#ff6a3d" }, light: { ink: "#100806", paper: "#f4ede4", accent: "#d94a1e" }, swatch: ["#100806", "#f4ede4", "#ff6a3d"] },
+  ultra: { dark: { ink: "#eee9f4", paper: "#0c0716", accent: "#a78bfa" }, light: { ink: "#0c0716", paper: "#eee9f4", accent: "#6d3aed" }, swatch: ["#0c0716", "#eee9f4", "#a78bfa"] },
+  rose: { dark: { ink: "#f4ebed", paper: "#11070a", accent: "#fb7185" }, light: { ink: "#11070a", paper: "#f4ebed", accent: "#c43a4f" }, swatch: ["#11070a", "#f4ebed", "#fb7185"] },
+  midnight: { dark: { ink: "#e6ecf5", paper: "#070b14", accent: "#60a5fa" }, light: { ink: "#070b14", paper: "#e6ecf5", accent: "#2563eb" }, swatch: ["#070b14", "#e6ecf5", "#60a5fa"] },
+  cyber: { dark: { ink: "#eaf6ff", paper: "#04101a", accent: "#22d3ee" }, light: { ink: "#04101a", paper: "#eaf6ff", accent: "#0891b2" }, swatch: ["#04101a", "#eaf6ff", "#22d3ee"] },
+  bone: { dark: { ink: "#f0ede4", paper: "#0e0d0a", accent: "#facc15" }, light: { ink: "#0e0d0a", paper: "#f0ede4", accent: "#a8740c" }, swatch: ["#0e0d0a", "#f0ede4", "#facc15"] }
 };
 const FONT_PAIRS = {
-  bricolage:    { name: "Bricolage", display: "'Bricolage Grotesque', sans-serif", sans: "'DM Sans', sans-serif" },
+  bricolage: { name: "Bricolage", display: "'Bricolage Grotesque', sans-serif", sans: "'DM Sans', sans-serif" },
   spaceGrotesk: { name: "Space Grotesk", display: "'Space Grotesk', sans-serif", sans: "'Space Grotesk', sans-serif", load: "Space+Grotesk:wght@300;400;500;600;700" },
-  manrope:      { name: "Manrope", display: "'Manrope', sans-serif", sans: "'Manrope', sans-serif", load: "Manrope:wght@200;300;400;500;600;700;800" },
-  generalSans:  { name: "Hanken Grotesk", display: "'Hanken Grotesk', sans-serif", sans: "'Hanken Grotesk', sans-serif", load: "Hanken+Grotesk:wght@300;400;500;600;700;800" },
-  redaktion:    { name: "Familjen Grotesk", display: "'Familjen Grotesk', sans-serif", sans: "'Familjen Grotesk', sans-serif", load: "Familjen+Grotesk:wght@400;500;600;700" },
-  unbounded:    { name: "Unbounded + Jakarta", display: "'Unbounded', sans-serif", sans: "'Plus Jakarta Sans', sans-serif", load: "Unbounded:wght@400;500;600;700;800|Plus+Jakarta+Sans:wght@300;400;500;600" },
-  syne:         { name: "Syne + DM", display: "'Syne', sans-serif", sans: "'DM Sans', sans-serif", load: "Syne:wght@400;500;600;700;800" },
-  archivo:      { name: "Archivo + Inter", display: "'Archivo', sans-serif", sans: "'Inter', sans-serif", load: "Archivo:wght@400;500;600;700;800;900|Inter:wght@300;400;500;600" },
+  manrope: { name: "Manrope", display: "'Manrope', sans-serif", sans: "'Manrope', sans-serif", load: "Manrope:wght@200;300;400;500;600;700;800" },
+  generalSans: { name: "Hanken Grotesk", display: "'Hanken Grotesk', sans-serif", sans: "'Hanken Grotesk', sans-serif", load: "Hanken+Grotesk:wght@300;400;500;600;700;800" },
+  redaktion: { name: "Familjen Grotesk", display: "'Familjen Grotesk', sans-serif", sans: "'Familjen Grotesk', sans-serif", load: "Familjen+Grotesk:wght@400;500;600;700" },
+  unbounded: { name: "Unbounded + Jakarta", display: "'Unbounded', sans-serif", sans: "'Plus Jakarta Sans', sans-serif", load: "Unbounded:wght@400;500;600;700;800|Plus+Jakarta+Sans:wght@300;400;500;600" },
+  syne: { name: "Syne + DM", display: "'Syne', sans-serif", sans: "'DM Sans', sans-serif", load: "Syne:wght@400;500;600;700;800" },
+  archivo: { name: "Archivo + Inter", display: "'Archivo', sans-serif", sans: "'Inter', sans-serif", load: "Archivo:wght@400;500;600;700;800;900|Inter:wght@300;400;500;600" }
 };
 const DENSITIES = { compact: 0.78, default: 1, airy: 1.25 };
 const CARD_RADII = { sharp: "0px", soft: "8px", round: "16px", pill: "28px" };
 const GLOWS = {
-  off:    { strength: 0, halo: 0 },
-  soft:   { strength: 1, halo: 14 },
-  strong: { strength: 1.6, halo: 24 },
+  off: { strength: 0, halo: 0 },
+  soft: { strength: 1, halo: 14 },
+  strong: { strength: 1.6, halo: 24 }
 };
 const TILE_TEXTURES = {
-  scan:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklch, var(--ink) 4%, transparent) 12px 13px)",
-  grid:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), repeating-linear-gradient(0deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 1px, transparent 1px 24px), repeating-linear-gradient(90deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 1px, transparent 1px 24px)",
-  dots:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), radial-gradient(color-mix(in oklch, var(--ink) 12%, transparent) 1.5px, transparent 2px) 0 0 / 18px 18px",
+  scan: "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklch, var(--ink) 4%, transparent) 12px 13px)",
+  grid: "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), repeating-linear-gradient(0deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 1px, transparent 1px 24px), repeating-linear-gradient(90deg, color-mix(in oklch, var(--ink) 5%, transparent) 0 1px, transparent 1px 24px)",
+  dots: "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), radial-gradient(color-mix(in oklch, var(--ink) 12%, transparent) 1.5px, transparent 2px) 0 0 / 18px 18px",
   noise: "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%), radial-gradient(color-mix(in oklch, var(--ink) 10%, transparent) 0.5px, transparent 1px) 0 0 / 5px 5px, radial-gradient(color-mix(in oklch, var(--ink) 7%, transparent) 0.5px, transparent 1px) 2px 3px / 9px 9px",
-  blur:  "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 24%, transparent), transparent 55%), radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%)",
-  solid: "color-mix(in oklch, var(--ink) 5%, transparent)",
+  blur: "radial-gradient(circle at 30% 30%, color-mix(in oklch, var(--accent) 24%, transparent), transparent 55%), radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%)",
+  solid: "color-mix(in oklch, var(--ink) 5%, transparent)"
 };
 
 const NAV = [
-  { id: "home", label: "Main" },
-  { id: "about", label: "About" },
-  { id: "projects", label: "Programs" },
-  { id: "insights", label: "Insights" },
-  { id: "involve", label: "Get Involved" },
-];
+{ id: "home", label: "Main" },
+{ id: "about", label: "About" },
+{ id: "projects", label: "Programs" },
+{ id: "insights", label: "Insights" },
+{ id: "involve", label: "Get Involved" }];
+
 
 const STATS = [
-  { ix: "01 / Reached Students", num: "7,000", suffix: "+", desc: "Students reached through mentorship, courses, and camps in five countries." },
-  { ix: "02 / Volunteers & Mentors", num: "110", suffix: "+", desc: "Active student volunteers serving as near-peer mentors." },
-  { ix: "03 / Global Impact", num: "5", suffix: "+", desc: "Establishing global impacts through international collaborations." },
-  { ix: "04 / Funds Raised", num: "19,500", suffix: "+", desc: "Raised to keep every program free and expand access to students who need it most.", prefix: "$" },
-];
+{ ix: "01 / Reached Students", num: "7,000", suffix: "+", desc: "Students reached through mentorship, courses, and camps in five countries." },
+{ ix: "02 / Volunteers & Mentors", num: "110", suffix: "+", desc: "Active student volunteers serving as near-peer mentors." },
+{ ix: "03 / Global Impact", num: "5", suffix: "+", desc: "Establishing global impacts through international collaborations." },
+{ ix: "04 / Funds Raised", num: "19,500", suffix: "+", desc: "Raised to keep every program free and expand access to students who need it most.", prefix: "$" }];
+
 
 const PROGRAMS = [
-  { ix: "01", kicker: "1-on-1", title: "Student Mentorship", desc: "Pair K–12 students with near-peer mentors for weekly project-driven sessions. Goals set in week one, milestones reviewed monthly.", tags: ["Year-round", "Grades 4-12", "Free"] },
-  { ix: "02", kicker: "Team support", title: "Team-to-Team", desc: "Experienced competition teams coach emerging rookie squads on build, code, and competition strategy.", tags: ["Aug–Apr", "FLL → FRC", "Free"] },
-  { ix: "03", kicker: "Self-paced", title: "Engineering & CS Courses", desc: "Free, modular open curricula in CAD, embedded systems, and programming. Taught by students, for students.", tags: ["Rolling", "Grades 6-12", "Open source"] },
-  { ix: "04", kicker: "Seasonal", title: "Camps & Workshops", desc: "Multi-day hands-on programs hosted at schools and community centers, especially in underserved areas.", tags: ["Summer + Winter", "Grades 3-9", "Free"] },
-];
+{ ix: "01", kicker: "1-on-1", title: "Student Mentorship", desc: "Pair K–12 students with near-peer mentors for weekly project-driven sessions. Goals set in week one, milestones reviewed monthly.", tags: ["Year-round", "Grades 4-12", "Free"] },
+{ ix: "02", kicker: "Team support", title: "Team-to-Team", desc: "Experienced competition teams coach emerging rookie squads on build, code, and competition strategy.", tags: ["Aug–Apr", "FLL → FRC", "Free"] },
+{ ix: "03", kicker: "Self-paced", title: "Engineering & CS Courses", desc: "Free, modular open curricula in CAD, embedded systems, and programming. Taught by students, for students.", tags: ["Rolling", "Grades 6-12", "Open source"] },
+{ ix: "04", kicker: "Seasonal", title: "Camps & Workshops", desc: "Multi-day hands-on programs hosted at schools and community centers, especially in underserved areas.", tags: ["Summer + Winter", "Grades 3-9", "Free"] }];
+
 
 const STEPS = [
-  { n: "01", title: "Understand", body: "Background, experience, ambition. No assumptions, no prerequisites." },
-  { n: "02", title: "Match & design", body: "Mentors matched by domain and personality. Path co-designed." },
-  { n: "03", title: "Learn by doing", body: "CAD, code, electronics, real robots from week one." },
-  { n: "04", title: "Grow & give back", body: "Students become mentors. The cycle is the curriculum." },
-];
+{ n: "01", title: "Understand", body: "Background, experience, ambition. No assumptions, no prerequisites." },
+{ n: "02", title: "Match & design", body: "Mentors matched by domain and personality. Path co-designed." },
+{ n: "03", title: "Learn by doing", body: "CAD, code, electronics, real robots from week one." },
+{ n: "04", title: "Grow & give back", body: "Students become mentors. The cycle is the curriculum." }];
+
 
 const TEAM = [
-  { name: "Shawn Li", role: "Co-Founder & Co-President", img: "shawnli.avif", bio: "Shawn is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He co-founded GUR to make a meaningful impact on students locally and globally, while building a team of talented and compassionate high schoolers who inspire the next generation of leaders. In his free time, Shawn enjoys playing piano and guitar, gaming, solving Rubik's Cube, and exploring new interests. You can find him at sh4wn.org." },
-  { name: "Arnav Talreja", role: "Co-Founder & Co-President", img: "arnavtalreja.avif", bio: "Arnav is a senior at TJHSST. He co-founded GUR to make a real impact in the robotics community, both globally and close to home, by helping more people learn technical skills, build with confidence, and compete in robotics competitions. Most importantly, he cares about making robotics something people genuinely enjoy being a part of. In his free time, Arnav likes playing tennis, gaming, and hanging out with friends." },
-  { name: "Lucas Shen", role: "VP of Teaching", img: "lucas.png", bio: "Lucas is a senior at Carter G. Woodson High School in Fairfax, Virginia, with a deep passion for robotics and its real-world applications. He joined to inspire motivated and determined students to discover that same love for the field beyond his own team. Outside of school, Lucas enjoys martial arts, pen spinning, and exploring cool new things." },
-  { name: "Caleb Guan", role: "VP of Curriculum", img: "calebguan.avif", bio: "Caleb is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Alexandria VA. He joined Growing Up With Robotics (GUR) because of his passion for computer science, robotics and problem solving, and his interest to help younger students to explore STEM in an engaging way. In his freetime, Caleb enjoys playing basketball, gaming, and hanging out with friends." },
-  { name: "Darrell Kao", role: "VP of Outreach", img: "darrellkao.avif", bio: "Darrell is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR), where he works to expand access to STEM education and robotics for younger students. Darrell was inspired by the learning experience he has at TJ, and hopes to bring the same learning opportunities to others. Additionally hoping he can inspire the younger generation in STEM related topics. Outside of school, Darrell enjoys reading, playing video games, hanging out with friends, and doing Chinese yo-yo." },
-  { name: "Jae Kim", role: "VP of Finance", img: "jaekim.avif", bio: "Jae is a junior at Centreville High School. Jae enjoys spending time teaching children about robotics. He enjoys spending time with friends and playing games. He is also the best MC in the world." },
-  { name: "Surya Raj", role: "Outreach", img: "suryaraj.avif", bio: "Surya is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR) to expand his love for robotics beyond the classroom and competitions, and to help make STEM education more accessible to students everywhere. Inspired by the hands on engineering culture at TJ, Surya hopes to use his skills to mentor younger students and spark their curiosity in robotics and technology. Outside of school, Surya enjoys watching sports, gaming, learning about cars, and spending time with friends." },
-  { name: "Tejal Bhasin", role: "Outreach", img: "tejalbhasin.avif", bio: "Tejal is a senior at Justice High School. She joined GUR as the social media manager to showcase the organization’s community doings and endeavors to spread knowledge of robotics to younger students. In her free time, Tejal enjoys doing crafts playing instruments, and learning new hobbies and ideas. " },
-  { name: "Nabi Zekarias", role: "Teaching", img: "nabizekarias.avif", bio: "Nabi is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR) to channel his passion for human-centered engineering into hands-on mentoring, helping make STEM education and technology accessible to younger students everywhere. Outside of school and robotics, he spends his time leading on the football field, tutoring math in his neighborhood, and serving his church community. In his free time, he loves watching sports, analyzing player stats, playing lacrosse, and hanging out with friends and family." },
-  { name: "Benjamin Wang", role: "Curriculum", img: "benjaminwang.png", bio: "Benjamin is a freshman at Thomas Jefferson High School for Technology. He joined GUR to share his passion for STEM and robotics. He hopes to teach younger students to explore engineering and develop problem-solving skills. Benjamin also enjoys playing tennis, reading, and spending time with friends." },
-];
+{ name: "Shawn Li", role: "Co-Founder & Co-President", img: "shawnli.avif", bio: "Shawn is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He co-founded GUR to make a meaningful impact on students locally and globally, while building a team of talented and compassionate high schoolers who inspire the next generation of leaders. In his free time, Shawn enjoys playing piano and guitar, gaming, solving Rubik's Cube, and exploring new interests. You can find him at sh4wn.org." },
+{ name: "Arnav Talreja", role: "Co-Founder & Co-President", img: "arnavtalreja.avif", bio: "Arnav is a senior at TJHSST. He co-founded GUR to make a real impact in the robotics community, both globally and close to home, by helping more people learn technical skills, build with confidence, and compete in robotics competitions. Most importantly, he cares about making robotics something people genuinely enjoy being a part of. In his free time, Arnav likes playing tennis, gaming, and hanging out with friends." },
+{ name: "Lucas Shen", role: "VP of Teaching", img: "lucas.png", bio: "Lucas is a senior at Carter G. Woodson High School in Fairfax, Virginia, with a deep passion for robotics and its real-world applications. He joined to inspire motivated and determined students to discover that same love for the field beyond his own team. Outside of school, Lucas enjoys martial arts, pen spinning, and exploring cool new things." },
+{ name: "Caleb Guan", role: "VP of Curriculum", img: "calebguan.avif", bio: "Caleb is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Alexandria VA. He joined Growing Up With Robotics (GUR) because of his passion for computer science, robotics and problem solving, and his interest to help younger students to explore STEM in an engaging way. In his freetime, Caleb enjoys playing basketball, gaming, and hanging out with friends." },
+{ name: "Darrell Kao", role: "VP of Outreach", img: "darrellkao.avif", bio: "Darrell is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR), where he works to expand access to STEM education and robotics for younger students. Darrell was inspired by the learning experience he has at TJ, and hopes to bring the same learning opportunities to others. Additionally hoping he can inspire the younger generation in STEM related topics. Outside of school, Darrell enjoys reading, playing video games, hanging out with friends, and doing Chinese yo-yo." },
+{ name: "Jae Kim", role: "VP of Finance", img: "jaekim.avif", bio: "Jae is a junior at Centreville High School. Jae enjoys spending time teaching children about robotics. He enjoys spending time with friends and playing games. He is also the best MC in the world." },
+{ name: "Surya Raj", role: "Outreach", img: "suryaraj.avif", bio: "Surya is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR) to expand his love for robotics beyond the classroom and competitions, and to help make STEM education more accessible to students everywhere. Inspired by the hands on engineering culture at TJ, Surya hopes to use his skills to mentor younger students and spark their curiosity in robotics and technology. Outside of school, Surya enjoys watching sports, gaming, learning about cars, and spending time with friends." },
+{ name: "Tejal Bhasin", role: "Outreach", img: "tejalbhasin.avif", bio: "Tejal is a senior at Justice High School. She joined GUR as the social media manager to showcase the organization’s community doings and endeavors to spread knowledge of robotics to younger students. In her free time, Tejal enjoys doing crafts playing instruments, and learning new hobbies and ideas. " },
+{ name: "Nabi Zekarias", role: "Teaching", img: "nabizekarias.avif", bio: "Nabi is a senior at Thomas Jefferson High School for Science and Technology (TJHSST) in Northern Virginia. He joined Growing Up With Robotics (GUR) to channel his passion for human-centered engineering into hands-on mentoring, helping make STEM education and technology accessible to younger students everywhere. Outside of school and robotics, he spends his time leading on the football field, tutoring math in his neighborhood, and serving his church community. In his free time, he loves watching sports, analyzing player stats, playing lacrosse, and hanging out with friends and family." },
+{ name: "Benjamin Wang", role: "Curriculum", img: "benjaminwang.png", bio: "Benjamin is a freshman at Thomas Jefferson High School for Technology. He joined GUR to share his passion for STEM and robotics. He hopes to teach younger students to explore engineering and develop problem-solving skills. Benjamin also enjoys playing tennis, reading, and spending time with friends." }];
+
 
 const PROJECTS_DETAIL = [
-  { n: "01", title: "1-to-1 Mentorship", desc: "Long-form mentor pairings designed around the student's curiosity. 240 active pairs as of spring 2026.", years: "Year-round", grades: "Grades 4–12", tags: ["Active", "Application-based"] },
-  { n: "02", title: "Team-to-Team Support", desc: "Sustained relationships between competitive and emerging teams. Code reviews, design critiques, mock matches.", years: "Aug–Apr", grades: "FLL → FRC", tags: ["Active", "Rolling"] },
-  { n: "03", title: "Engineering & CS Courses", desc: "Open curricula in Python, C++, Onshape CAD, embedded systems. Self-paced and instructor-led tracks.", years: "Rolling", grades: "Grades 6–12", tags: ["Open source"] },
-  { n: "04", title: "Camps & Workshops", desc: "Week-long intensives in partnership with Title I schools and community centers across five countries.", years: "Summer + Winter", grades: "Grades 3–9", tags: ["Active", "Free"] },
-  { n: "05", title: "Mentor Training", desc: "Onboarding and ongoing development for student volunteers. 12-hour core + role-specific modules.", years: "Quarterly", grades: "Volunteers", tags: ["Recurring"] },
-];
+{ n: "01", title: "1-to-1 Mentorship", desc: "Long-form mentor pairings designed around the student's curiosity. 240 active pairs as of spring 2026.", years: "Year-round", grades: "Grades 4–12", tags: ["Active", "Application-based"] },
+{ n: "02", title: "Team-to-Team Support", desc: "Sustained relationships between competitive and emerging teams. Code reviews, design critiques, mock matches.", years: "Aug–Apr", grades: "FLL → FRC", tags: ["Active", "Rolling"] },
+{ n: "03", title: "Engineering & CS Courses", desc: "Open curricula in Python, C++, Onshape CAD, embedded systems. Self-paced and instructor-led tracks.", years: "Rolling", grades: "Grades 6–12", tags: ["Open source"] },
+{ n: "04", title: "Camps & Workshops", desc: "Week-long intensives in partnership with Title I schools and community centers across five countries.", years: "Summer + Winter", grades: "Grades 3–9", tags: ["Active", "Free"] },
+{ n: "05", title: "Mentor Training", desc: "Onboarding and ongoing development for student volunteers. 12-hour core + role-specific modules.", years: "Quarterly", grades: "Volunteers", tags: ["Recurring"] }];
+
 
 const PROGRAM_FULL = {
   "01": {
@@ -1071,130 +1078,130 @@ const PROGRAM_FULL = {
     headline: "Student Mentorship",
     lede: "Long-form pairings between K–12 students and near-peer mentors, built around the student's actual curiosity — not a generic syllabus.",
     body: [
-      { label: "How it works", text: "Students apply and are matched with a high school or college mentor in a shared domain. Goals are set in week one, milestones reviewed monthly. The pairing is the curriculum." },
-      { label: "What you build", text: "Real projects from the start — robots, code, CAD models, electronics. No worksheets. No lecture decks. Just a mentor, a student, and something worth building." },
-      { label: "The scale", text: "240 active pairings as of spring 2026, year-round, across five countries. Sessions run 60–90 minutes weekly." },
-    ],
+    { label: "How it works", text: "Students apply and are matched with a high school or college mentor in a shared domain. Goals are set in week one, milestones reviewed monthly. The pairing is the curriculum." },
+    { label: "What you build", text: "Real projects from the start — robots, code, CAD models, electronics. No worksheets. No lecture decks. Just a mentor, a student, and something worth building." },
+    { label: "The scale", text: "240 active pairings as of spring 2026, year-round, across five countries. Sessions run 60–90 minutes weekly." }],
+
     tags: ["Year-round", "Grades 4–12", "Free", "Application-based", "240 active pairings"],
     when: "Year-round",
     who: "Grades 4–12",
-    cta: { label: "Apply as a student", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
+    cta: { label: "Apply as a student", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true }
   },
   "02": {
     kicker: "Team support · Aug–Apr · FLL → FRC",
     headline: "Team-to-Team Support",
     lede: "Experienced competition teams coach emerging rookie squads on build strategy, code quality, and competition mechanics — sustained relationships, not one-off help.",
     body: [
-      { label: "How it works", text: "Veteran FTC and FRC teams are paired with newer FLL and rookie squads for the full season. Code reviews, design critiques, side-by-side mock matches — a working relationship, not a lecture." },
-      { label: "What teams gain", text: "A structured outside perspective during the season when you're too deep in the build to see the big picture. The coaching team gains mentorship experience that makes them sharper too." },
-      { label: "The cadence", text: "Bi-weekly check-ins, plus surge support around scrimmage and competition weekends, running August through April." },
-    ],
+    { label: "How it works", text: "Veteran FTC and FRC teams are paired with newer FLL and rookie squads for the full season. Code reviews, design critiques, side-by-side mock matches — a working relationship, not a lecture." },
+    { label: "What teams gain", text: "A structured outside perspective during the season when you're too deep in the build to see the big picture. The coaching team gains mentorship experience that makes them sharper too." },
+    { label: "The cadence", text: "Bi-weekly check-ins, plus surge support around scrimmage and competition weekends, running August through April." }],
+
     tags: ["Aug–Apr", "FLL → FRC", "Free", "Rolling enrollment"],
     when: "Aug–Apr",
     who: "FLL to FRC teams",
-    cta: { label: "Email us to get paired", href: "mailto:growingupwithrobotics@gmail.com" },
+    cta: { label: "Email us to get paired", href: "mailto:growingupwithrobotics@gmail.com" }
   },
   "03": {
     kicker: "Self-paced · Rolling · Grades 6–12",
     headline: "Engineering & CS Courses",
     lede: "Free, modular, open-source curricula in Python, C++, Onshape CAD, embedded systems, and programming — taught by students, for students.",
     body: [
-      { label: "What's covered", text: "Python and C++ fundamentals, Onshape 3D CAD, embedded systems with microcontrollers, and programming problem-solving. All curricula are open-source and free to adapt." },
-      { label: "How it's taught", text: "Two tracks: self-paced (work through materials at your own speed) and instructor-led (live sessions with a student instructor). Both are free and need no prior experience." },
-      { label: "The philosophy", text: "We don't teach to a test or toward a competition. We teach the skills that transfer — the ones that make students capable of building anything they want to build." },
-    ],
+    { label: "What's covered", text: "Python and C++ fundamentals, Onshape 3D CAD, embedded systems with microcontrollers, and programming problem-solving. All curricula are open-source and free to adapt." },
+    { label: "How it's taught", text: "Two tracks: self-paced (work through materials at your own speed) and instructor-led (live sessions with a student instructor). Both are free and need no prior experience." },
+    { label: "The philosophy", text: "We don't teach to a test or toward a competition. We teach the skills that transfer — the ones that make students capable of building anything they want to build." }],
+
     tags: ["Rolling", "Grades 6–12", "Open source", "Self-paced", "Instructor-led"],
     when: "Rolling",
     who: "Grades 6–12",
-    cta: { label: "Email us to enroll", href: "mailto:growingupwithrobotics@gmail.com" },
+    cta: { label: "Email us to enroll", href: "mailto:growingupwithrobotics@gmail.com" }
   },
   "04": {
     kicker: "Seasonal · Grades 3–9 · Title I focus",
     headline: "Camps & Workshops",
     lede: "Multi-day, hands-on intensives at schools and community centers — especially in underserved areas and Title I schools across five countries.",
     body: [
-      { label: "What happens", text: "Three to five day programs where students build, code, and compete with real robots. No experience required. We bring the hardware, the curriculum, and the mentors." },
-      { label: "Where we go", text: "Title I schools, community centers, and partner organizations across Northern Virginia and in five countries. If you don't have a robotics program, that's exactly why we come." },
-      { label: "The design", text: "Camps are scaffolded for students who've never seen a robot, with experienced mentors running the room and near-peer helpers keeping energy high and sessions moving." },
-    ],
+    { label: "What happens", text: "Three to five day programs where students build, code, and compete with real robots. No experience required. We bring the hardware, the curriculum, and the mentors." },
+    { label: "Where we go", text: "Title I schools, community centers, and partner organizations across Northern Virginia and in five countries. If you don't have a robotics program, that's exactly why we come." },
+    { label: "The design", text: "Camps are scaffolded for students who've never seen a robot, with experienced mentors running the room and near-peer helpers keeping energy high and sessions moving." }],
+
     tags: ["Summer + Winter", "Grades 3–9", "Free", "Title I focus", "5 countries"],
     when: "Summer + Winter",
     who: "Grades 3–9",
-    cta: { label: "Partner with us on a camp", href: "mailto:growingupwithrobotics@gmail.com" },
+    cta: { label: "Partner with us on a camp", href: "mailto:growingupwithrobotics@gmail.com" }
   },
   "05": {
     kicker: "Quarterly · All volunteers",
     headline: "Mentor Training",
     lede: "Structured onboarding and ongoing development for every student volunteer. Good intentions don't make good mentors — practice and frameworks do.",
     body: [
-      { label: "The core curriculum", text: "12 hours of foundational training covering mentorship frameworks, feedback techniques, managing different learning styles, and handling sessions that go sideways." },
-      { label: "Role-specific modules", text: "After core training, volunteers take modules specific to their role: 1-on-1 mentorship, team coaching, camp facilitation, or instruction. Each module runs 4–6 hours." },
-      { label: "The cadence", text: "New cohorts onboard quarterly. Returning mentors take refresher modules and advanced tracks. There's no graduation — there's just the next thing to get better at." },
-    ],
+    { label: "The core curriculum", text: "12 hours of foundational training covering mentorship frameworks, feedback techniques, managing different learning styles, and handling sessions that go sideways." },
+    { label: "Role-specific modules", text: "After core training, volunteers take modules specific to their role: 1-on-1 mentorship, team coaching, camp facilitation, or instruction. Each module runs 4–6 hours." },
+    { label: "The cadence", text: "New cohorts onboard quarterly. Returning mentors take refresher modules and advanced tracks. There's no graduation — there's just the next thing to get better at." }],
+
     tags: ["Quarterly", "All volunteers", "12-hour core", "Role-specific modules"],
     when: "Quarterly",
     who: "High school & college volunteers",
-    cta: { label: "Apply to mentor", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", external: true },
-  },
+    cta: { label: "Apply to mentor", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", external: true }
+  }
 };
 
 const mediaType = (src) => /\.(mp4|webm|mov|m4v)$/i.test(src) ? "video" : "image";
 
 const SPONSORS = [
-  { name: "BAE Systems", src: "public/sponsors/bae_systems.png" },
-  { name: "goBILDA", src: "public/sponsors/go_builda.png" },
-  { name: "Jane Street", src: "public/sponsors/jane_street.png" },
-  { name: "R Cube IT", src: "public/sponsors/rcube.png" },
-  { name: "Send Cut Send", src: "public/sponsors/send_cut_send.png" },
-  { name: "TJ Academic Boosters", src: "public/sponsors/tjab.png" },
-  { name: "TJ Partnership Fund", src: "public/sponsors/tjpf.png" },
-];
+{ name: "BAE Systems", src: "public/sponsors/bae_systems.png" },
+{ name: "goBILDA", src: "public/sponsors/go_builda.png" },
+{ name: "Jane Street", src: "public/sponsors/jane_street.png" },
+{ name: "R Cube IT", src: "public/sponsors/rcube.png" },
+{ name: "Send Cut Send", src: "public/sponsors/send_cut_send.png" },
+{ name: "TJ Academic Boosters", src: "public/sponsors/tjab.png" },
+{ name: "TJ Partnership Fund", src: "public/sponsors/tjpf.png" }];
+
 
 const GALLERY = [
-  { src: "public/insights/ftcteam.jpeg", cap: "FTC 14607 Robot Uprising at Chesapeake State Championship" },
-  { src: "public/insights/aymsummercampgroup.jpeg", cap: "AYM summer camp · full group & robot mascot" },
-  { src: "public/insights/aymsummercamp.jpeg", cap: "CAD lecture session · summer program" },
-  { src: "public/insights/fllmentoring.jpeg", cap: "One-on-one FLL coaching · field review" },
-  { src: "public/insights/flltutor.jpeg", cap: "FLL mentorship · pre-competition" },
-  { src: "public/insights/mentorship.jpeg", cap: "FTC 14607 mentors presenting to the group" },
-  { src: "public/insights/1on1mentorship.jpeg", cap: "Late-night robot assembly session" },
-  { src: "public/insights/guestspeaker.jpeg", cap: "Virtual guest talk · TJ classroom" },
-  { src: "public/insights/teammeetings.jpeg", cap: "Weekly planning session · whiteboard review" },
-  { src: "public/insights/img_6211.jpg" },
-  { src: "public/insights/img_6215.jpg" },
-  { src: "public/insights/img_6248.jpg" },
-  { src: "public/insights/img_6267.jpg" },
-  { src: "public/insights/img_9035.jpg" },
-  { src: "public/insights/img_9073.jpg" },
-  { src: "public/insights/img_9084.jpg" },
-  { src: "public/insights/gur_5eff0633.jpg" },
-  { src: "public/insights/gur_80b5bdc2.jpg" },
-  { src: "public/insights/gur_9c2d6025.jpg" },
-  { src: "public/insights/gur_a6fd6064.jpg" },
-  { src: "public/insights/img_6792.jpg" },
-  { src: "public/insights/img_6796.jpg" },
-  { src: "public/insights/img_6799.jpg" },
-  { src: "public/insights/img_6811.jpg" },
-  { src: "public/insights/img_6821.jpg" },
-  { src: "public/insights/img_6853.jpg" },
-  { src: "public/insights/img_6872.jpg" },
-  { src: "public/insights/img_6878.jpg" },
-  { src: "public/insights/img_6908.jpg" },
-  { src: "public/insights/img_6927.jpg" },
-  { src: "public/insights/img_6852.mp4", poster: "public/insights/img_6852-poster.jpg" },
-  { src: "public/insights/img_6871.mp4", poster: "public/insights/img_6871-poster.jpg" },
-  { src: "public/insights/img_6894.mp4", poster: "public/insights/img_6894-poster.jpg" },
-  { src: "public/insights/img_6926.mp4", poster: "public/insights/img_6926-poster.jpg" },
-  { src: "public/insights/img_6896.mp4", poster: "public/insights/img_6896-poster.jpg" },
-  { src: "public/insights/gur_7ee6f165.mp4", poster: "public/insights/gur_7ee6f165-poster.jpg" },
-].map((item) => ({ ...item, type: mediaType(item.src) }));
+{ src: "public/insights/ftcteam.jpeg", cap: "FTC 14607 Robot Uprising at Chesapeake State Championship" },
+{ src: "public/insights/aymsummercampgroup.jpeg", cap: "AYM summer camp · full group & robot mascot" },
+{ src: "public/insights/aymsummercamp.jpeg", cap: "CAD lecture session · summer program" },
+{ src: "public/insights/fllmentoring.jpeg", cap: "One-on-one FLL coaching · field review" },
+{ src: "public/insights/flltutor.jpeg", cap: "FLL mentorship · pre-competition" },
+{ src: "public/insights/mentorship.jpeg", cap: "FTC 14607 mentors presenting to the group" },
+{ src: "public/insights/1on1mentorship.jpeg", cap: "Late-night robot assembly session" },
+{ src: "public/insights/guestspeaker.jpeg", cap: "Virtual guest talk · TJ classroom" },
+{ src: "public/insights/teammeetings.jpeg", cap: "Weekly planning session · whiteboard review" },
+{ src: "public/insights/img_6211.jpg" },
+{ src: "public/insights/img_6215.jpg" },
+{ src: "public/insights/img_6248.jpg" },
+{ src: "public/insights/img_6267.jpg" },
+{ src: "public/insights/img_9035.jpg" },
+{ src: "public/insights/img_9073.jpg" },
+{ src: "public/insights/img_9084.jpg" },
+{ src: "public/insights/gur_5eff0633.jpg" },
+{ src: "public/insights/gur_80b5bdc2.jpg" },
+{ src: "public/insights/gur_9c2d6025.jpg" },
+{ src: "public/insights/gur_a6fd6064.jpg" },
+{ src: "public/insights/img_6792.jpg" },
+{ src: "public/insights/img_6796.jpg" },
+{ src: "public/insights/img_6799.jpg" },
+{ src: "public/insights/img_6811.jpg" },
+{ src: "public/insights/img_6821.jpg" },
+{ src: "public/insights/img_6853.jpg" },
+{ src: "public/insights/img_6872.jpg" },
+{ src: "public/insights/img_6878.jpg" },
+{ src: "public/insights/img_6908.jpg" },
+{ src: "public/insights/img_6927.jpg" },
+{ src: "public/insights/img_6852.mp4", poster: "public/insights/img_6852-poster.jpg" },
+{ src: "public/insights/img_6871.mp4", poster: "public/insights/img_6871-poster.jpg" },
+{ src: "public/insights/img_6894.mp4", poster: "public/insights/img_6894-poster.jpg" },
+{ src: "public/insights/img_6926.mp4", poster: "public/insights/img_6926-poster.jpg" },
+{ src: "public/insights/img_6896.mp4", poster: "public/insights/img_6896-poster.jpg" },
+{ src: "public/insights/gur_7ee6f165.mp4", poster: "public/insights/gur_7ee6f165-poster.jpg" }].
+map((item) => ({ ...item, type: mediaType(item.src) }));
 
 const PATHS = [
-  { n: "01", title: "Join as a Student", desc: "K–12 students interested in mentorship, courses, or camps. Free, application-based.", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
-  { n: "02", title: "Mentor with Us", desc: "High school and college students with technical and teaching interests. Training provided.", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", external: true },
-  { n: "03", title: "Partner Schools", desc: "Schools and districts looking to bring workshops, curricula, or camps to their students.", href: "mailto:growingupwithrobotics@gmail.com" },
-  { n: "04", title: "Sponsor Programs", desc: "Companies and individuals funding access for students in underserved communities.", href: "mailto:growingupwithrobotics@gmail.com" },
-];
+{ n: "01", title: "Join as a Student", desc: "K–12 students interested in mentorship, courses, or camps. Free, application-based.", href: "https://forms.gle/JCKz958v3CVfPBky5", external: true },
+{ n: "02", title: "Mentor with Us", desc: "High school and college students with technical and teaching interests. Training provided.", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", external: true },
+{ n: "03", title: "Partner Schools", desc: "Schools and districts looking to bring workshops, curricula, or camps to their students.", href: "mailto:growingupwithrobotics@gmail.com" },
+{ n: "04", title: "Sponsor Programs", desc: "Companies and individuals funding access for students in underserved communities.", href: "mailto:growingupwithrobotics@gmail.com" }];
+
 
 // ── Animated counter ────────────────────────────────
 function Counter({ target, prefix = "", suffix = "" }) {
@@ -1203,13 +1210,13 @@ function Counter({ target, prefix = "", suffix = "" }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    let raf = null, started = false;
+    let raf = null,started = false;
     const num = parseInt(target.replace(/,/g, ""), 10) || 0;
     const obs = new IntersectionObserver((es) => {
-      es.forEach(e => {
+      es.forEach((e) => {
         if (e.isIntersecting && !started) {
           started = true;
-          const dur = 1400; const t0 = performance.now();
+          const dur = 1400;const t0 = performance.now();
           const tick = (t) => {
             const p = Math.min(1, (t - t0) / dur);
             const eased = 1 - Math.pow(1 - p, 3);
@@ -1221,411 +1228,411 @@ function Counter({ target, prefix = "", suffix = "" }) {
       });
     }, { threshold: 0.3 });
     obs.observe(el);
-    return () => { obs.disconnect(); if (raf) cancelAnimationFrame(raf); };
+    return () => {obs.disconnect();if (raf) cancelAnimationFrame(raf);};
   }, [target]);
-  return <span ref={ref}>{prefix}{n.toLocaleString()}<span className="acc">{suffix}</span></span>;
+  return /*#__PURE__*/React.createElement("span", { ref: ref }, prefix, n.toLocaleString(), /*#__PURE__*/React.createElement("span", { className: "acc" }, suffix));
 }
 
 function Header({ route, setRoute }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
-  const navigate = (id) => { setRoute(id); close(); };
-  return (
-    <>
-      <header className="topbar">
-        <div className="topbar-inner">
-          <a className="brand" onClick={() => navigate("home")} href="#home">
-            <span className="brand-mark" aria-label="GUR"></span>
-            <span className="brand-text"><b>Growing Up with Robotics</b><span></span></span>
-          </a>
-          <nav className="topnav">
-            {NAV.map(n => (
-              <a key={n.id} href={`#${n.id}`}
-                 className={route === n.id ? "active" : ""}
-                 onClick={(e) => { e.preventDefault(); setRoute(n.id); }}>
-                {n.label}
-              </a>
-            ))}
-          </nav>
-          <div className="topright">
-            <a className="pill-cta" href="mailto:growingupwithrobotics@gmail.com">Contact ↗</a>
-            <button className="menu-btn" onClick={() => setMenuOpen(v => !v)} aria-label="Toggle menu">
-              {menuOpen ? "✕" : "☰"}
-            </button>
-          </div>
-        </div>
-      </header>
-      <div className={"mob-nav" + (menuOpen ? " open" : "")}>
-        <div className="mob-nav-top">
-          <a className="brand" onClick={() => navigate("home")} href="#home">
-            <span className="brand-mark" aria-label="GUR"></span>
-            <span className="brand-text"><b>Growing Up with Robotics</b></span>
-          </a>
-          <button className="menu-btn" onClick={close} aria-label="Close menu">✕</button>
-        </div>
-        <nav className="mob-nav-links">
-          {NAV.map(n => (
-            <a key={n.id} href={`#${n.id}`}
-               className={route === n.id ? "active" : ""}
-               onClick={(e) => { e.preventDefault(); navigate(n.id); }}>
-              {n.label}
-            </a>
-          ))}
-        </nav>
-        <div className="mob-nav-foot">
-          <a className="btn btn-primary" href="mailto:growingupwithrobotics@gmail.com" onClick={close}>
-            Contact Us <span className="arrow">↗</span>
-          </a>
-        </div>
-      </div>
-    </>
-  );
+  const navigate = (id) => {setRoute(id);close();};
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement("header", { className: "topbar" }, /*#__PURE__*/
+    React.createElement("div", { className: "topbar-inner" }, /*#__PURE__*/
+    React.createElement("a", { className: "brand", onClick: () => navigate("home"), href: "#home" }, /*#__PURE__*/
+    React.createElement("span", { className: "brand-mark", "aria-label": "GUR" }), /*#__PURE__*/
+    React.createElement("span", { className: "brand-text" }, /*#__PURE__*/React.createElement("b", null, "Growing Up with Robotics"), /*#__PURE__*/React.createElement("span", null))
+    ), /*#__PURE__*/
+    React.createElement("nav", { className: "topnav" },
+    NAV.map((n) => /*#__PURE__*/
+    React.createElement("a", { key: n.id, href: `#${n.id}`,
+      className: route === n.id ? "active" : "",
+      onClick: (e) => {e.preventDefault();setRoute(n.id);} },
+    n.label
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "topright" }, /*#__PURE__*/
+    React.createElement("a", { className: "pill-cta", href: "mailto:growingupwithrobotics@gmail.com" }, "Contact \u2197"), /*#__PURE__*/
+    React.createElement("button", { className: "menu-btn", onClick: () => setMenuOpen((v) => !v), "aria-label": "Toggle menu" },
+    menuOpen ? "✕" : "☰"
+    )
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "mob-nav" + (menuOpen ? " open" : "") }, /*#__PURE__*/
+    React.createElement("div", { className: "mob-nav-top" }, /*#__PURE__*/
+    React.createElement("a", { className: "brand", onClick: () => navigate("home"), href: "#home" }, /*#__PURE__*/
+    React.createElement("span", { className: "brand-mark", "aria-label": "GUR" }), /*#__PURE__*/
+    React.createElement("span", { className: "brand-text" }, /*#__PURE__*/React.createElement("b", null, "Growing Up with Robotics"))
+    ), /*#__PURE__*/
+    React.createElement("button", { className: "menu-btn", onClick: close, "aria-label": "Close menu" }, "\u2715")
+    ), /*#__PURE__*/
+    React.createElement("nav", { className: "mob-nav-links" },
+    NAV.map((n) => /*#__PURE__*/
+    React.createElement("a", { key: n.id, href: `#${n.id}`,
+      className: route === n.id ? "active" : "",
+      onClick: (e) => {e.preventDefault();navigate(n.id);} },
+    n.label
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "mob-nav-foot" }, /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-primary", href: "mailto:growingupwithrobotics@gmail.com", onClick: close }, "Contact Us ", /*#__PURE__*/
+    React.createElement("span", { className: "arrow" }, "\u2197")
+    )
+    )
+    )
+    ));
+
 }
 
 function Footer({ setRoute }) {
-  return (
-    <footer>
-      <div className="foot">
-        <div className="foot-top">
-          <div className="foot-brand">
-            <h4>Inspiring the next generation of <span className="acc">leaders</span>, one student at a time.</h4>
-            <p>A student-led nonprofit expanding access to hands-on STEM and robotics — mentorship, partnerships, and programs designed for the students who need them most.</p>
-          </div>
-          <div>
-            <h5>Programs</h5>
-            <ul>
-              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Mentorship</a></li>
-              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Team-to-Team</a></li>
-              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Courses</a></li>
-              <li><a href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Camps</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>Org</h5>
-            <ul>
-              <li><a href="#about" onClick={(e)=>{e.preventDefault(); setRoute("about");}}>About</a></li>
-              <li><a href="#insights" onClick={(e)=>{e.preventDefault(); setRoute("insights");}}>Insights</a></li>
-              <li><a href="#involve" onClick={(e)=>{e.preventDefault(); setRoute("involve");}}>Get Involved</a></li>
-              <li><a href="mailto:growingupwithrobotics@gmail.com">Press</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>Follow</h5>
-            <ul>
-              <li><a href="https://www.instagram.com/growingupwithrobotics/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></li>
-              <li><a href="https://www.linkedin.com/company/growing-up-with-robotics/?viewAsMember=true" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
-              <li><a href="mailto:growingupwithrobotics@gmail.com">Newsletter ↗</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="foot-bottom">
-          <span>© 2023–2026 Growing Up with Robotics. All rights reserved.</span>
-          <span className="ascii">▸ growingupwithrobotics.org</span>
-          <div className="foot-bottom-right">
-            <a className="foot-social" href="https://github.com/sh4wn27/gur" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fillRule="evenodd" clipRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-            </a>
-            <span>Built &amp; Maintained by Shawn</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+  return (/*#__PURE__*/
+    React.createElement("footer", null, /*#__PURE__*/
+    React.createElement("div", { className: "foot" }, /*#__PURE__*/
+    React.createElement("div", { className: "foot-top" }, /*#__PURE__*/
+    React.createElement("div", { className: "foot-brand" }, /*#__PURE__*/
+    React.createElement("h4", null, "Inspiring the next generation of ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "leaders"), ", one student at a time."), /*#__PURE__*/
+    React.createElement("p", null, "A student-led nonprofit expanding access to hands-on STEM and robotics \u2014 mentorship, partnerships, and programs designed for the students who need them most.")
+    ), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("h5", null, "Programs"), /*#__PURE__*/
+    React.createElement("ul", null, /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#projects", onClick: (e) => {e.preventDefault();setRoute("projects");} }, "Mentorship")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#projects", onClick: (e) => {e.preventDefault();setRoute("projects");} }, "Team-to-Team")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#projects", onClick: (e) => {e.preventDefault();setRoute("projects");} }, "Courses")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#projects", onClick: (e) => {e.preventDefault();setRoute("projects");} }, "Camps"))
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("h5", null, "Org"), /*#__PURE__*/
+    React.createElement("ul", null, /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#about", onClick: (e) => {e.preventDefault();setRoute("about");} }, "About")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#insights", onClick: (e) => {e.preventDefault();setRoute("insights");} }, "Insights")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "#involve", onClick: (e) => {e.preventDefault();setRoute("involve");} }, "Get Involved")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "mailto:growingupwithrobotics@gmail.com" }, "Press"))
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("h5", null, "Follow"), /*#__PURE__*/
+    React.createElement("ul", null, /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "https://www.instagram.com/growingupwithrobotics/", target: "_blank", rel: "noopener noreferrer" }, "Instagram \u2197")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "https://www.linkedin.com/company/growing-up-with-robotics/?viewAsMember=true", target: "_blank", rel: "noopener noreferrer" }, "LinkedIn \u2197")), /*#__PURE__*/
+    React.createElement("li", null, /*#__PURE__*/React.createElement("a", { href: "mailto:growingupwithrobotics@gmail.com" }, "Newsletter \u2197"))
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "foot-bottom" }, /*#__PURE__*/
+    React.createElement("span", null, "\xA9 2023\u20132026 Growing Up with Robotics. All rights reserved."), /*#__PURE__*/
+    React.createElement("span", { className: "ascii" }, "\u25B8 growingupwithrobotics.org"), /*#__PURE__*/
+    React.createElement("div", { className: "foot-bottom-right" }, /*#__PURE__*/
+    React.createElement("a", { className: "foot-social", href: "https://github.com/sh4wn27/gur", target: "_blank", rel: "noopener noreferrer", "aria-label": "GitHub" }, /*#__PURE__*/
+    React.createElement("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "currentColor", "aria-hidden": "true" }, /*#__PURE__*/React.createElement("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" }))
+    ), /*#__PURE__*/
+    React.createElement("span", null, "Built & Maintained by Shawn")
+    )
+    )
+    )
+    ));
+
 }
 
 function Home({ setRoute, tweaks, setActiveProgram }) {
-  return (
-    <div className="page">
-      <section className="hero">
-        <div className="hero-bg-logo" aria-hidden="true"></div>
-        <div className="hero-content">
-          <div className="hero-tags">
-            <span className="tag">110+ volunteers and mentors</span>
-            <span className="tag">7,000+ students reached</span>
-            <span className="tag">5+ countries</span>
-          </div>
-          {tweaks.heroLayout === "marker" ? (
-            <h1>
-              Inspiring<br/>
-              the next generation<br/>
-              of <span className="marker">leaders</span> — one<br/>
-              student <span className="accent">at a time.</span>
-            </h1>
-          ) : tweaks.heroLayout === "underline" ? (
-            <h1>
-              Inspiring the <span className="underline">next generation</span> of <span className="accent">leaders.</span>
-            </h1>
-          ) : (
-            <h1>
-              Robotics, <span className="accent">for every</span> curious kid <span className="strike">— without exception.</span>
-            </h1>
-          )}
-        </div>
-        <div className="hero-foot">
-          <p className="hero-lede">
-            Growing Up With Robotics is a student-led nonprofit making robotics and STEM accessible to K–12 students. <strong>Through mentorship, hands-on programs, and community partnerships,</strong> we help students grow — not just technical skills, but confidence, curiosity, and leadership.
-          </p>
-          <div className="cta-stack">
-            <h5>Get started</h5>
-            <a className="btn btn-primary" href="#projects" onClick={(e)=>{e.preventDefault(); setRoute("projects");}}>Explore Programs <span className="arrow">↗</span></a>
-            <a className="btn btn-ghost" href="https://forms.gle/JCKz958v3CVfPBky5" target="_blank" rel="noopener noreferrer">Join as student</a>
-          </div>
-          <div className="cta-stack">
-            <h5>Get involved</h5>
-            <a className="btn btn-ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">Mentor with us</a>
-            <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with us</a>
-          </div>
-        </div>
-      </section>
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "page" }, /*#__PURE__*/
+    React.createElement("section", { className: "hero" }, /*#__PURE__*/
+    React.createElement("div", { className: "hero-bg-logo", "aria-hidden": "true" }), /*#__PURE__*/
+    React.createElement("div", { className: "hero-content" }, /*#__PURE__*/
+    React.createElement("div", { className: "hero-tags" }, /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "110+ volunteers and mentors"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "7,000+ students reached"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "5+ countries")
+    ),
+    tweaks.heroLayout === "marker" ? /*#__PURE__*/
+    React.createElement("h1", null, "Inspiring", /*#__PURE__*/
+    React.createElement("br", null), "the next generation", /*#__PURE__*/
+    React.createElement("br", null), "of ", /*#__PURE__*/
+    React.createElement("span", { className: "marker" }, "leaders"), " \u2014 one", /*#__PURE__*/React.createElement("br", null), "student ", /*#__PURE__*/
+    React.createElement("span", { className: "accent" }, "at a time.")
+    ) :
+    tweaks.heroLayout === "underline" ? /*#__PURE__*/
+    React.createElement("h1", null, "Inspiring the ", /*#__PURE__*/
+    React.createElement("span", { className: "underline" }, "next generation"), " of ", /*#__PURE__*/React.createElement("span", { className: "accent" }, "leaders.")
+    ) : /*#__PURE__*/
 
-      <div className="ticker">
-        <div className="ticker-track">
-          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>PROGRAMMING<span>·</span>FRC<span>·</span>FTC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span><span className="acc">110+ VOLUNTEERS</span><span>·</span><span className="acc">5+ COUNTRIES</span><span>·</span><span className="acc">$19,500+ RAISED</span><span>·</span>THOMAS JEFFERSON HIGH SCHOOL FOR SCI & TECH<span>·</span>AREA YOUTH MINISTRY<span>·</span></span>
-          <span><span className="acc">▸</span>MENTORSHIP<span>·</span>CAD<span>·</span>PROGRAMMING<span>·</span>FRC<span>·</span>FTC<span>·</span>FLL<span>·</span>CAMPS<span>·</span>WORKSHOPS<span>·</span>CURRICULUM<span>·</span><span className="acc">7,000+ STUDENTS</span><span>·</span><span className="acc">110+ VOLUNTEERS</span><span>·</span><span className="acc">5+ COUNTRIES</span><span>·</span><span className="acc">$19,500+ RAISED</span><span>·</span>THOMAS JEFFERSON HIGH SCHOOL FOR SCI & TECH<span>·</span>AREA YOUTH MINISTRY<span>·</span></span>
-        </div>
-      </div>
+    React.createElement("h1", null, "Robotics, ", /*#__PURE__*/
+    React.createElement("span", { className: "accent" }, "for every"), " curious kid ", /*#__PURE__*/React.createElement("span", { className: "strike" }, "\u2014 without exception.")
+    )
 
-      <section className="stats">
-        <div className="stats-intro">
-          <div className="label">▸ 01 / Impact ledger</div>
-          <h2>Three years of mentorship, <span className="acc">measured.</span></h2>
-          <p>Numbers verified by program leads quarterly. The work behind each is in our Insights.</p>
-        </div>
-        <div className="stats-grid">
-          {STATS.map((s, i) => (
-            <div className="stat" key={i}>
-              <div className="ix">{s.ix.split(' / ')[0]}<br/><b>/ {s.ix.split(' / ')[1]}</b></div>
-              <div className="num"><Counter target={s.num} suffix={s.suffix} prefix={s.prefix || ""} /></div>
-              <div className="desc">{s.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "hero-foot" }, /*#__PURE__*/
+    React.createElement("p", { className: "hero-lede" }, "Growing Up With Robotics is a student-led nonprofit making robotics and STEM accessible to K\u201312 students. ", /*#__PURE__*/
+    React.createElement("strong", null, "Through mentorship, hands-on programs, and community partnerships,"), " we help students grow \u2014 not just technical skills, but confidence, curiosity, and leadership."
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "cta-stack" }, /*#__PURE__*/
+    React.createElement("h5", null, "Get started"), /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-primary", href: "#projects", onClick: (e) => {e.preventDefault();setRoute("projects");} }, "Explore Programs ", /*#__PURE__*/React.createElement("span", { className: "arrow" }, "\u2197")), /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-ghost", href: "https://forms.gle/JCKz958v3CVfPBky5", target: "_blank", rel: "noopener noreferrer" }, "Join as student")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "cta-stack" }, /*#__PURE__*/
+    React.createElement("h5", null, "Get involved"), /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-ghost", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", target: "_blank", rel: "noopener noreferrer" }, "Mentor with us"), /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-ghost", href: "mailto:growingupwithrobotics@gmail.com" }, "Partner with us")
+    )
+    )
+    ), /*#__PURE__*/
 
-      <section className="sec">
-        <div className="sec-head">
-          <div className="ix">▸ 02 / Programs &amp; impact</div>
-          <h2>Four main <span className="acc">programs.</span></h2>
-          <div className="meta">All free · All mentor-led</div>
-        </div>
-        <div className="programs-stack">
-          {PROGRAMS.map(p => (
-            <div className="program-card" key={p.title} onClick={() => setActiveProgram(p.ix)}>
-              <div className="ix">{p.ix}</div>
-              <div className="title">
-                <span className="kicker">{p.kicker}</span>
-                <h3>{p.title}</h3>
-              </div>
-              <div className="body">
-                <p>{p.desc}</p>
-                <div className="tags">
-                  {p.tags.map(t => <span className="tag" key={t}>{t}</span>)}
-                </div>
-              </div>
-              <div className="cta-area">
-                <div className="arrow-circle">↗</div>
-                <div className="meta">Read brief</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+    React.createElement("div", { className: "ticker" }, /*#__PURE__*/
+    React.createElement("div", { className: "ticker-track" }, /*#__PURE__*/
+    React.createElement("span", null, /*#__PURE__*/React.createElement("span", { className: "acc" }, "\u25B8"), "MENTORSHIP", /*#__PURE__*/React.createElement("span", null, "\xB7"), "CAD", /*#__PURE__*/React.createElement("span", null, "\xB7"), "PROGRAMMING", /*#__PURE__*/React.createElement("span", null, "\xB7"), "FRC", /*#__PURE__*/React.createElement("span", null, "\xB7"), "FTC", /*#__PURE__*/React.createElement("span", null, "\xB7"), "FLL", /*#__PURE__*/React.createElement("span", null, "\xB7"), "CAMPS", /*#__PURE__*/React.createElement("span", null, "\xB7"), "WORKSHOPS", /*#__PURE__*/React.createElement("span", null, "\xB7"), "CURRICULUM", /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "7,000+ STUDENTS"), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "110+ VOLUNTEERS"), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "5+ COUNTRIES"), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "$19,500+ RAISED"), /*#__PURE__*/React.createElement("span", null, "\xB7"), "THOMAS JEFFERSON HIGH SCHOOL FOR SCI & TECH", /*#__PURE__*/React.createElement("span", null, "\xB7"), "AREA YOUTH MINISTRY", /*#__PURE__*/React.createElement("span", null, "\xB7")), /*#__PURE__*/
+    React.createElement("span", null, /*#__PURE__*/React.createElement("span", { className: "acc" }, "\u25B8"), "MENTORSHIP", /*#__PURE__*/React.createElement("span", null, "\xB7"), "CAD", /*#__PURE__*/React.createElement("span", null, "\xB7"), "PROGRAMMING", /*#__PURE__*/React.createElement("span", null, "\xB7"), "FRC", /*#__PURE__*/React.createElement("span", null, "\xB7"), "FTC", /*#__PURE__*/React.createElement("span", null, "\xB7"), "FLL", /*#__PURE__*/React.createElement("span", null, "\xB7"), "CAMPS", /*#__PURE__*/React.createElement("span", null, "\xB7"), "WORKSHOPS", /*#__PURE__*/React.createElement("span", null, "\xB7"), "CURRICULUM", /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "7,000+ STUDENTS"), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "110+ VOLUNTEERS"), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "5+ COUNTRIES"), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", { className: "acc" }, "$19,500+ RAISED"), /*#__PURE__*/React.createElement("span", null, "\xB7"), "THOMAS JEFFERSON HIGH SCHOOL FOR SCI & TECH", /*#__PURE__*/React.createElement("span", null, "\xB7"), "AREA YOUTH MINISTRY", /*#__PURE__*/React.createElement("span", null, "\xB7"))
+    )
+    ), /*#__PURE__*/
 
-      <section className="sec">
-        <div className="sec-head">
-          <div className="ix">▸ 03 / Method</div>
-          <h2>How we <span className="acc">work.</span></h2>
-          <div className="meta">Four steps · Repeat</div>
-        </div>
-        <div className="process">
-          <div className="process-intro">
-            <h3>Built around <span className="acc">mentorship</span>, accessibility, &amp; hands-on learning.</h3>
-            <p>We meet students where they are and help them grow through real robotics experiences — not lectures.</p>
-          </div>
-          <div className="steps">
-            {STEPS.map(s => (
-              <div className="step" key={s.n}>
-                <div className="n">{s.n}</div>
-                <div><h4>{s.title}</h4><p>{s.body}</p></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+    React.createElement("section", { className: "stats" }, /*#__PURE__*/
+    React.createElement("div", { className: "stats-intro" }, /*#__PURE__*/
+    React.createElement("div", { className: "label" }, "\u25B8 01 / Impact ledger"), /*#__PURE__*/
+    React.createElement("h2", null, "Three years of mentorship, ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "measured.")), /*#__PURE__*/
+    React.createElement("p", null, "Numbers verified by program leads quarterly. The work behind each is in our Insights.")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "stats-grid" },
+    STATS.map((s, i) => /*#__PURE__*/
+    React.createElement("div", { className: "stat", key: i }, /*#__PURE__*/
+    React.createElement("div", { className: "ix" }, s.ix.split(' / ')[0], /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("b", null, "/ ", s.ix.split(' / ')[1])), /*#__PURE__*/
+    React.createElement("div", { className: "num" }, /*#__PURE__*/React.createElement(Counter, { target: s.num, suffix: s.suffix, prefix: s.prefix || "" })), /*#__PURE__*/
+    React.createElement("div", { className: "desc" }, s.desc)
+    )
+    )
+    )
+    ), /*#__PURE__*/
 
-      <section className="sec">
-        <div className="sec-head">
-          <div className="ix">▸ 04 / Partners</div>
-          <h2>Backed by our <span className="acc">sponsors.</span></h2>
-          <div className="meta">{SPONSORS.length} organizations</div>
-        </div>
-        <div className="sponsor-grid">
-          <div className="sponsor-row">
-            {SPONSORS.slice(0, 4).map(s => (
-              <div className="sponsor-card" key={s.name}>
-                <img src={s.src} alt={s.name} loading="lazy" />
-              </div>
-            ))}
-          </div>
-          <div className="sponsor-row">
-            {SPONSORS.slice(4).map(s => (
-              <div className="sponsor-card" key={s.name}>
-                <img src={s.src} alt={s.name} loading="lazy" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+    React.createElement("section", { className: "sec" }, /*#__PURE__*/
+    React.createElement("div", { className: "sec-head" }, /*#__PURE__*/
+    React.createElement("div", { className: "ix" }, "\u25B8 02 / Programs & impact"), /*#__PURE__*/
+    React.createElement("h2", null, "Four main ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "programs.")), /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "All free \xB7 All mentor-led")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "programs-stack" },
+    PROGRAMS.map((p) => /*#__PURE__*/
+    React.createElement("div", { className: "program-card", key: p.title, onClick: () => setActiveProgram(p.ix) }, /*#__PURE__*/
+    React.createElement("div", { className: "ix" }, p.ix), /*#__PURE__*/
+    React.createElement("div", { className: "title" }, /*#__PURE__*/
+    React.createElement("span", { className: "kicker" }, p.kicker), /*#__PURE__*/
+    React.createElement("h3", null, p.title)
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "body" }, /*#__PURE__*/
+    React.createElement("p", null, p.desc), /*#__PURE__*/
+    React.createElement("div", { className: "tags" },
+    p.tags.map((t) => /*#__PURE__*/React.createElement("span", { className: "tag", key: t }, t))
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "cta-area" }, /*#__PURE__*/
+    React.createElement("div", { className: "arrow-circle" }, "\u2197"), /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "Read brief")
+    )
+    )
+    )
+    )
+    ), /*#__PURE__*/
 
-      <section className="cta-banner">
-        <div className="cta-banner-inner">
-          <div>
-            <div className="meta">▸ Get involved</div>
-            <h2>The next student we reach <span className="italic">could be yours.</span></h2>
-          </div>
-          <div className="actions">
-            <a className="btn btn-primary" href="https://forms.gle/JCKz958v3CVfPBky5" target="_blank" rel="noopener noreferrer">Start application <span className="arrow">↗</span></a>
-            <a className="btn btn-ghost" href="mailto:growingupwithrobotics@gmail.com">Partner with us</a>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+    React.createElement("section", { className: "sec" }, /*#__PURE__*/
+    React.createElement("div", { className: "sec-head" }, /*#__PURE__*/
+    React.createElement("div", { className: "ix" }, "\u25B8 03 / Method"), /*#__PURE__*/
+    React.createElement("h2", null, "How we ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "work.")), /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "Four steps \xB7 Repeat")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "process" }, /*#__PURE__*/
+    React.createElement("div", { className: "process-intro" }, /*#__PURE__*/
+    React.createElement("h3", null, "Built around ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "mentorship"), ", accessibility, & hands-on learning."), /*#__PURE__*/
+    React.createElement("p", null, "We meet students where they are and help them grow through real robotics experiences \u2014 not lectures.")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "steps" },
+    STEPS.map((s) => /*#__PURE__*/
+    React.createElement("div", { className: "step", key: s.n }, /*#__PURE__*/
+    React.createElement("div", { className: "n" }, s.n), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/React.createElement("h4", null, s.title), /*#__PURE__*/React.createElement("p", null, s.body))
+    )
+    )
+    )
+    )
+    ), /*#__PURE__*/
+
+    React.createElement("section", { className: "sec" }, /*#__PURE__*/
+    React.createElement("div", { className: "sec-head" }, /*#__PURE__*/
+    React.createElement("div", { className: "ix" }, "\u25B8 04 / Partners"), /*#__PURE__*/
+    React.createElement("h2", null, "Backed by our ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "sponsors.")), /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, SPONSORS.length, " organizations")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "sponsor-grid" }, /*#__PURE__*/
+    React.createElement("div", { className: "sponsor-row" },
+    SPONSORS.slice(0, 4).map((s) => /*#__PURE__*/
+    React.createElement("div", { className: "sponsor-card", key: s.name }, /*#__PURE__*/
+    React.createElement("img", { src: s.src, alt: s.name, loading: "lazy" })
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "sponsor-row" },
+    SPONSORS.slice(4).map((s) => /*#__PURE__*/
+    React.createElement("div", { className: "sponsor-card", key: s.name }, /*#__PURE__*/
+    React.createElement("img", { src: s.src, alt: s.name, loading: "lazy" })
+    )
+    )
+    )
+    )
+    ), /*#__PURE__*/
+
+    React.createElement("section", { className: "cta-banner" }, /*#__PURE__*/
+    React.createElement("div", { className: "cta-banner-inner" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "\u25B8 Get involved"), /*#__PURE__*/
+    React.createElement("h2", null, "The next student we reach ", /*#__PURE__*/React.createElement("span", { className: "italic" }, "could be yours."))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "actions" }, /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-primary", href: "https://forms.gle/JCKz958v3CVfPBky5", target: "_blank", rel: "noopener noreferrer" }, "Start application ", /*#__PURE__*/React.createElement("span", { className: "arrow" }, "\u2197")), /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-ghost", href: "mailto:growingupwithrobotics@gmail.com" }, "Partner with us")
+    )
+    )
+    )
+    ));
+
 }
 
 function About({ setRoute }) {
-  return (
-    <div className="page">
-      <header className="pageheader">
-        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>01</div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="meta-row">
-            <span className="tag accent">About</span>
-            <span className="tag">Founded 2023</span>
-            <span className="tag">Fiscal 501(c)(3)</span>
-          </div>
-          <h1>A student-led answer<br/>to a <span className="acc">student-sized</span> problem.</h1>
-          <p className="lede"><strong>Robotics teaches the things school is slow to teach:</strong> how to fail, how to argue with a teammate, how to ship something that almost-works. But access is uneven. We're trying to close that gap — from the inside.</p>
-        </div>
-      </header>
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "page" }, /*#__PURE__*/
+    React.createElement("header", { className: "pageheader" }, /*#__PURE__*/
+    React.createElement("div", { className: "hero-bg-num", style: { fontSize: "clamp(200px, 28vw, 480px)" } }, "01"), /*#__PURE__*/
+    React.createElement("div", { style: { position: "relative", zIndex: 1 } }, /*#__PURE__*/
+    React.createElement("div", { className: "meta-row" }, /*#__PURE__*/
+    React.createElement("span", { className: "tag accent" }, "About"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "Founded 2023"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "Fiscal 501(c)(3)")
+    ), /*#__PURE__*/
+    React.createElement("h1", null, "A student-led answer", /*#__PURE__*/React.createElement("br", null), "to a ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "student-sized"), " problem."), /*#__PURE__*/
+    React.createElement("p", { className: "lede" }, /*#__PURE__*/React.createElement("strong", null, "Robotics teaches the things school is slow to teach:"), " how to fail, how to argue with a teammate, how to ship something that almost-works. But access is uneven. We're trying to close that gap \u2014 from the inside.")
+    )
+    ), /*#__PURE__*/
 
-      <section className="about-grid">
-        <div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>▸ 01 / Mission</div>
-          <h2>Make robotics belong to every <span className="acc">curious kid.</span></h2>
-        </div>
-        <div className="body">
-          <p>Growing Up with Robotics started as a single after-school mentorship in 2023 — two high school students teaching CAD to a middle schooler who'd never opened a wrench.</p>
-          <p>Three years later, we run mentorship pairings, team-to-team coaching, free open courses, and seasonal camps across five countries.</p>
-          <p>What we keep coming back to is this: most students don't fail at robotics. They never get the chance to try. The bench is too far, the team is too full, the cost is too much. We exist to close that gap.</p>
-          <p>Every program is free, every mentor is a student, and every decision is made closer to the bench than the boardroom.</p>
-        </div>
-      </section>
+    React.createElement("section", { className: "about-grid" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { style: { fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 } }, "\u25B8 01 / Mission"), /*#__PURE__*/
+    React.createElement("h2", null, "Make robotics belong to every ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "curious kid."))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "body" }, /*#__PURE__*/
+    React.createElement("p", null, "Growing Up with Robotics started as a single after-school mentorship in 2023 \u2014 two high school students teaching CAD to a middle schooler who'd never opened a wrench."), /*#__PURE__*/
+    React.createElement("p", null, "Three years later, we run mentorship pairings, team-to-team coaching, free open courses, and seasonal camps across five countries."), /*#__PURE__*/
+    React.createElement("p", null, "What we keep coming back to is this: most students don't fail at robotics. They never get the chance to try. The bench is too far, the team is too full, the cost is too much. We exist to close that gap."), /*#__PURE__*/
+    React.createElement("p", null, "Every program is free, every mentor is a student, and every decision is made closer to the bench than the boardroom.")
+    )
+    ), /*#__PURE__*/
 
-      <div className="stat-cards">
-        <div className="stat-card"><div className="lbl">Founded</div><div className="v">2023</div></div>
-        <div className="stat-card"><div className="lbl">Students</div><div className="v">7,000<span className="acc">+</span></div></div>
-        <div className="stat-card"><div className="lbl">Mentors</div><div className="v">110<span className="acc">+</span></div></div>
-        <div className="stat-card"><div className="lbl">Countries</div><div className="v">5<span className="acc">+</span></div></div>
-      </div>
+    React.createElement("div", { className: "stat-cards" }, /*#__PURE__*/
+    React.createElement("div", { className: "stat-card" }, /*#__PURE__*/React.createElement("div", { className: "lbl" }, "Founded"), /*#__PURE__*/React.createElement("div", { className: "v" }, "2023")), /*#__PURE__*/
+    React.createElement("div", { className: "stat-card" }, /*#__PURE__*/React.createElement("div", { className: "lbl" }, "Students"), /*#__PURE__*/React.createElement("div", { className: "v" }, "7,000", /*#__PURE__*/React.createElement("span", { className: "acc" }, "+"))), /*#__PURE__*/
+    React.createElement("div", { className: "stat-card" }, /*#__PURE__*/React.createElement("div", { className: "lbl" }, "Mentors"), /*#__PURE__*/React.createElement("div", { className: "v" }, "110", /*#__PURE__*/React.createElement("span", { className: "acc" }, "+"))), /*#__PURE__*/
+    React.createElement("div", { className: "stat-card" }, /*#__PURE__*/React.createElement("div", { className: "lbl" }, "Countries"), /*#__PURE__*/React.createElement("div", { className: "v" }, "5", /*#__PURE__*/React.createElement("span", { className: "acc" }, "+")))
+    ), /*#__PURE__*/
 
-      <section className="sec">
-        <div className="sec-head">
-          <div className="ix">▸ 02 / Team</div>
-          <h2>Led by <span className="acc">Students.</span></h2>
-          <div className="meta">Staff &amp; program leads</div>
-        </div>
+    React.createElement("section", { className: "sec" }, /*#__PURE__*/
+    React.createElement("div", { className: "sec-head" }, /*#__PURE__*/
+    React.createElement("div", { className: "ix" }, "\u25B8 02 / Team"), /*#__PURE__*/
+    React.createElement("h2", null, "Led by ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "Students.")), /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "Staff & program leads")
+    ), /*#__PURE__*/
 
-        <div className="team-grid" style={{ padding: 0 }}>
-          {TEAM.map(p => (
-            <div className="person" key={p.name}>
-              <div className="portrait">
-                <img className="ph-img" src={`public/team/${p.img}`} alt={p.name} onError={onImgErr} />
-                {p.name}
-              </div>
-              <div className="name">{p.name}</div>
-              <div className="role">{p.role}</div>
-              {p.bio && <div className="bio">{p.bio}</div>}
-            </div>
-          ))}
-        </div>
-      </section>
+    React.createElement("div", { className: "team-grid", style: { padding: 0 } },
+    TEAM.map((p) => /*#__PURE__*/
+    React.createElement("div", { className: "person", key: p.name }, /*#__PURE__*/
+    React.createElement("div", { className: "portrait" }, /*#__PURE__*/
+    React.createElement("img", { className: "ph-img", src: `public/team/${p.img}`, alt: p.name, onError: onImgErr }),
+    p.name
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "name" }, p.name), /*#__PURE__*/
+    React.createElement("div", { className: "role" }, p.role),
+    p.bio && /*#__PURE__*/React.createElement("div", { className: "bio" }, p.bio)
+    )
+    )
+    )
+    ), /*#__PURE__*/
 
-      <div className="members-roster">
-        <div className="members-roster-inner">
-          <div className="members-roster-header">
-            <span className="ix">▸ 03 / Roster</span>
-            <h3>More members</h3>
-          </div>
-          <div className="members-list">
-            {[
-              { name: "Emma Zhang",          grade: "11th" },
-              { name: "Grace Zhang",         grade: "11th" },
-              { name: "Stephan Lugovoy",     grade: "11th" },
-              { name: "Victoria Lee",        grade: "11th" },
-              { name: "Aarav Devani",        grade: "10th" },
-              { name: "Madeleine Wong",      grade: "10th" },
-            ].map(m => (
-              <div className="member-item" key={m.name}>
-                <div className="m-name">{m.name}</div>
-                <div className="m-grade">Grade {m.grade}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+    React.createElement("div", { className: "members-roster" }, /*#__PURE__*/
+    React.createElement("div", { className: "members-roster-inner" }, /*#__PURE__*/
+    React.createElement("div", { className: "members-roster-header" }, /*#__PURE__*/
+    React.createElement("span", { className: "ix" }, "\u25B8 03 / Roster"), /*#__PURE__*/
+    React.createElement("h3", null, "More members")
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "members-list" },
+    [
+    { name: "Emma Zhang", grade: "11th" },
+    { name: "Grace Zhang", grade: "11th" },
+    { name: "Stephan Lugovoy", grade: "11th" },
+    { name: "Victoria Lee", grade: "11th" },
+    { name: "Aarav Devani", grade: "10th" },
+    { name: "Madeleine Wong", grade: "10th" }].
+    map((m) => /*#__PURE__*/
+    React.createElement("div", { className: "member-item", key: m.name }, /*#__PURE__*/
+    React.createElement("div", { className: "m-name" }, m.name), /*#__PURE__*/
+    React.createElement("div", { className: "m-grade" }, "Grade ", m.grade)
+    )
+    )
+    )
+    )
+    ), /*#__PURE__*/
 
-      <section className="cta-banner">
-        <div className="cta-banner-inner">
-          <div>
-            <div className="meta">▸ Join the team</div>
-            <h2>We're hiring mentors <span className="italic">for fall.</span></h2>
-          </div>
-          <div className="actions">
-            <a className="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">Apply to mentor <span className="arrow">↗</span></a>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+    React.createElement("section", { className: "cta-banner" }, /*#__PURE__*/
+    React.createElement("div", { className: "cta-banner-inner" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "\u25B8 Join the team"), /*#__PURE__*/
+    React.createElement("h2", null, "We're hiring mentors ", /*#__PURE__*/React.createElement("span", { className: "italic" }, "for fall."))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "actions" }, /*#__PURE__*/
+    React.createElement("a", { className: "btn btn-primary", href: "https://docs.google.com/forms/d/e/1FAIpQLSdtxWHr23QapA7FO-OzskwMbomfqwb_RGM01Ff8K_hh0C2cdg/viewform?usp=dialog", target: "_blank", rel: "noopener noreferrer" }, "Apply to mentor ", /*#__PURE__*/React.createElement("span", { className: "arrow" }, "\u2197"))
+    )
+    )
+    )
+    ));
+
 }
 
 function Projects({ setRoute, setActiveProgram }) {
-  return (
-    <div className="page">
-      <header className="pageheader">
-        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>02</div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="meta-row">
-            <span className="tag accent">Programs</span>
-            <span className="tag">5 active</span>
-            <span className="tag">All free</span>
-          </div>
-          <h1>Five programs.<br/><span className="acc">One throughline:</span> access.</h1>
-          <p className="lede">Each program is free, mentor-led, and designed for students who don't already have a robotics community to lean on.</p>
-        </div>
-      </header>
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "page" }, /*#__PURE__*/
+    React.createElement("header", { className: "pageheader" }, /*#__PURE__*/
+    React.createElement("div", { className: "hero-bg-num", style: { fontSize: "clamp(200px, 28vw, 480px)" } }, "02"), /*#__PURE__*/
+    React.createElement("div", { style: { position: "relative", zIndex: 1 } }, /*#__PURE__*/
+    React.createElement("div", { className: "meta-row" }, /*#__PURE__*/
+    React.createElement("span", { className: "tag accent" }, "Programs"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "5 active"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "All free")
+    ), /*#__PURE__*/
+    React.createElement("h1", null, "Five programs.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", { className: "acc" }, "One throughline:"), " access."), /*#__PURE__*/
+    React.createElement("p", { className: "lede" }, "Each program is free, mentor-led, and designed for students who don't already have a robotics community to lean on.")
+    )
+    ), /*#__PURE__*/
 
-      <section className="proj-cards">
-        {PROJECTS_DETAIL.map(p => (
-          <div className="proj-card" key={p.n} onClick={() => setActiveProgram(p.n)} style={{ cursor: "pointer" }}>
-            <div className="n">{p.n}</div>
-            <div>
-              <h3><span className="acc">{p.title.split(" ")[0]}</span> {p.title.split(" ").slice(1).join(" ")}</h3>
-              <p>{p.desc}</p>
-              <div className="pills">{p.tags.map(t => <span className="tag" key={t}>{t}</span>)}</div>
-            </div>
-            <div className="meta-col">
-              <div className="row"><b>When</b> · {p.years}</div>
-              <div className="row"><b>Who</b> · {p.grades}</div>
-              <div className="arrow-circle">↗</div>
-            </div>
-          </div>
-        ))}
-      </section>
+    React.createElement("section", { className: "proj-cards" },
+    PROJECTS_DETAIL.map((p) => /*#__PURE__*/
+    React.createElement("div", { className: "proj-card", key: p.n, onClick: () => setActiveProgram(p.n), style: { cursor: "pointer" } }, /*#__PURE__*/
+    React.createElement("div", { className: "n" }, p.n), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("h3", null, /*#__PURE__*/React.createElement("span", { className: "acc" }, p.title.split(" ")[0]), " ", p.title.split(" ").slice(1).join(" ")), /*#__PURE__*/
+    React.createElement("p", null, p.desc), /*#__PURE__*/
+    React.createElement("div", { className: "pills" }, p.tags.map((t) => /*#__PURE__*/React.createElement("span", { className: "tag", key: t }, t)))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "meta-col" }, /*#__PURE__*/
+    React.createElement("div", { className: "row" }, /*#__PURE__*/React.createElement("b", null, "When"), " \xB7 ", p.years), /*#__PURE__*/
+    React.createElement("div", { className: "row" }, /*#__PURE__*/React.createElement("b", null, "Who"), " \xB7 ", p.grades), /*#__PURE__*/
+    React.createElement("div", { className: "arrow-circle" }, "\u2197")
+    )
+    )
+    )
+    )
 
-    </div>
-  );
+    ));
+
 }
 
 function GalleryLightbox({ items, index, setIndex, onClose }) {
@@ -1638,114 +1645,114 @@ function GalleryLightbox({ items, index, setIndex, onClose }) {
     };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+    return () => {document.removeEventListener("keydown", onKey);document.body.style.overflow = "";};
   }, [items.length, onClose, setIndex]);
   if (!item) return null;
-  return (
-    <div className="lightbox-backdrop" onClick={onClose}>
-      <button className="lightbox-close" onClick={onClose} aria-label="Close">×</button>
-      <button className="lightbox-nav prev" onClick={(e) => { e.stopPropagation(); setIndex((index - 1 + items.length) % items.length); }} aria-label="Previous">‹</button>
-      <div className="lightbox-stage" onClick={(e) => e.stopPropagation()}>
-        {item.type === "video" ? (
-          <video className="lightbox-media" src={item.src} poster={item.poster} controls autoPlay playsInline />
-        ) : (
-          <img className="lightbox-media" src={item.src} alt={item.cap || ""} onError={onImgErr} />
-        )}
-        <div className="lightbox-cap">
-          {item.cap && <span>{item.cap}</span>}
-          <span className="lightbox-count">{index + 1} / {items.length}</span>
-        </div>
-      </div>
-      <button className="lightbox-nav next" onClick={(e) => { e.stopPropagation(); setIndex((index + 1) % items.length); }} aria-label="Next">›</button>
-    </div>
-  );
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "lightbox-backdrop", onClick: onClose }, /*#__PURE__*/
+    React.createElement("button", { className: "lightbox-close", onClick: onClose, "aria-label": "Close" }, "\xD7"), /*#__PURE__*/
+    React.createElement("button", { className: "lightbox-nav prev", onClick: (e) => {e.stopPropagation();setIndex((index - 1 + items.length) % items.length);}, "aria-label": "Previous" }, "\u2039"), /*#__PURE__*/
+    React.createElement("div", { className: "lightbox-stage", onClick: (e) => e.stopPropagation() },
+    item.type === "video" ? /*#__PURE__*/
+    React.createElement("video", { className: "lightbox-media", src: item.src, poster: item.poster, controls: true, autoPlay: true, playsInline: true }) : /*#__PURE__*/
+
+    React.createElement("img", { className: "lightbox-media", src: item.src, alt: item.cap || "", onError: onImgErr }), /*#__PURE__*/
+
+    React.createElement("div", { className: "lightbox-cap" },
+    item.cap && /*#__PURE__*/React.createElement("span", null, item.cap), /*#__PURE__*/
+    React.createElement("span", { className: "lightbox-count" }, index + 1, " / ", items.length)
+    )
+    ), /*#__PURE__*/
+    React.createElement("button", { className: "lightbox-nav next", onClick: (e) => {e.stopPropagation();setIndex((index + 1) % items.length);}, "aria-label": "Next" }, "\u203A")
+    ));
+
 }
 
 function Insights() {
   const [subDone, setSubDone] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
-  return (
-    <div className="page">
-      <header className="pageheader">
-        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>03</div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="meta-row">
-            <span className="tag accent">Gallery</span>
-            <span className="tag">{GALLERY.length} moments</span>
-            <span className="tag">Photos & video</span>
-          </div>
-          <h1>Moments from <span className="acc">the field.</span></h1>
-          <p className="lede">Photos and clips from mentorship sessions, camps, and competitions. <strong>Click through to see it up close.</strong></p>
-        </div>
-      </header>
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "page" }, /*#__PURE__*/
+    React.createElement("header", { className: "pageheader" }, /*#__PURE__*/
+    React.createElement("div", { className: "hero-bg-num", style: { fontSize: "clamp(200px, 28vw, 480px)" } }, "03"), /*#__PURE__*/
+    React.createElement("div", { style: { position: "relative", zIndex: 1 } }, /*#__PURE__*/
+    React.createElement("div", { className: "meta-row" }, /*#__PURE__*/
+    React.createElement("span", { className: "tag accent" }, "Gallery"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, GALLERY.length, " moments"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "Photos & video")
+    ), /*#__PURE__*/
+    React.createElement("h1", null, "Moments from ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "the field.")), /*#__PURE__*/
+    React.createElement("p", { className: "lede" }, "Photos and clips from mentorship sessions, camps, and competitions. ", /*#__PURE__*/React.createElement("strong", null, "Click through to see it up close."))
+    )
+    ), /*#__PURE__*/
 
-      <section className="sec" style={{ paddingTop: 40 }}>
-        <div className="mgallery">
-          {GALLERY.map((item, i) => (
-            <div
-              className="tile"
-              key={item.src}
-              onClick={() => setOpenIndex(i)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter") setOpenIndex(i); }}
-            >
-              {item.type === "video" ? (
-                <video className="gal-media" src={item.src} poster={item.poster} muted playsInline preload="metadata" />
-              ) : (
-                <img className="gal-media" src={item.src} alt="" loading="lazy" onError={onImgErr} />
-              )}
-              {item.type === "video" && <div className="gal-play">▶</div>}
-            </div>
-          ))}
-        </div>
-      </section>
+    React.createElement("section", { className: "sec", style: { paddingTop: 40 } }, /*#__PURE__*/
+    React.createElement("div", { className: "mgallery" },
+    GALLERY.map((item, i) => /*#__PURE__*/
+    React.createElement("div", {
+      className: "tile",
+      key: item.src,
+      onClick: () => setOpenIndex(i),
+      role: "button",
+      tabIndex: 0,
+      onKeyDown: (e) => {if (e.key === "Enter") setOpenIndex(i);} },
 
-      {openIndex !== null && (
-        <GalleryLightbox items={GALLERY} index={openIndex} setIndex={setOpenIndex} onClose={() => setOpenIndex(null)} />
-      )}
+    item.type === "video" ? /*#__PURE__*/
+    React.createElement("video", { className: "gal-media", src: item.src, poster: item.poster, muted: true, playsInline: true, preload: "metadata" }) : /*#__PURE__*/
 
-      <section className="cta-banner" style={{ marginTop: 0 }}>
-        <div className="cta-banner-inner">
-          <div>
-            <div className="meta">▸ Subscribe</div>
-            <h2>New moments from the field — <span className="italic">in your inbox.</span></h2>
-          </div>
-          <div className="actions" style={{ width: "100%" }}>
-            {subDone ? (
-              <div style={{ fontFamily: "var(--mono)", fontSize: 14, color: "var(--accent-ink)", padding: "14px 0", letterSpacing: "0.04em" }}>
-                ✓ You're on the list — we'll be in touch.
-              </div>
-            ) : (
-              <form
-                action="https://growingupwithrobotics.us22.list-manage.com/subscribe/post?u=f3c46692cf2c574032e48ee57&id=57913a8feb&f_id=00b9c2e1f0"
-                method="post"
-                target="_blank"
-                onSubmit={() => setSubDone(true)}
-                style={{ width: "100%" }}
-              >
-                {/* Mailchimp bot-prevention honeypot — do not remove */}
-                <div style={{ position: "absolute", left: "-5000px" }} aria-hidden="true">
-                  <input type="text" name="b_f3c46692cf2c574032e48ee57_57913a8feb" tabIndex="-1" defaultValue="" />
-                </div>
-                <div className="field full" style={{ width: "100%" }}>
-                  <label style={{ color: "var(--accent-ink)", opacity: 0.7 }}>Your email</label>
-                  <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                    <input
-                      type="email" name="EMAIL" required
-                      placeholder="2027hli@tjhsst.edu"
-                      style={{ flex: "1 1 200px", minWidth: 0, background: "color-mix(in oklch, var(--accent-ink) 10%, transparent)", borderColor: "rgba(0,200,0,50)", color: "var(--accent-ink)" }}
-                    />
-                    <button className="btn btn-primary" type="submit" style={{ flexShrink: 0 }}>Subscribe <span className="arrow">↗</span></button>
-                  </div>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+    React.createElement("img", { className: "gal-media", src: item.src, alt: "", loading: "lazy", onError: onImgErr }),
+
+    item.type === "video" && /*#__PURE__*/React.createElement("div", { className: "gal-play" }, "\u25B6")
+    )
+    )
+    )
+    ),
+
+    openIndex !== null && /*#__PURE__*/
+    React.createElement(GalleryLightbox, { items: GALLERY, index: openIndex, setIndex: setOpenIndex, onClose: () => setOpenIndex(null) }), /*#__PURE__*/
+
+
+    React.createElement("section", { className: "cta-banner", style: { marginTop: 0 } }, /*#__PURE__*/
+    React.createElement("div", { className: "cta-banner-inner" }, /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("div", { className: "meta" }, "\u25B8 Subscribe"), /*#__PURE__*/
+    React.createElement("h2", null, "New moments from the field \u2014 ", /*#__PURE__*/React.createElement("span", { className: "italic" }, "in your inbox."))
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "actions", style: { width: "100%" } },
+    subDone ? /*#__PURE__*/
+    React.createElement("div", { style: { fontFamily: "var(--mono)", fontSize: 14, color: "var(--accent-ink)", padding: "14px 0", letterSpacing: "0.04em" } }, "\u2713 You're on the list \u2014 we'll be in touch."
+
+    ) : /*#__PURE__*/
+
+    React.createElement("form", {
+      action: "https://growingupwithrobotics.us22.list-manage.com/subscribe/post?u=f3c46692cf2c574032e48ee57&id=57913a8feb&f_id=00b9c2e1f0",
+      method: "post",
+      target: "_blank",
+      onSubmit: () => setSubDone(true),
+      style: { width: "100%" } }, /*#__PURE__*/
+
+
+    React.createElement("div", { style: { position: "absolute", left: "-5000px" }, "aria-hidden": "true" }, /*#__PURE__*/
+    React.createElement("input", { type: "text", name: "b_f3c46692cf2c574032e48ee57_57913a8feb", tabIndex: "-1", defaultValue: "" })
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "field full", style: { width: "100%" } }, /*#__PURE__*/
+    React.createElement("label", { style: { color: "var(--accent-ink)", opacity: 0.7 } }, "Your email"), /*#__PURE__*/
+    React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap" } }, /*#__PURE__*/
+    React.createElement("input", {
+      type: "email", name: "EMAIL", required: true,
+      placeholder: "2027hli@tjhsst.edu",
+      style: { flex: "1 1 200px", minWidth: 0, background: "color-mix(in oklch, var(--accent-ink) 10%, transparent)", borderColor: "rgba(0,200,0,50)", color: "var(--accent-ink)" } }
+    ), /*#__PURE__*/
+    React.createElement("button", { className: "btn btn-primary", type: "submit", style: { flexShrink: 0 } }, "Subscribe ", /*#__PURE__*/React.createElement("span", { className: "arrow" }, "\u2197"))
+    )
+    )
+    )
+
+    )
+    )
+    )
+    ));
+
 }
 
 function GetInvolved() {
@@ -1762,146 +1769,146 @@ function GetInvolved() {
       window.location.href = "mailto:growingupwithrobotics@gmail.com";
     }
   };
-  return (
-    <div className="page">
-      <header className="pageheader">
-        <div className="hero-bg-num" style={{ fontSize: "clamp(200px, 28vw, 480px)" }}>04</div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="meta-row">
-            <span className="tag accent">Get involved</span>
-            <span className="tag">4 paths</span>
-          </div>
-          <h1>Four ways <span className="acc">to start.</span></h1>
-          <p className="lede"><strong>Whatever you bring — curiosity, time, a classroom, a check —</strong> there's a way in.</p>
-        </div>
-      </header>
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "page" }, /*#__PURE__*/
+    React.createElement("header", { className: "pageheader" }, /*#__PURE__*/
+    React.createElement("div", { className: "hero-bg-num", style: { fontSize: "clamp(200px, 28vw, 480px)" } }, "04"), /*#__PURE__*/
+    React.createElement("div", { style: { position: "relative", zIndex: 1 } }, /*#__PURE__*/
+    React.createElement("div", { className: "meta-row" }, /*#__PURE__*/
+    React.createElement("span", { className: "tag accent" }, "Get involved"), /*#__PURE__*/
+    React.createElement("span", { className: "tag" }, "4 paths")
+    ), /*#__PURE__*/
+    React.createElement("h1", null, "Four ways ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "to start.")), /*#__PURE__*/
+    React.createElement("p", { className: "lede" }, /*#__PURE__*/React.createElement("strong", null, "Whatever you bring \u2014 curiosity, time, a classroom, a check \u2014"), " there's a way in.")
+    )
+    ), /*#__PURE__*/
 
-      <section className="paths">
-        {PATHS.map(p => (
-          <a className="path-card" key={p.n} href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener noreferrer" : undefined} style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="pn">{p.n}</div>
-            <div>
-              <h3>{p.title}</h3>
-              <p>{p.desc}</p>
-            </div>
-            <div className="arrow-circle">↗</div>
-          </a>
-        ))}
-      </section>
+    React.createElement("section", { className: "paths" },
+    PATHS.map((p) => /*#__PURE__*/
+    React.createElement("a", { className: "path-card", key: p.n, href: p.href, target: p.external ? "_blank" : undefined, rel: p.external ? "noopener noreferrer" : undefined, style: { textDecoration: "none", color: "inherit" } }, /*#__PURE__*/
+    React.createElement("div", { className: "pn" }, p.n), /*#__PURE__*/
+    React.createElement("div", null, /*#__PURE__*/
+    React.createElement("h3", null, p.title), /*#__PURE__*/
+    React.createElement("p", null, p.desc)
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "arrow-circle" }, "\u2197")
+    )
+    )
+    ), /*#__PURE__*/
 
-      <section className="form-section">
-        <div className="left">
-          <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>▸ Application</div>
-          <h2>Tell us <span className="acc">who you are.</span></h2>
-          <p>{isStudent ? "Sign up for our mailing list and apply to join as a student — takes under two minutes." : isMentor ? "Fill out our volunteer application to join the team as a mentor — takes under two minutes." : "Reach out directly and we'll connect you with the right program lead within a week."}</p>
-        </div>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="field full">
-            <label>I'm here as a</label>
-            <div className="seg">
-              {["Student","Mentor","School","Sponsor"].map(r => (
-                <button key={r} type="button" className={"chip" + (role === r ? " on" : "")} onClick={() => setRole(r)}>{r}</button>
-              ))}
-            </div>
-          </div>
-          <div className="form-actions" style={{ gridColumn: "1 / -1", paddingTop: 0 }}>
-            <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              {isStudent || isMentor ? "▸ Opens Google Form" : "▸ Opens your email client"}
-            </div>
-            <button className="btn btn-primary" type="submit">
-              {isStudent ? "Join the mailing list" : isMentor ? "Apply to volunteer" : "Contact us"} <span className="arrow">↗</span>
-            </button>
-          </div>
-        </form>
-      </section>
-    </div>
-  );
+    React.createElement("section", { className: "form-section" }, /*#__PURE__*/
+    React.createElement("div", { className: "left" }, /*#__PURE__*/
+    React.createElement("div", { style: { fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 } }, "\u25B8 Application"), /*#__PURE__*/
+    React.createElement("h2", null, "Tell us ", /*#__PURE__*/React.createElement("span", { className: "acc" }, "who you are.")), /*#__PURE__*/
+    React.createElement("p", null, isStudent ? "Sign up for our mailing list and apply to join as a student — takes under two minutes." : isMentor ? "Fill out our volunteer application to join the team as a mentor — takes under two minutes." : "Reach out directly and we'll connect you with the right program lead within a week.")
+    ), /*#__PURE__*/
+    React.createElement("form", { className: "form", onSubmit: handleSubmit }, /*#__PURE__*/
+    React.createElement("div", { className: "field full" }, /*#__PURE__*/
+    React.createElement("label", null, "I'm here as a"), /*#__PURE__*/
+    React.createElement("div", { className: "seg" },
+    ["Student", "Mentor", "School", "Sponsor"].map((r) => /*#__PURE__*/
+    React.createElement("button", { key: r, type: "button", className: "chip" + (role === r ? " on" : ""), onClick: () => setRole(r) }, r)
+    )
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "form-actions", style: { gridColumn: "1 / -1", paddingTop: 0 } }, /*#__PURE__*/
+    React.createElement("div", { style: { fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" } },
+    isStudent || isMentor ? "▸ Opens Google Form" : "▸ Opens your email client"
+    ), /*#__PURE__*/
+    React.createElement("button", { className: "btn btn-primary", type: "submit" },
+    isStudent ? "Join the mailing list" : isMentor ? "Apply to volunteer" : "Contact us", " ", /*#__PURE__*/React.createElement("span", { className: "arrow" }, "\u2197")
+    )
+    )
+    )
+    )
+    ));
+
 }
 
 function Tweaks({ tweaks, setTweak }) {
-  return (
-    <TweaksPanel title="Tweaks · Signal">
-      <TweakSection label="Color">
-        <TweakColor
-          label="Palette"
-          value={tweaks.palette}
-          options={Object.values(PALETTES).map(p => p.swatch)}
-          onChange={(_, ix) => setTweak("palette", Object.keys(PALETTES)[ix])}
-        />
-        <TweakRadio label="Mode" value={tweaks.mode} options={["light","dark"]} onChange={(v) => setTweak("mode", v)} />
-        <TweakRadio label="Glow" value={tweaks.glow} options={["off","soft","strong"]} onChange={(v) => setTweak("glow", v)} />
-      </TweakSection>
-      <TweakSection label="Type">
-        <TweakSelect label="Font" value={tweaks.fontPair} options={Object.entries(FONT_PAIRS).map(([k,v]) => [k, v.name])} onChange={(v) => setTweak("fontPair", v)} />
-        <TweakSelect label="Accent mark" value={tweaks.accentMark}
-          options={[["▸","▸ Triangle"],["●","● Dot"],["◆","◆ Diamond"],["✦","✦ Sparkle"],["▲","▲ Up-tri"],["■","■ Square"]]}
-          onChange={(v) => setTweak("accentMark", v)} />
-      </TweakSection>
-      <TweakSection label="Layout">
-        <TweakRadio label="Density" value={tweaks.density} options={["compact","default","airy"]} onChange={(v) => setTweak("density", v)} />
-        <TweakSelect label="Hero" value={tweaks.heroLayout}
-          options={[["marker","Marker"],["underline","Underline"],["strike","Strike"],["stack","Stacked"],["italic","All italic"]]}
-          onChange={(v) => setTweak("heroLayout", v)} />
-        <TweakSelect label="Card radius" value={tweaks.cardRadius}
-          options={[["sharp","Sharp"],["soft","Soft"],["round","Round"],["pill","Pill"]]}
-          onChange={(v) => setTweak("cardRadius", v)} />
-        <TweakSelect label="Tile texture" value={tweaks.tileTexture}
-          options={[["scan","Scan-lines"],["grid","Grid"],["dots","Dots"],["noise","Noise"],["blur","Blur"],["solid","Solid"]]}
-          onChange={(v) => setTweak("tileTexture", v)} />
-      </TweakSection>
-    </TweaksPanel>
-  );
+  return (/*#__PURE__*/
+    React.createElement(TweaksPanel, { title: "Tweaks \xB7 Signal" }, /*#__PURE__*/
+    React.createElement(TweakSection, { label: "Color" }, /*#__PURE__*/
+    React.createElement(TweakColor, {
+      label: "Palette",
+      value: tweaks.palette,
+      options: Object.values(PALETTES).map((p) => p.swatch),
+      onChange: (_, ix) => setTweak("palette", Object.keys(PALETTES)[ix]) }
+    ), /*#__PURE__*/
+    React.createElement(TweakRadio, { label: "Mode", value: tweaks.mode, options: ["light", "dark"], onChange: (v) => setTweak("mode", v) }), /*#__PURE__*/
+    React.createElement(TweakRadio, { label: "Glow", value: tweaks.glow, options: ["off", "soft", "strong"], onChange: (v) => setTweak("glow", v) })
+    ), /*#__PURE__*/
+    React.createElement(TweakSection, { label: "Type" }, /*#__PURE__*/
+    React.createElement(TweakSelect, { label: "Font", value: tweaks.fontPair, options: Object.entries(FONT_PAIRS).map(([k, v]) => [k, v.name]), onChange: (v) => setTweak("fontPair", v) }), /*#__PURE__*/
+    React.createElement(TweakSelect, { label: "Accent mark", value: tweaks.accentMark,
+      options: [["▸", "▸ Triangle"], ["●", "● Dot"], ["◆", "◆ Diamond"], ["✦", "✦ Sparkle"], ["▲", "▲ Up-tri"], ["■", "■ Square"]],
+      onChange: (v) => setTweak("accentMark", v) })
+    ), /*#__PURE__*/
+    React.createElement(TweakSection, { label: "Layout" }, /*#__PURE__*/
+    React.createElement(TweakRadio, { label: "Density", value: tweaks.density, options: ["compact", "default", "airy"], onChange: (v) => setTweak("density", v) }), /*#__PURE__*/
+    React.createElement(TweakSelect, { label: "Hero", value: tweaks.heroLayout,
+      options: [["marker", "Marker"], ["underline", "Underline"], ["strike", "Strike"], ["stack", "Stacked"], ["italic", "All italic"]],
+      onChange: (v) => setTweak("heroLayout", v) }), /*#__PURE__*/
+    React.createElement(TweakSelect, { label: "Card radius", value: tweaks.cardRadius,
+      options: [["sharp", "Sharp"], ["soft", "Soft"], ["round", "Round"], ["pill", "Pill"]],
+      onChange: (v) => setTweak("cardRadius", v) }), /*#__PURE__*/
+    React.createElement(TweakSelect, { label: "Tile texture", value: tweaks.tileTexture,
+      options: [["scan", "Scan-lines"], ["grid", "Grid"], ["dots", "Dots"], ["noise", "Noise"], ["blur", "Blur"], ["solid", "Solid"]],
+      onChange: (v) => setTweak("tileTexture", v) })
+    )
+    ));
+
 }
 
 function ProgramModal({ programKey, onClose }) {
   const p = PROGRAM_FULL[programKey];
   useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e) => {if (e.key === "Escape") onClose();};
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+    return () => {document.removeEventListener("keydown", onKey);document.body.style.overflow = "";};
   }, [onClose]);
   if (!p) return null;
-  return (
-    <div className="prog-modal-backdrop" onClick={onClose}>
-      <div className="prog-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="prog-modal-close" onClick={onClose}>×</button>
-        <div className="prog-modal-head">
-          <div className="prog-modal-num">{programKey}</div>
-          <div className="prog-modal-kicker">▸ {p.kicker}</div>
-          <h2 className="prog-modal-title">{p.headline}</h2>
-          <p className="prog-modal-lede">{p.lede}</p>
-        </div>
-        <div className="prog-modal-body">
-          {p.body.map((sec) => (
-            <div className="prog-modal-section" key={sec.label}>
-              <div className="prog-modal-section-label">{sec.label}</div>
-              <p>{sec.text}</p>
-            </div>
-          ))}
-          <div className="prog-modal-tags">
-            {p.tags.map((t) => <span className="tag" key={t}>{t}</span>)}
-          </div>
-        </div>
-        <div className="prog-modal-footer">
-          <div className="prog-modal-meta">
-            <span><b>When</b> · {p.when}</span>
-            <span><b>Who</b> · {p.who}</span>
-          </div>
-          <a className="btn btn-primary" href={p.cta.href} {...(p.cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
-            {p.cta.label} <span className="arrow">↗</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  );
+  return (/*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-backdrop", onClick: onClose }, /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal", onClick: (e) => e.stopPropagation() }, /*#__PURE__*/
+    React.createElement("button", { className: "prog-modal-close", onClick: onClose }, "\xD7"), /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-head" }, /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-num" }, programKey), /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-kicker" }, "\u25B8 ", p.kicker), /*#__PURE__*/
+    React.createElement("h2", { className: "prog-modal-title" }, p.headline), /*#__PURE__*/
+    React.createElement("p", { className: "prog-modal-lede" }, p.lede)
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-body" },
+    p.body.map((sec) => /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-section", key: sec.label }, /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-section-label" }, sec.label), /*#__PURE__*/
+    React.createElement("p", null, sec.text)
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-tags" },
+    p.tags.map((t) => /*#__PURE__*/React.createElement("span", { className: "tag", key: t }, t))
+    )
+    ), /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-footer" }, /*#__PURE__*/
+    React.createElement("div", { className: "prog-modal-meta" }, /*#__PURE__*/
+    React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, "When"), " \xB7 ", p.when), /*#__PURE__*/
+    React.createElement("span", null, /*#__PURE__*/React.createElement("b", null, "Who"), " \xB7 ", p.who)
+    ), /*#__PURE__*/
+    React.createElement("a", _extends({ className: "btn btn-primary", href: p.cta.href }, p.cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {}),
+    p.cta.label, " ", /*#__PURE__*/React.createElement("span", { className: "arrow" }, "\u2197")
+    )
+    )
+    )
+    ));
+
 }
 
 function App() {
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [route, setRouteState] = useState(() => {
     const h = window.location.hash.replace("#", "");
-    return NAV.find(n => n.id === h) ? h : "home";
+    return NAV.find((n) => n.id === h) ? h : "home";
   });
   const [activeProgram, setActiveProgram] = useState(null);
   const setRoute = (id) => {
@@ -1912,7 +1919,7 @@ function App() {
   useEffect(() => {
     const onHash = () => {
       const h = window.location.hash.replace("#", "");
-      if (NAV.find(n => n.id === h)) setRouteState(h);
+      if (NAV.find((n) => n.id === h)) setRouteState(h);
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -1954,7 +1961,7 @@ function App() {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
     const targets = [];
     while (walker.nextNode()) targets.push(walker.currentNode);
-    targets.forEach(n => {
+    targets.forEach((n) => {
       if (allMarks.test(n.nodeValue)) {
         const newVal = n.nodeValue.replace(allMarks, mark);
         if (newVal !== n.nodeValue) n.nodeValue = newVal;
@@ -1964,18 +1971,18 @@ function App() {
 
   const Page = { home: Home, about: About, projects: Projects, insights: Insights, involve: GetInvolved }[route] || Home;
 
-  return (
-    <>
-      <Header route={route} setRoute={setRoute} />
-      <Page key={route} setRoute={setRoute} tweaks={tweaks} setActiveProgram={setActiveProgram} />
-      <Footer setRoute={setRoute} />
-      <Tweaks tweaks={tweaks} setTweak={setTweak} />
-      {activeProgram && <ProgramModal programKey={activeProgram} onClose={() => setActiveProgram(null)} />}
-    </>
-  );
+  return (/*#__PURE__*/
+    React.createElement(React.Fragment, null, /*#__PURE__*/
+    React.createElement(Header, { route: route, setRoute: setRoute }), /*#__PURE__*/
+    React.createElement(Page, { key: route, setRoute: setRoute, tweaks: tweaks, setActiveProgram: setActiveProgram }), /*#__PURE__*/
+    React.createElement(Footer, { setRoute: setRoute }), /*#__PURE__*/
+    React.createElement(Tweaks, { tweaks: tweaks, setTweak: setTweak }),
+    activeProgram && /*#__PURE__*/React.createElement(ProgramModal, { programKey: activeProgram, onClose: () => setActiveProgram(null) })
+    ));
+
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>
