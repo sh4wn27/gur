@@ -1,0 +1,11 @@
+{
+  "name": "gur-website-build",
+  "private": true,
+  "description": "Build-time prerender step for growingupwithrobotics.org. Not part of the runtime site.",
+  "scripts": {
+    "build": "node scripts/prerender.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^25.11.0"
+  }
+}
