@@ -16,7 +16,10 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
+// @sparticuz/chromium ships as an ESM module with a default export; under
+// require() that lands on .default rather than the module object itself.
+const chromium = require("@sparticuz/chromium").default;
 
 const ROOT = path.join(__dirname, "..");
 const PORT = 8973;
@@ -58,8 +61,13 @@ function serveStatic() {
 
 async function main() {
   const server = serveStatic();
+  // plain puppeteer's bundled Chromium needs desktop shared libs (e.g. libnspr4.so)
+  // that Vercel's build image doesn't have; @sparticuz/chromium is built for
+  // exactly this kind of serverless/Lambda-style container.
   const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: await puppeteer.defaultArgs({ args: chromium.args, headless: "shell" }),
+    executablePath: await chromium.executablePath(),
+    headless: "shell",
   });
 
   try {
